@@ -1,69 +1,181 @@
+
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
+const photosAccueil = [
+  { src: "/images/jardin1.png", alt: "Le jardin de Casa Noppalu" },
+  { src: "/images/jardin2.jpg", alt: "Une adorable salamandre" },
+  { src: "/images/jardin3.jpg", alt: "La terrasse pour l'apéro" },
+  { src: "/images/jardin4.jpg", alt: "Un escargot nous rend visite" },
+  { src: "/images/piscine1.jpg", alt: "La piscine de Casa Noppalu" },
+  { src: "/images/plage.jpg", alt: "La plage à proximité" },
+];
+
+const bungalows = [
+  {
+    nom: "Le Manguier",
+    photo: "/images/bungalow1.jpg",
+    description: "Un espace indépendant pour profiter d'un séjour au calme.",
+  },
+  {
+    nom: "Le Cocotier",
+    photo: "/images/bungalow2.jpg",
+    description: "Un cadre agréable pour se reposer et profiter du jardin.",
+  },
+  {
+    nom: "Le Bananier",
+    photo: "/images/bungalow3.jpg",
+    description: "Un hébergement indépendant dans un environnement naturel.",
+  },
+];
+
 export default function Home() {
+  const [photoActuelle, setPhotoActuelle] = useState(0);
+
+  function photoPrecedente() {
+    setPhotoActuelle(
+      (photoActuelle - 1 + photosAccueil.length) % photosAccueil.length
+    );
+  }
+
+  function photoSuivante() {
+    setPhotoActuelle((photoActuelle + 1) % photosAccueil.length);
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
+    <main className="flex-1">
+      {/* Section 1 : accueil et carrousel */}
+      <section className="px-6 py-12 md:px-12 md:py-10">
+        <div className="mx-auto grid max-w-6xl items-center gap-6 md:grid-cols-1">
+          <div>
+            <p className="mb-4 text-sm uppercase tracking-[0.2em] text-[#8B3017]">
+              Bienvenue à Casa Noppalu
+            </p>
+
+            <h1 className="mb-6 text-4xl font-semibold leading-tight text-[#2F6036] md:text-5xl">
+              Une parenthèse de calme au Sénégal
+            </h1>
+
+            <p className="max-w-4xl text-lg leading-8 text-[#222222]">
+              Découvrez nos bungalows indépendants, nichés dans un jardin
+              propice au repos, à la nature et à la sérénité.
+            </p>
+
             <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="#bungalows"
+              className="mt-8 inline-block rounded-md bg-[#2F6036] px-6 py-3 text-[#FFFEF6] transition hover:opacity-80"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Découvrir nos bungalows
+            </a>
+          </div>
+
+          <div className="relative">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-lg">
+              <Image
+                src={photosAccueil[photoActuelle].src}
+                alt={photosAccueil[photoActuelle].alt}
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={photoPrecedente}
+              aria-label="Photo précédente"
+              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-4 py-2 text-xl text-[#2F6036] shadow"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              ‹
+            </button>
+
+            <button
+              type="button"
+              onClick={photoSuivante}
+              aria-label="Photo suivante"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-4 py-2 text-xl text-[#2F6036] shadow"
+            >
+              ›
+            </button>
+
+            <div className="mt-4 flex justify-center gap-2">
+              {photosAccueil.map((photo, index) => (
+                <button
+                  key={photo.src}
+                  type="button"
+                  onClick={() => setPhotoActuelle(index)}
+                  aria-label={`Afficher la photo ${index + 1}`}
+                  aria-current={photoActuelle === index}
+                  className={`h-2.5 w-2.5 rounded-full ${
+                    photoActuelle === index
+                      ? "bg-[#2F6036]"
+                      : "bg-[#C6B06B]"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Section 2 : les trois bungalows */}
+      <section id="bungalows" className="bg-[#FFFEF6] px-6 py-16 md:px-12">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 text-center">
+            <p className="mb-3 text-sm uppercase tracking-[0.2em] text-[#8B3017]">
+              Votre séjour
+            </p>
+
+            <h2 className="text-3xl font-semibold text-[#2F6036] md:text-4xl">
+              Nos bungalows
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-2xl leading-7 text-[#222222]">
+              Trois espaces indépendants pour profiter du calme et de la
+              douceur de vivre au Sénégal.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {bungalows.map((bungalow) => (
+              <article
+                key={bungalow.nom}
+                className="overflow-hidden rounded-lg bg-white shadow-sm"
+              >
+                <div className="relative aspect-[4/3]">
+                  <Image
+                    src={bungalow.photo}
+                    alt={bungalow.nom}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+
+                <div className="p-6">
+                  <h3 className="mb-3 text-xl font-semibold text-[#2F6036]">
+                    {bungalow.nom}
+                  </h3>
+
+                  <p className="mb-5 leading-7 text-[#222222]">
+                    {bungalow.description}
+                  </p>
+
+                  <a
+                    href="/contact"
+                    className="font-medium text-[#2F6036] underline underline-offset-4 hover:text-[#8B3017]"
+                  >
+                    En savoir plus
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }
