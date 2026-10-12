@@ -27,7 +27,7 @@ export default function Header () {
                         alt = "Logo Casa Noppalu"
                         width={128}
                         height={128}
-                        className="h-20 w-20 shrink-0 object-contain sm:h-24 sm:w-24 lg:h-32 lg:w-32"
+                        className="h-20 w-20 shrink-0 object-contain sm:h-24 sm:w-24 lg:h-32 lg:w-32 "
                     />
                     <div>
                     <p className="text-2xl sm:text-3xl font-serif font-semibold text-green">
@@ -97,7 +97,7 @@ export default function Header () {
 
 
             </div>
-            <div className="mx-auto mt-4 h-px w-[98%] bg-sand" />
+            <div className="mx-auto mt-4 h-px w-[98%] bg-sand shadow-[0_2px_3px_rgba(34,34,34,0.18)]" />
         </header>
     )
     
