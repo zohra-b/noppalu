@@ -1,6 +1,7 @@
 "use client"; 
 
 import { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 
 
@@ -16,20 +17,20 @@ export default function Header () {
                 (langue) => langue.code === langueActuelle )!;
 
     return (
-        <header className="bg-linen px-6 py-4" >
+       <header className="w-full bg-linen px-4 py-4 sm:px-6">
             {/* Partie gauche : logo et identité */}
-            <div className="mx-auto flex max-w-6xl items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <Image
+            <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <Link href="/">
+                <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+                     <Image
                         src = "/images/logo-rond.png"
                         alt = "Logo Casa Noppalu"
                         width={128}
                         height={128}
-                        className="w-32 h-32 object-contain"
+                        className="h-20 w-20 shrink-0 object-contain sm:h-24 sm:w-24 lg:h-32 lg:w-32"
                     />
-                
                     <div>
-                    <p className="text-3xl font-serif font-semibold text-green">
+                    <p className="text-2xl sm:text-3xl font-serif font-semibold text-green">
                         Casa Noppalu
                         </p>
                     <p className="font-serif text-lg italic text-sand">
@@ -37,17 +38,18 @@ export default function Header () {
                         </p>
                         </div>
                 </div>
+                    </Link>
 
             {/* Partie droite : nav et langues*/}
             <nav className="flex items-center gap-6">
-                <a 
+                <Link 
                     href="/bungalows"
                     className="text-green hover:text-sand">Nos bungalows
-                </a>
-                <a 
+                </Link>
+                <Link 
                     href="/contact"
                     className="text-green hover:text-sand">Contact 
-                </a>
+                </Link>
 
                 {/* Sélecteur de langue */}
                 <div className="relative"> 
@@ -95,6 +97,7 @@ export default function Header () {
 
 
             </div>
+            <div className="mx-auto mt-4 h-px w-[98%] bg-sand" />
         </header>
     )
     
