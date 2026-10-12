@@ -54,22 +54,21 @@ export default function Header () {
                 {/* Sélecteur de langue */}
                 <div className="relative"> 
                     <button
-  type="button"
-  onClick={() => {
-    console.log("Clic sur le sélecteur");
-    setMenuOuvert(!menuOuvert);
-  }}
-  aria-label={`Langue actuelle : ${langueSelectionnee.nom}`}
-  aria-expanded={menuOuvert}
-  className="rounded-md p-2 hover:bg-white/50"
->
+                            type="button"
+                            onClick={() => {
+                                setMenuOuvert(!menuOuvert);
+                            }}
+                            aria-label={`Langue actuelle : ${langueSelectionnee.nom}`}
+                            aria-expanded={menuOuvert}
+                            className="rounded-md p-2 hover:bg-ivory/50"
+                            >
   <span className="text-2xl">
     {langueSelectionnee.drapeau}
   </span>
 </button>
 
                     {menuOuvert && ( 
-                        <div className="absolute right-0 top-full z-50 mt-2 min-w-36 rounded-md bg-white py-2 shadow-lg"> 
+                        <div className="absolute right-0 top-full z-50 mt-2 min-w-36 rounded-md bg-ivory py-2 shadow-lg"> 
                         {langues 
                             .filter((langue) => langue.code !== langueActuelle) 
                             .map((langue) => ( 
