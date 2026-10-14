@@ -44,6 +44,10 @@ export default function Header () {
             <nav className="flex items-center gap-6">
                 <Link 
                     href="/bungalows"
+                    className="text-linen hover:text-linen">Réserver
+                </Link>
+                <Link 
+                    href="/bungalows"
                     className="text-green hover:text-sand">Nos bungalows
                 </Link>
                 <Link 
