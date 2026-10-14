@@ -16,17 +16,17 @@ const photosAccueil = [
 
 const bungalows = [
   {
-    nom: "Le Manguier",
+    nom: "Manguier",
     photo: "/images/bungalow1.jpg",
     description: "Un espace indépendant pour profiter d'un séjour au calme.",
   },
   {
-    nom: "Le Cocotier",
+    nom: "Cocotier",
     photo: "/images/bungalow2.jpg",
     description: "Un cadre agréable pour se reposer et profiter du jardin.",
   },
   {
-    nom: "Le Bananier",
+    nom: "Bananier",
     photo: "/images/bungalow3.jpg",
     description: "Un hébergement indépendant dans un environnement naturel.",
   },

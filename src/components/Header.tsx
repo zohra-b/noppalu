@@ -43,10 +43,10 @@ export default function Header () {
 
             {/* Partie droite : nav et langues*/}
             <nav className="flex items-center gap-6">
-                <Link 
+                {/* <Link 
                     href="/bungalows"
-                    className="text-linen hover:text-linen">Réserver
-                </Link>
+                    className="text-green hover:text-sand">Réserver
+                </Link> */}
 
                 <div 
                 className="relative"
