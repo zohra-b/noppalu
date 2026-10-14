@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Button from "@/components/Button";
 
 export default function ContactPage() {
   const [envoi, setEnvoi] = useState(false);
@@ -136,12 +137,12 @@ export default function ContactPage() {
                 Les informations saisies servent à répondre à votre demande.
               </p>
 
-              <button
+              <Button 
                 type="submit"
-                className="w-full rounded-md bg-green px-5 py-3 font-medium text-linen transition-colors hover:bg-[#244D2B]"
-              >
-                Préparer mon e-mail
-              </button>
+                className="w-full"
+                >Préparer mon message
+
+                </Button>
 
               {envoi && (
                 <p role="status" className="text-sm text-green">
@@ -173,14 +174,12 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold">WhatsApp</h3>
                   <p className="mb-3">+221 76 886 63 367</p>
-                  <a
+                 <Button
                     href="https://wa.me/2217688663367"
                     target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block rounded-md bg-green px-5 py-3 font-medium text-linen transition-colors hover:bg-[#244D2B]"
-                  >
+                    >
                     Nous contacter sur WhatsApp
-                  </a>
+                </Button>
                 </div>
 
                 <div>
