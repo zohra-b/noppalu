@@ -58,21 +58,20 @@ export default function Home() {
               Une parenthèse de calme au Sénégal
             </h1>
 
-            <p className="max-w-4xl text-lg leading-8 text-[#222222]">
-              Découvrez nos bungalows indépendants, nichés dans un jardin
-              propice au repos, à la nature et à la sérénité.
+            <p className="max-w-full text-lg leading-8 text-[#222222]">
+              Casa Noppalu vous accueille dans un cadre simple et naturel, avec trois bungalows indépendants pour profiter de la douceur du Sénégal, se détendre au bord de la piscine et savourer les plaisirs simples des vacances.
             </p>
 
-            <a
+            {/* <a
               href="#bungalows"
               className="mt-8 inline-block rounded-md bg-[#2F6036] px-6 py-3 text-[#FFFEF6] transition hover:opacity-80"
             >
               Découvrir nos bungalows
-            </a>
+            </a> */}
           </div>
 
           <div className="relative">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-lg">
+            <div className="relative aspect-video overflow-hidden rounded-lg">
               <Image
                 src={photosAccueil[photoActuelle].src}
                 alt={photosAccueil[photoActuelle].alt}
@@ -124,7 +123,7 @@ export default function Home() {
       {/* Section 2 : les trois bungalows */}
       <section id="bungalows" className="bg-[#FFFEF6] px-6 py-16 md:px-12">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-10 text-center">
+          <div className="mb-10">
             <p className="mb-3 text-sm uppercase tracking-[0.2em] text-[#8B3017]">
               Votre séjour
             </p>
@@ -133,19 +132,18 @@ export default function Home() {
               Nos bungalows
             </h2>
 
-            <p className="mx-auto mt-4 max-w-2xl leading-7 text-[#222222]">
-              Trois espaces indépendants pour profiter du calme et de la
-              douceur de vivre au Sénégal.
+         <p className="mt-4 w-full leading-7 text-[#222222]">
+              Nos trois bungalows indépendants vous offrent chacun un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d’un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d’une télévision connectée. Vous profitez ainsi de votre propre espace, avec la liberté d’organiser vos journées à votre rythme.
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="mb-22 grid gap-8 md:grid-cols-3">
             {bungalows.map((bungalow) => (
               <article
                 key={bungalow.nom}
                 className="overflow-hidden rounded-lg bg-white shadow-sm"
               >
-                <div className="relative aspect-[4/3]">
+                <div className="relative aspect-4/3">
                   <Image
                     src={bungalow.photo}
                     alt={bungalow.nom}
