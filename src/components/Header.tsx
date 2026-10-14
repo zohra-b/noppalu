@@ -12,7 +12,8 @@ const langues = [
 
 export default function Header () {
     const [langueActuelle, setLangueActuelle] = useState("fr"); 
-    const [menuOuvert, setMenuOuvert] = useState(false); 
+    const [menuLanguesOuvert, setMenuLanguesOuvert] = useState(false); 
+    const [menuBungalowsOuvert, setMenuBungalowsOuvert] = useState(false);
     const langueSelectionnee = langues.find( 
                 (langue) => langue.code === langueActuelle )!;
 
@@ -46,34 +47,60 @@ export default function Header () {
                     href="/bungalows"
                     className="text-linen hover:text-linen">Réserver
                 </Link>
-                <Link 
-                    href="/bungalows"
-                    className="text-green hover:text-sand">Nos bungalows
-                </Link>
+
+                <div 
+                className="relative"
+                onMouseEnter={() => setMenuBungalowsOuvert(true)}
+                onMouseLeave={() => setMenuBungalowsOuvert(false)}
+                > 
+                    <button 
+                        type="button" 
+                        aria-expanded={menuBungalowsOuvert} 
+                        className="text-green hover:text-sand" 
+                        > Nos bungalows </button> 
+                        
+                    {menuBungalowsOuvert && ( 
+                        <div 
+                        className="absolute left-0 top-full z-50 min-w-44 rounded-md bg-white py-2 shadow-lg"> 
+                        <Link 
+                        href="/bungalows/manguier" 
+                        onClick={() => setMenuBungalowsOuvert(false)} className="block px-4 py-2 text-green hover:bg-linen" > Manguier </Link> 
+                        <Link 
+                        href="/bungalows/cocotier" 
+                        onClick={() => setMenuBungalowsOuvert(false)} className="block px-4 py-2 text-green hover:bg-linen" > 
+                        Cocotier </Link> 
+                        <Link 
+                        href="/bungalows/bananier" 
+                        onClick={() => setMenuBungalowsOuvert(false)} 
+                        className="block px-4 py-2 text-green hover:bg-linen" > 
+                        Bananier </Link> 
+                        </div>)
+                    } 
+                </div>
+
                 <Link 
                     href="/contact"
                     className="text-green hover:text-sand">Contact 
                 </Link>
 
                 {/* Sélecteur de langue */}
-                <div className="relative"> 
+                <div 
+                className="relative"
+                onMouseEnter={() => setMenuLanguesOuvert(true)}
+                onMouseLeave={() => setMenuLanguesOuvert(false)}> 
                     <button
-  type="button"
-  onClick={() => {
-    console.log("Clic sur le sélecteur");
-    setMenuOuvert(!menuOuvert);
-  }}
-  aria-label={`Langue actuelle : ${langueSelectionnee.nom}`}
-  aria-expanded={menuOuvert}
-  className="rounded-md p-2 hover:bg-white/50"
->
-  <span className="text-2xl">
-    {langueSelectionnee.drapeau}
-  </span>
-</button>
+                        type="button"
+                        aria-label={`Langue actuelle : ${langueSelectionnee.nom}`}
+                        aria-expanded={menuLanguesOuvert}
+                        className="rounded-md p-2 hover:bg-white/50"
+                        >
+                        <span className="text-2xl">
+                        {langueSelectionnee.drapeau}
+                        </span>
+                    </button>
 
-                    {menuOuvert && ( 
-                        <div className="absolute right-0 top-full z-50 mt-2 min-w-36 rounded-md bg-white py-2 shadow-lg"> 
+                    {menuLanguesOuvert && ( 
+                        <div className="absolute right-0 top-full z-50 min-w-36 rounded-md bg-white py-2 shadow-lg"> 
                         {langues 
                             .filter((langue) => langue.code !== langueActuelle) 
                             .map((langue) => ( 
@@ -82,7 +109,7 @@ export default function Header () {
                                     type="button" 
                                     onClick={() => { 
                                         setLangueActuelle(langue.code); 
-                                        setMenuOuvert(false); }} 
+                                        setMenuLanguesOuvert(false); }} 
                                     className="flex w-full items-center gap-3 px-4 py-2 text-left hover:bg-linen" 
                                     > 
                                 <span className="text-xl"> 

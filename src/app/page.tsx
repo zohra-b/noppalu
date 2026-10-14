@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const photosAccueil = [
   { src: "/images/jardin1.png", alt: "Le jardin de Casa Noppalu" },
@@ -62,12 +63,12 @@ export default function Home() {
               Casa Noppalu vous accueille dans un cadre simple et naturel, avec trois bungalows indépendants pour profiter de la douceur du Sénégal, se détendre au bord de la piscine et savourer les plaisirs simples des vacances.
             </p>
 
-            {/* <a
+            {/* <Link
               href="#bungalows"
               className="mt-8 inline-block rounded-md bg-[#2F6036] px-6 py-3 text-[#FFFEF6] transition hover:opacity-80"
             >
               Découvrir nos bungalows
-            </a> */}
+            </Link> */}
           </div>
 
           <div className="relative">
@@ -162,12 +163,12 @@ export default function Home() {
                     {bungalow.description}
                   </p>
 
-                  <a
+                  <Link
                     href="/contact"
                     className="font-medium text-[#2F6036] underline underline-offset-4 hover:text-[#8B3017]"
                   >
                     En savoir plus
-                  </a>
+                  </Link>
                 </div>
               </article>
             ))}
