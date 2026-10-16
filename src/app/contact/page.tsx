@@ -4,33 +4,39 @@
 import { useState, type FormEvent } from "react";
 import Button from "@/components/Button";
 
-export default function ContactPage() {
-  const [envoi, setEnvoi] = useState(false);
+type Statut = "repos" | "envoi" | "succes" | "erreur";
 
-  function envoyerMessage(event: FormEvent<HTMLFormElement>) {
+export default function ContactPage() {
+  const [statut, setStatut] = useState<Statut>("repos");
+  const [erreur, setErreur] = useState("");
+
+  async function envoyerMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setStatut("envoi");
+    setErreur("");
 
     const formulaire = event.currentTarget;
-    const donnees = new FormData(formulaire);
+    const donnees = Object.fromEntries(new FormData(formulaire));
 
-    const nom = donnees.get("nom");
-    const email = donnees.get("email");
-    const telephone = donnees.get("telephone");
-    const objet = donnees.get("objet");
-    const message = donnees.get("message");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(donnees),
+      });
+      const json = await res.json();
 
-    const sujet = encodeURIComponent(
-      `Casa Noppalu - ${objet || "Demande de contact"}`
-    );
-
-    const corps = encodeURIComponent(
-      `Nom : ${nom}\nEmail : ${email}\nTéléphone / WhatsApp : ${telephone || "Non renseigné"}\nObjet : ${objet || "Non précisé"}\n\nMessage :\n${message}`
-    );
-
-    window.location.href =
-      `mailto:casanoppalu@proton.me?subject=${sujet}&body=${corps}`;
-
-    setEnvoi(true);
+      if (!res.ok) {
+        setErreur(json.error ?? "Une erreur est survenue.");
+        setStatut("erreur");
+        return;
+      }
+      formulaire.reset();
+      setStatut("succes");
+    } catch {
+      setErreur("Connexion impossible. Réessayez dans un instant.");
+      setStatut("erreur");
+    }
   }
 
   return (
@@ -132,24 +138,29 @@ export default function ContactPage() {
                   className="w-full resize-y rounded-md border border-[#C6B06B] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-green"
                 />
               </div>
-
+              <div aria-hidden="true" className="absolute left-[-9999px]">
+                  <label htmlFor="website">Ne pas remplir</label>
+                  <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </div>
               <p className="text-xs text-gray-600">
                 Les informations saisies servent à répondre à votre demande.
               </p>
 
               <Button 
-                type="submit"
-                className="w-full"
-                >Préparer mon message
+                type="submit" 
+                className="w-full" 
+                disabled={statut === "envoi"}>
+                      {statut === "envoi" ? "Envoi en cours…" : "Envoyer mon message"}
+              </Button>
 
-                </Button>
-
-              {envoi && (
+              {statut === "succes" && (
                 <p role="status" className="text-sm text-green">
-                  Si votre logiciel de messagerie ne s'est pas ouvert,
-                  contactez-nous directement par e-mail ou WhatsApp.
+                Merci, votre message a bien été envoyé. Nous vous répondrons rapidement.
                 </p>
-              )}
+                  )}
+              {statut === "erreur" && (
+                <p role="alert" className="text-sm text-red-700">{erreur}</p>
+                  )}
             </form>
           </section>
 
@@ -164,7 +175,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold">E-mail</h3>
                   <a
-                    href="mailto:casanoppalu@proton.me"
+                    href="mailto:contact@casanoppalu.com"
                     className="break-all text-green underline underline-offset-4"
                   >
                     contact@casanoppalu.com
@@ -173,9 +184,9 @@ export default function ContactPage() {
 
                 <div>
                   <h3 className="font-semibold">WhatsApp</h3>
-                  <p className="mb-3">+221 76 886 63 367</p>
+                  <p className="mb-3">+221 76 86 63 367</p>
                  <Button
-                    href="https://wa.me/2217688663367"
+                    href="https://wa.me/221768663367"
                     target="_blank"
                     >
                     Nous contacter sur WhatsApp
