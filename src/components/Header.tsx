@@ -63,14 +63,14 @@ export default function Header () {
                         <div 
                         className="absolute left-0 top-full z-50 min-w-44 rounded-md bg-white py-2 shadow-lg"> 
                         <Link 
-                        href="/bungalows/manguier" 
+                        href="/#bungalows" 
                         onClick={() => setMenuBungalowsOuvert(false)} className="block px-4 py-2 text-green hover:bg-linen" > Manguier </Link> 
                         <Link 
-                        href="/bungalows/cocotier" 
+                        href="/#bungalows" 
                         onClick={() => setMenuBungalowsOuvert(false)} className="block px-4 py-2 text-green hover:bg-linen" > 
                         Cocotier </Link> 
                         <Link 
-                        href="/bungalows/bananier" 
+                        href="/#bungalows" 
                         onClick={() => setMenuBungalowsOuvert(false)} 
                         className="block px-4 py-2 text-green hover:bg-linen" > 
                         Bananier </Link> 

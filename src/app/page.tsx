@@ -52,15 +52,16 @@ export default function Home() {
         <div className="mx-auto grid max-w-6xl items-center gap-6 md:grid-cols-1">
           <div>
             <p className="mb-4 text-sm uppercase tracking-[0.2em] text-[#8B3017]">
-              Bienvenue à Casa Noppalu
+              Casa Noppalu, Maison d'hôtes au Sénégal
             </p>
 
             <h1 className="mb-6 text-4xl font-semibold leading-tight text-[#2F6036] md:text-5xl">
-              Une parenthèse de calme au Sénégal
+              Votre pied à terre avec piscine à Saly
             </h1>
 
             <p className="max-w-full text-lg leading-8 text-[#222222]">
-              Casa Noppalu vous accueille dans un cadre simple et naturel, avec trois bungalows indépendants pour profiter de la douceur du Sénégal, se détendre au bord de la piscine et savourer les plaisirs simples des vacances.
+              À Saly, dans le quartier résidentiel de Niakhnakhal, Casa Noppalu vous accueille dans un cadre simple et confortable, loin des grands complexes hôteliers. Nos trois bungalows indépendants et climatisés, équipés d'une kitchenette et du wifi, vous offrent la liberté d'organiser vos journées à votre rythme, tout en profitant de la piscine, du jardin et de la plage, accessible en dix minutes à pied.
+
             </p>
 
             {/* <Link
@@ -134,7 +135,7 @@ export default function Home() {
             </h2>
 
          <p className="mt-4 w-full leading-7 text-[#222222]">
-              Nos trois bungalows indépendants vous offrent chacun un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d’un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d’une télévision connectée. Vous profitez ainsi de votre propre espace, avec la liberté d’organiser vos journées à votre rythme.
+              Nos bungalows vous offrent un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d’un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d’une télévision connectée. 
             </p>
           </div>
 
@@ -167,7 +168,7 @@ export default function Home() {
                     href="/contact"
                     className="font-medium text-[#2F6036] underline underline-offset-4 hover:text-[#8B3017]"
                   >
-                    En savoir plus
+                    Nous contacter
                   </Link>
                 </div>
               </article>

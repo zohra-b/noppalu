@@ -34,7 +34,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="flex-1 bg-linen px-6 py-12 text-[#222222]">
+    <main className="flex-1 bg-linen px-6 py-2 text-[#222222]">
       <div className="mx-auto max-w-6xl">
         <header className="mb-10 text-center">
           <h1 className="mb-4 font-serif text-3xl font-semibold text-green md:text-4xl">
@@ -167,7 +167,7 @@ export default function ContactPage() {
                     href="mailto:casanoppalu@proton.me"
                     className="break-all text-green underline underline-offset-4"
                   >
-                    casanoppalu@proton.me
+                    contact@casanoppalu.com
                   </a>
                 </div>
 
