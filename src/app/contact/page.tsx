@@ -46,7 +46,7 @@ export default function ContactPage() {
           <h1 className="mb-4 font-serif text-3xl font-semibold text-green md:text-4xl">
             Contact
           </h1>
-          <p className="mx-auto max-w-2xl">
+          <p className="mx-auto max-w-1xl">
             Une question sur Casa Noppalu ou sur nos bungalows ?
             Écrivez-nous, nous vous répondrons avec plaisir.
           </p>
