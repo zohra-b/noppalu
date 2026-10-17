@@ -1,9 +1,10 @@
 
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Gallery from "@/components/Gallery";
+import { bungalows } from "@/lib/bungalows";
 
 const photosAccueil = [
   { src: "/images/jardin1.png", alt: "Le jardin de Casa Noppalu" },
@@ -14,37 +15,7 @@ const photosAccueil = [
   { src: "/images/plage.jpg", alt: "La plage à proximité" },
 ];
 
-const bungalows = [
-  {
-    nom: "Manguier",
-    photo: "/images/bungalow1.jpg",
-    description: "Un espace indépendant pour profiter d'un séjour au calme.",
-  },
-  {
-    nom: "Cocotier",
-    photo: "/images/bungalow2.jpg",
-    description: "Un cadre agréable pour se reposer et profiter du jardin.",
-  },
-  {
-    nom: "Bananier",
-    photo: "/images/bungalow3.jpg",
-    description: "Un hébergement indépendant dans un environnement naturel.",
-  },
-];
-
 export default function Home() {
-  const [photoActuelle, setPhotoActuelle] = useState(0);
-
-  function photoPrecedente() {
-    setPhotoActuelle(
-      (photoActuelle - 1 + photosAccueil.length) % photosAccueil.length
-    );
-  }
-
-  function photoSuivante() {
-    setPhotoActuelle((photoActuelle + 1) % photosAccueil.length);
-  }
-
   return (
     <main className="flex-1">
       {/* Section 1 : accueil et carrousel */}
@@ -61,64 +32,10 @@ export default function Home() {
 
             <p className="max-w-full text-lg leading-8 text-[#222222]">
               À Saly, dans le quartier résidentiel de Niakhnakhal, Casa Noppalu vous accueille dans un cadre simple et confortable, loin des grands complexes hôteliers. Nos trois bungalows indépendants et climatisés, équipés d'une kitchenette et du wifi, vous offrent la liberté d'organiser vos journées à votre rythme, tout en profitant de la piscine, du jardin et de la plage, accessible en dix minutes à pied.
-
-            </p>
-
-            {/* <Link
-              href="#bungalows"
-              className="mt-8 inline-block rounded-md bg-[#2F6036] px-6 py-3 text-[#FFFEF6] transition hover:opacity-80"
-            >
-              Découvrir nos bungalows
-            </Link> */}
+            </p> 
           </div>
 
-          <div className="relative">
-            <div className="relative aspect-video overflow-hidden rounded-lg">
-              <Image
-                src={photosAccueil[photoActuelle].src}
-                alt={photosAccueil[photoActuelle].alt}
-                fill
-                priority
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-
-            <button
-              type="button"
-              onClick={photoPrecedente}
-              aria-label="Photo précédente"
-              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-4 py-2 text-xl text-[#2F6036] shadow"
-            >
-              ‹
-            </button>
-
-            <button
-              type="button"
-              onClick={photoSuivante}
-              aria-label="Photo suivante"
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-4 py-2 text-xl text-[#2F6036] shadow"
-            >
-              ›
-            </button>
-
-            <div className="mt-4 flex justify-center gap-2">
-              {photosAccueil.map((photo, index) => (
-                <button
-                  key={photo.src}
-                  type="button"
-                  onClick={() => setPhotoActuelle(index)}
-                  aria-label={`Afficher la photo ${index + 1}`}
-                  aria-current={photoActuelle === index}
-                  className={`h-2.5 w-2.5 rounded-full ${
-                    photoActuelle === index
-                      ? "bg-[#2F6036]"
-                      : "bg-[#C6B06B]"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
+          <Gallery photos = {photosAccueil}/>
         </div>
       </section>
 
@@ -141,38 +58,38 @@ export default function Home() {
 
           <div className="mb-22 grid gap-8 md:grid-cols-3">
             {bungalows.map((bungalow) => (
-              <article
-                key={bungalow.nom}
-                className="overflow-hidden rounded-lg bg-white shadow-sm"
-              >
-                <div className="relative aspect-4/3">
-                  <Image
-                    src={bungalow.photo}
-                    alt={bungalow.nom}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
+  <article
+    key={bungalow.slug}
+    className="overflow-hidden rounded-lg bg-white shadow-sm"
+  >
+    <div className="relative aspect-4/3">
+      <Image
+        src={bungalow.photos[0].src}
+        alt={bungalow.nom}
+        fill
+        className="object-cover"
+        sizes="(max-width: 768px) 100vw, 33vw"
+      />
+    </div>
 
-                <div className="p-6">
-                  <h3 className="mb-3 text-xl font-semibold text-[#2F6036]">
-                    {bungalow.nom}
-                  </h3>
+    <div className="p-6">
+      <h3 className="mb-3 text-xl font-semibold text-[#2F6036]">
+        {bungalow.nom}
+      </h3>
 
-                  <p className="mb-5 leading-7 text-[#222222]">
-                    {bungalow.description}
-                  </p>
+      <p className="mb-5 leading-7 text-[#222222]">
+        {bungalow.resume}
+      </p>
 
-                  <Link
-                    href="/contact"
-                    className="font-medium text-[#2F6036] underline underline-offset-4 hover:text-[#8B3017]"
-                  >
-                    Nous contacter
-                  </Link>
-                </div>
-              </article>
-            ))}
+      <Link
+        href={bungalow.publie ? `/bungalows/${bungalow.slug}` : "/bungalows"}
+        className="font-medium text-[#2F6036] underline underline-offset-4 hover:text-[#8B3017]"
+      >
+        {bungalow.publie ? "Découvrir ce bungalow" : "Voir les bungalows"}
+      </Link>
+    </div>
+  </article>
+))}
           </div>
         </div>
       </section>
