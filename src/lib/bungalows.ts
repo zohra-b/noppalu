@@ -46,7 +46,7 @@ export const bungalows: Bungalow[] = [
     slug: "manguier",
     nom: "Manguier",
     resume: "",
-    publie: true,
+    publie: false,
     lit: "160 cm",
     photos: [{ src: "/images/bungalow1.jpg", alt: "Bungalow Manguier" }, { src: "/images/bungalow2.jpg", alt: "Bungalow Bananier" }, ],
   },

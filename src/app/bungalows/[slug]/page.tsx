@@ -66,16 +66,12 @@ export default async function BungalowPage({ params }: Props) {
                 { icone: "lit", libelle: `Lit en ${bungalow.lit}` },
                 ...infosCommunes.equipements,
             ]}
+            tarifs={infosCommunes.tarifs}
+            tarifsNote={infosCommunes.tarifsNote}
             conditions={infosCommunes.conditions}
             />
 
-        {/* <section className="mt-10 rounded-lg bg-[#FFFEF6] p-6 shadow-sm">
-          <h2 className="mb-3 font-serif text-2xl text-[#2F6036]">
-            Disponibilités
-          </h2>
-          
-          <p>Le calendrier de disponibilité sera bientôt affiché ici.</p>
-        </section> */}
+        
       </div>
     </main>
   );
