@@ -25,9 +25,17 @@ export const infosCommunes = {
       libelle: "Kitchenette (petit réfrigérateur, plaques de cuisson, micro-ondes, machine à café, bouilloire)",
     },
   ] as Equipement[],
+  tarifs: [
+    { libelle: "Basse saison (mai à octobre) :", prix: "35.000 FCFA/nuit" },
+    { libelle: "Haute saison (novembre à juin)", prix: "40.000 FCFA/nuit" },
+    { libelle: "Fêtes de fin d'année (15 déc au 5 janv.)", prix: "50.000 FCFA/nuit" },
+  ] as LigneTarif[],
+  tarifsNote: 
+    "Transfert de / vers l'aéroport sur demande (20.000 CFCA)",
   conditions: [
-    "Accès au logement : à partir de 14h. Sortie du logement : 11h. (service de bagagerie offert)",
+    "Capacité : 2 personnes par bungalow",
     "Séjour minimum : 2 nuits. Réservation : minimum 24h avant.",
+    "Accès au logement : à partir de 14h. Sortie du logement : avant 11h. (service de bagagerie offert)",
     "Paiement : virement, Wave, Paypal",
     
   ],
