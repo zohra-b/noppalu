@@ -32,7 +32,7 @@ export default function Gallery({
 
   return (
     <div className="relative">
-      <div className="relative aspect-video overflow-hidden rounded-lg">
+      <div className="relative mx-auto aspect-video w-full max-w-[calc(60vh*16/9)] overflow-hidden rounded-lg">
         <Image
           src={photos[actuelle].src}
           alt={photos[actuelle].alt}

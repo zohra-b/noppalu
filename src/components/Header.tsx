@@ -60,7 +60,10 @@ export default function Header () {
                             onMouseEnter={() => setMenuBungalowsOuvert(true)}
                             onMouseLeave={() => setMenuBungalowsOuvert(false)}
                         >
-                    
+                        
+                        <Link href="/bungalows" className="text-green hover:text-sand">
+                        Bungalows
+                        </Link>
 
                         {menuBungalowsOuvert && (
                             <div className="absolute left-0 top-full z-50 min-w-44 rounded-md bg-white py-2 shadow-lg">

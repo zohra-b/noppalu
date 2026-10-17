@@ -19,18 +19,18 @@ export default function Home() {
   return (
     <main className="flex-1">
       {/* Section 1 : accueil et carrousel */}
-      <section className="px-6 py-12 md:px-12 md:py-10">
+      <section className="px-6 py-6 md:px-12 md:py-6">
         <div className="mx-auto grid max-w-6xl items-center gap-6 md:grid-cols-1">
           <div>
-            <p className="mb-4 text-sm uppercase tracking-[0.2em] text-[#8B3017]">
+            <p className="mb-2 text-sm uppercase tracking-[0.2em] text-[#8B3017]">
               Casa Noppalu, Maison d'hôtes au Sénégal
             </p>
 
-            <h1 className="mb-6 text-4xl font-semibold leading-tight text-[#2F6036] md:text-5xl">
+            <h1 className="mb-4 text-3xl font-semibold leading-tight text-[#2F6036] md:text-4xl">
               Votre pied à terre avec piscine à Saly
             </h1>
 
-            <p className="max-w-full text-lg leading-8 text-[#222222]">
+            <p className="max-w-full text-base leading-7 text-[#222222]">
               À Saly, dans le quartier résidentiel de Niakhnakhal, Casa Noppalu vous accueille dans un cadre simple et confortable, loin des grands complexes hôteliers. Nos trois bungalows indépendants et climatisés, équipés d'une kitchenette et du wifi, vous offrent la liberté d'organiser vos journées à votre rythme, tout en profitant de la piscine, du jardin et de la plage, accessible en dix minutes à pied.
             </p> 
           </div>

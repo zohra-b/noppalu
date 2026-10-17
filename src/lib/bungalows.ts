@@ -27,6 +27,7 @@ export const infosCommunes = {
   ] as Equipement[],
   conditions: [
     "Accès au logement : à partir de 14h. Sortie du logement : 11h. (service de bagagerie offert)",
+    "Séjour minimum : 2 nuits. Réservation : minimum 24h avant.",
     "Paiement : virement, Wave, Paypal",
     
   ],
@@ -37,7 +38,7 @@ export const bungalows: Bungalow[] = [
     slug: "manguier",
     nom: "Manguier",
     resume: "",
-    publie: false,
+    publie: true,
     lit: "160 cm",
     photos: [{ src: "/images/bungalow1.jpg", alt: "Bungalow Manguier" }, { src: "/images/bungalow2.jpg", alt: "Bungalow Bananier" }, ],
   },
