@@ -4,6 +4,8 @@ export type IconeNom = "lit" | "clim" | "cuisine" | "wifi" | "tv" | "piscine";
 
 export type Equipement = { icone: IconeNom; libelle: string };
 
+export type LigneTarif = { libelle: string; prix: string };
+
 export type Bungalow = {
   slug: string;
   nom: string;
