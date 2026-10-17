@@ -45,77 +45,49 @@ export default function Header () {
 
             {/* Partie droite : nav et langues*/}
             <nav className="flex items-center gap-6">
-                {/* <Link 
-                    href="/bungalows"
-                    className="text-green hover:text-sand">Réserver
-                </Link> */}
+                <Link 
+                    href="/"
+                    className="text-green hover:text-sand">Accueil 
+                </Link>
 
-{bungalowsPublies.length === 0 ? (
-  <Link href="/bungalows" className="text-green hover:text-sand">
-    Nos bungalows
-  </Link>
-) : (
-  <div
-    className="relative"
-    onMouseEnter={() => setMenuBungalowsOuvert(true)}
-    onMouseLeave={() => setMenuBungalowsOuvert(false)}
-  >
-    <Link href="/bungalows" className="text-green hover:text-sand">
-      Nos bungalows
-    </Link>
+                {bungalowsPublies.length === 0 ? (
+                    <Link href="/bungalows" className="text-green hover:text-sand">
+                        Bungalows
+                    </Link>
+                    ) : (
+                        <div
+                            className="relative"
+                            onMouseEnter={() => setMenuBungalowsOuvert(true)}
+                            onMouseLeave={() => setMenuBungalowsOuvert(false)}
+                        >
+                    {/* <Link href="/bungalows" className="text-green hover:text-sand">
+                        Nos bungalows
+                    </Link> */}
 
-    {menuBungalowsOuvert && (
-      <div className="absolute left-0 top-full z-50 min-w-44 rounded-md bg-white py-2 shadow-lg">
-        <Link
-          href="/bungalows"
-          onClick={() => setMenuBungalowsOuvert(false)}
-          className="block px-4 py-2 text-green hover:bg-linen"
-        >
-          Présentation générale
-        </Link>
-        {bungalowsPublies.map((b) => (
-          <Link
-            key={b.slug}
-            href={`/bungalows/${b.slug}`}
-            onClick={() => setMenuBungalowsOuvert(false)}
-            className="block px-4 py-2 text-green hover:bg-linen"
-          >
-            {b.nom}
-          </Link>
-        ))}
-      </div>
-    )}
-  </div>
+                        {menuBungalowsOuvert && (
+                            <div className="absolute left-0 top-full z-50 min-w-44 rounded-md bg-white py-2 shadow-lg">
+                                <Link
+                                href="/bungalows"
+                                onClick={() => setMenuBungalowsOuvert(false)}
+                                className="block px-4 py-2 text-green hover:bg-linen"
+                                >
+                                Présentation
+                                </Link>
+                                {bungalowsPublies.map((b) => (
+                                <Link
+                                    key={b.slug}
+                                    href={`/bungalows/${b.slug}`}
+                                    onClick={() => setMenuBungalowsOuvert(false)}
+                                    className="block px-4 py-2 text-green hover:bg-linen"
+                                >
+                                    {b.nom}
+                                </Link>
+                                ))}
+                            </div>
+                        )}
+                        </div>
 )}
-                {/* <div 
-                className="relative"
-                onMouseEnter={() => setMenuBungalowsOuvert(true)}
-                onMouseLeave={() => setMenuBungalowsOuvert(false)}
-                > 
-                    <button 
-                        type="button" 
-                        aria-expanded={menuBungalowsOuvert} 
-                        className="text-green hover:text-sand" 
-                        > Nos bungalows </button> 
-                        
-                    {menuBungalowsOuvert && ( 
-                        <div 
-                        className="absolute left-0 top-full z-50 min-w-44 rounded-md bg-white py-2 shadow-lg"> 
-                        <Link 
-                        href="/#bungalows" 
-                        onClick={() => setMenuBungalowsOuvert(false)} className="block px-4 py-2 text-green hover:bg-linen" > Manguier </Link> 
-                        <Link 
-                        href="/#bungalows" 
-                        onClick={() => setMenuBungalowsOuvert(false)} className="block px-4 py-2 text-green hover:bg-linen" > 
-                        Cocotier </Link> 
-                        <Link 
-                        href="/#bungalows" 
-                        onClick={() => setMenuBungalowsOuvert(false)} 
-                        className="block px-4 py-2 text-green hover:bg-linen" > 
-                        Bananier </Link> 
-                        </div>)
-                    } 
-                </div> */}
+                
 
                 <Link 
                     href="/contact"

@@ -33,7 +33,7 @@ export default async function BungalowPage({ params }: Props) {
           href="/bungalows"
           className="text-sm text-[#2F6036] underline underline-offset-4"
         >
-          ← Présentation générale
+          ← Présentation
         </Link>
 
         <header className="mb-8 mt-4">

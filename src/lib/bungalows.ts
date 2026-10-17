@@ -36,15 +36,15 @@ export const bungalows: Bungalow[] = [
   {
     slug: "manguier",
     nom: "Manguier",
-    resume: "Un espace indépendant pour profiter d'un séjour au calme.",
-    publie: true,
+    resume: "",
+    publie: false,
     lit: "160 cm",
     photos: [{ src: "/images/bungalow1.jpg", alt: "Bungalow Manguier" }, { src: "/images/bungalow2.jpg", alt: "Bungalow Bananier" }, ],
   },
   {
     slug: "cocotier",
     nom: "Cocotier",
-    resume: "Un cadre agréable pour se reposer et profiter du jardin.",
+    resume: "",
     publie: false,
     lit: "160 cm",
     photos: [{ src: "/images/bungalow2.jpg", alt: "Bungalow Cocotier" }],
@@ -52,7 +52,7 @@ export const bungalows: Bungalow[] = [
   {
     slug: "bananier",
     nom: "Bananier",
-    resume: "Un hébergement indépendant dans un environnement naturel.",
+    resume: "",
     publie: false,
     lit: "140 cm",
     photos: [{ src: "/images/bungalow3.jpg", alt: "Bungalow Bananier" }],

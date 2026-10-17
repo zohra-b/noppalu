@@ -36,6 +36,7 @@ export default function Home() {
           </div>
 
           <Gallery photos = {photosAccueil}/>
+        
         </div>
       </section>
 
