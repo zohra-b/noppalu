@@ -20,7 +20,7 @@ export default function Header () {
                 (langue) => langue.code === langueActuelle )!;
 
     return (
-       <header className="w-full bg-linen px-4 py-4 sm:px-6">
+       <header className="w-full bg-linen px-4 py-2 sm:px-6">
             {/* Partie gauche : logo et identité */}
             <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <Link href="/">
@@ -30,13 +30,13 @@ export default function Header () {
                         alt = "Logo Casa Noppalu"
                         width={128}
                         height={128}
-                        className="h-20 w-20 shrink-0 object-contain sm:h-24 sm:w-24 lg:h-32 lg:w-32 "
+                        className="h-14 w-14 shrink-0 object-contain sm:h-16 sm:w-16 lg:h-20 lg:w-20 "
                     />
                     <div>
-                    <p className="text-2xl sm:text-3xl font-serif font-semibold text-green">
+                    <p className="text-xl sm:text-2xl font-serif font-semibold text-green">
                         Casa Noppalu
                         </p>
-                    <p className="font-serif text-lg italic text-sand">
+                    <p className="font-serif text-base italic text-sand">
                         Calme & Sérénité
                         </p>
                         </div>
@@ -60,9 +60,7 @@ export default function Header () {
                             onMouseEnter={() => setMenuBungalowsOuvert(true)}
                             onMouseLeave={() => setMenuBungalowsOuvert(false)}
                         >
-                    {/* <Link href="/bungalows" className="text-green hover:text-sand">
-                        Nos bungalows
-                    </Link> */}
+                    
 
                         {menuBungalowsOuvert && (
                             <div className="absolute left-0 top-full z-50 min-w-44 rounded-md bg-white py-2 shadow-lg">
@@ -139,7 +137,7 @@ export default function Header () {
 
 
             </div>
-            <div className="mx-auto mt-4 h-px w-[98%] bg-sand shadow-[0_2px_3px_rgba(34,34,34,0.18)]" />
+            <div className="mx-auto mt-2 h-px w-[98%] bg-sand shadow-[0_2px_3px_rgba(34,34,34,0.18)]" />
         </header>
     )
     
