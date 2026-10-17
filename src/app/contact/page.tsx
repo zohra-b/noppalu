@@ -184,7 +184,7 @@ export default function ContactPage() {
 
                 <div>
                   <h3 className="font-semibold">WhatsApp</h3>
-                  <p className="mb-3">+221 76 86 63 367</p>
+                  <p className="mb-3">+221 76 866 33 67</p>
                  <Button
                     href="https://wa.me/221768663367"
                     target="_blank"
