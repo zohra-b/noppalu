@@ -15,14 +15,14 @@ const FAUTES_COURANTES: Record<string, string> = {
   "outlook.con": "outlook.com",
 };
 
-// Renvoie un message d'erreur, ou null si l'adresse est valide.
-export function validerEmail(brut: string): string | null {
+export type CodeErreurEmail = "email_vide" | "email_trop_long" | "email_invalide";
+
+// Renvoie un code d'erreur, ou null si l'adresse est valide.
+export function validerEmail(brut: string): CodeErreurEmail | null {
   const email = brut.trim();
-  if (!email) return "Indiquez votre adresse e-mail.";
-  if (email.length > 200) return "Cette adresse e-mail est trop longue.";
-  if (!EMAIL_RE.test(email) || email.includes("..")) {
-    return "Cette adresse e-mail n’est pas valide. Exemple : nom@exemple.com";
-  }
+  if (!email) return "email_vide";
+  if (email.length > 200) return "email_trop_long";
+  if (!EMAIL_RE.test(email) || email.includes("..")) return "email_invalide";
   return null;
 }
 

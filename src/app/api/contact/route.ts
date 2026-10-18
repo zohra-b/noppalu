@@ -2,16 +2,20 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { validerEmail } from "@/lib/validation";
 
-const OBJETS = [
-  "Disponibilités",
-  "Question sur un bungalow",
-  "Informations pratiques",
-  "Autre demande",
-];
+// Codes envoyés par le formulaire -> libellés français pour ton e-mail
+const OBJETS: Record<string, string> = {
+  disponibilites: "Disponibilités",
+  bungalow: "Question sur un bungalow",
+  infos: "Informations pratiques",
+  autre: "Autre demande",
+};
 
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+function erreur(code: string, status: number) {
+  return NextResponse.json({ error: code }, { status });
+}
 
 export async function POST(req: Request) {
   const apiKey = process.env.RESEND_API_KEY;
@@ -20,18 +24,16 @@ export async function POST(req: Request) {
 
   if (!apiKey || !from || !to) {
     console.error("Contact : variable d'environnement manquante");
-    return NextResponse.json(
-      { error: "L'envoi a échoué. Contactez-nous directement à contact@casanoppalu.com ou par WhatsApp." },
-      { status: 500 }
-    );
+    return erreur("envoi_echoue", 500);
   }
 
   const resend = new Resend(apiKey);
+
   let body: Record<string, unknown>;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
+    return erreur("requete_invalide", 400);
   }
 
   // Honeypot
@@ -44,24 +46,19 @@ export async function POST(req: Request) {
   const telephone = String(body.telephone ?? "").trim();
   const objetBrut = String(body.objet ?? "").trim();
   const message = String(body.message ?? "").trim();
-  const objet = OBJETS.includes(objetBrut) ? objetBrut : "Demande de contact";
+  const objet = Object.hasOwn(OBJETS, objetBrut)
+    ? OBJETS[objetBrut]
+    : "Demande de contact";
 
-  if (nom.length < 2 || nom.length > 100) {
-    return NextResponse.json({ error: "Nom invalide." }, { status: 400 });
-  }
-    const problemeEmail = validerEmail(email);
-  if (problemeEmail) {
-    return NextResponse.json({ error: problemeEmail }, { status: 400 });
-  }
-  
-  if (telephone.length > 30) {
-    return NextResponse.json({ error: "Numéro de téléphone invalide." }, { status: 400 });
-  }
+  if (nom.length < 2 || nom.length > 100) return erreur("nom_invalide", 400);
+
+  const problemeEmail = validerEmail(email);
+  if (problemeEmail) return erreur(problemeEmail, 400);
+
+  if (telephone.length > 30) return erreur("telephone_invalide", 400);
+
   if (message.length < 10 || message.length > 5000) {
-    return NextResponse.json(
-      { error: "Le message doit contenir entre 10 et 5000 caractères." },
-      { status: 400 }
-    );
+    return erreur("message_invalide", 400);
   }
 
   try {
@@ -77,16 +74,13 @@ export async function POST(req: Request) {
         <p><strong>Téléphone / WhatsApp :</strong> ${escapeHtml(telephone || "Non renseigné")}</p>
         <p><strong>Objet :</strong> ${escapeHtml(objet)}</p>
         <p style="white-space:pre-wrap">${escapeHtml(message)}</p>
-    `,
-  });
+      `,
+    });
 
-  if (error) throw error;
-  } catch (err)  {
+    if (error) throw error;
+  } catch (err) {
     console.error("Contact : échec d'envoi", err);
-    return NextResponse.json(
-      { error: "L'envoi a échoué. Réessayez ou contactez-nous par WhatsApp." },
-      { status: 500 }
-    );
+    return erreur("envoi_echoue", 500);
   }
 
   return NextResponse.json({ ok: true });

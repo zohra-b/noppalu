@@ -29,8 +29,62 @@
     },
     "bungalowsSurtitre": "Votre séjour",
     "bungalowsTitre": "Nos bungalows",
-    "bungalowsIntro": "Nos bungalows vous offrent un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d’un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d’une télévision connectée.",
+    "bungalowsIntro": "Nos bungalows vous offrent un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d'un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d'une télévision connectée.",
     "decouvrir": "Découvrir ce bungalow",
     "voirBungalows": "Voir les bungalows"
+  },
+
+  "Contact": {
+    "titre": "Contact",
+    "intro": "Une question sur Casa Noppalu ou sur nos bungalows ? Écrivez-nous, nous vous répondrons avec plaisir.",
+    "formulaire": {
+      "titre": "Envoyez-nous un message",
+      "nom": "Nom *",
+      "email": "Adresse e-mail *",
+      "corriger": "Oui, corriger",
+      "telephone": "Téléphone / WhatsApp (facultatif)",
+      "telephonePlaceholder": "+33, +221, etc.",
+      "objet": "Objet de votre demande",
+      "message": "Votre message *",
+      "messagePlaceholder": "Comment pouvons-nous vous aider ?",
+      "antispam": "Ne pas remplir",
+      "mention": "Les informations saisies servent à répondre à votre demande.",
+      "envoyer": "Envoyer mon message",
+      "envoiEnCours": "Envoi en cours…",
+      "succes": "Merci, votre message a bien été envoyé. Nous vous répondrons rapidement.",
+      "whatsappErreur": "Nous écrire sur WhatsApp"
+    },
+    "objets": {
+      "disponibilites": "Disponibilités",
+      "bungalow": "Question sur un bungalow",
+      "infos": "Informations pratiques",
+      "autre": "Autre demande"
+    },
+    "erreurs": {
+      "email_vide": "Indiquez votre adresse e-mail.",
+      "email_trop_long": "Cette adresse e-mail est trop longue.",
+      "email_invalide": "Cette adresse e-mail n'est pas valide. Exemple : nom@exemple.com",
+      "email_suggestion": "Vouliez-vous écrire {adresse} ?",
+      "nom_invalide": "Nom invalide.",
+      "telephone_invalide": "Numéro de téléphone invalide.",
+      "message_invalide": "Le message doit contenir entre 10 et 5000 caractères.",
+      "requete_invalide": "Requête invalide.",
+      "envoi_echoue": "L'envoi a échoué. Réessayez ou contactez-nous par WhatsApp.",
+      "timeout": "Le serveur met trop de temps à répondre. Vos informations sont conservées : réessayez.",
+      "reseau": "Connexion impossible. Vérifiez votre connexion internet puis réessayez."
+    },
+    "coordonnees": {
+      "titre": "Nos coordonnées",
+      "email": "E-mail",
+      "whatsapp": "WhatsApp",
+      "boutonWhatsapp": "Nous contacter sur WhatsApp",
+      "adresse": "Adresse"
+    },
+    "itineraire": {
+      "titre": "Itinéraire",
+      "ouvrir": "Ouvrir l'itinéraire dans Google Maps",
+      "carteTitre": "Localisation de Casa Noppalu à Saly, Sénégal"
+    }
   }
+
 }

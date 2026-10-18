@@ -1,29 +1,53 @@
-
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import Button from "@/components/Button";
 import { suggererEmail, validerEmail } from "@/lib/validation";
 
 type Statut = "repos" | "envoi" | "succes" | "erreur";
 
 export default function ContactPage() {
+  const t = useTranslations("Contact");
+
   const [statut, setStatut] = useState<Statut>("repos");
-  const [erreur, setErreur] = useState("");
+  const [codeErreur, setCodeErreur] = useState("");
 
   const emailRef = useRef<HTMLInputElement>(null);
-  const [erreurEmail, setErreurEmail] = useState("");
+  const [codeErreurEmail, setCodeErreurEmail] = useState("");
   const [suggestion, setSuggestion] = useState<string | null>(null);
+
+  const messageErreurEmail = !codeErreurEmail
+    ? ""
+    : codeErreurEmail === "suggestion"
+      ? t("erreurs.email_suggestion", { adresse: suggestion ?? "" })
+      : t(`erreurs.${codeErreurEmail}`);
+
+  const CODES_CONNUS = [
+    "nom_invalide",
+    "telephone_invalide",
+    "message_invalide",
+    "requete_invalide",
+    "email_vide",
+    "email_trop_long",
+    "email_invalide",
+    "envoi_echoue",
+    "timeout",
+    "reseau",
+  ];
+  const messageErreur = t(
+    `erreurs.${CODES_CONNUS.includes(codeErreur) ? codeErreur : "envoi_echoue"}`,
+  );
 
   function corrigerEmail() {
     if (emailRef.current && suggestion) emailRef.current.value = suggestion;
-    setErreurEmail("");
+    setCodeErreurEmail("");
     setSuggestion(null);
   }
 
   async function envoyerMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    
+
     const formulaire = event.currentTarget;
     const donnees = Object.fromEntries(new FormData(formulaire));
 
@@ -33,16 +57,16 @@ export default function ContactPage() {
     const probleme = validerEmail(email);
     const corrige = probleme ? null : suggererEmail(email);
     if (probleme || corrige) {
-      setErreurEmail(probleme ?? `Vouliez-vous écrire ${corrige} ?`);
+      setCodeErreurEmail(probleme ?? "suggestion");
       setSuggestion(corrige);
       emailRef.current?.focus();
       return;
     }
 
-    setErreurEmail("");
+    setCodeErreurEmail("");
     setSuggestion(null);
     setStatut("envoi");
-    setErreur("");
+    setCodeErreur("");
 
     try {
       const controleur = new AbortController();
@@ -58,48 +82,43 @@ export default function ContactPage() {
       const json = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setErreur(
-          json.error ?? "L’envoi a échoué. Réessayez ou contactez-nous par WhatsApp."
-        );
+        setCodeErreur(typeof json.error === "string" ? json.error : "envoi_echoue");
         setStatut("erreur");
         return;
       }
       formulaire.reset();
       setStatut("succes");
     } catch (err) {
-      setErreur(
+      setCodeErreur(
         err instanceof DOMException && err.name === "AbortError"
-          ? "Le serveur met trop de temps à répondre. Vos informations sont conservées : réessayez."
-          : "Connexion impossible. Vérifiez votre connexion internet puis réessayez."
+          ? "timeout"
+          : "reseau",
       );
       setStatut("erreur");
     }
   }
-  
+
   return (
     <main className="flex-1 bg-linen px-6 py-2 text-[#222222]">
       <div className="mx-auto max-w-6xl">
         <header className="mb-10 text-center">
           <h1 className="mb-4 font-serif text-3xl font-semibold text-green md:text-4xl">
-            Contact
+            {t("titre")}
           </h1>
-          <p className="mx-auto max-w-1xl">
-            Une question sur Casa Noppalu ou sur nos bungalows ?
-            Écrivez-nous, nous vous répondrons avec plaisir.
-          </p>
+          <p className="mx-auto max-w-1xl">{t("intro")}</p>
         </header>
 
         <div className="grid gap-8 md:grid-cols-2">
           {/* Formulaire */}
           <section className="rounded-lg bg-[#FFFEF6] p-6 shadow-sm md:p-8">
             <h2 className="mb-6 font-serif text-2xl text-green">
-              Envoyez-nous un message
+              {t("formulaire.titre")}
             </h2>
 
             <form onSubmit={envoyerMessage} className="space-y-5">
               <div>
                 <label htmlFor="nom" className="mb-1 block text-sm font-medium">
-                  Nom *
+                  {t("formulaire.nom")}
                 </label>
                 <input
                   id="nom"
@@ -113,35 +132,35 @@ export default function ContactPage() {
 
               <div>
                 <label htmlFor="email" className="mb-1 block text-sm font-medium">
-                  Adresse e-mail *
+                  {t("formulaire.email")}
                 </label>
-                                <input
+                <input
                   ref={emailRef}
                   id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
-                  aria-invalid={!!erreurEmail}
-                  aria-describedby={erreurEmail ? "email-erreur" : undefined}
+                  aria-invalid={!!codeErreurEmail}
+                  aria-describedby={codeErreurEmail ? "email-erreur" : undefined}
                   onChange={() => {
-                    if (erreurEmail) {
-                      setErreurEmail("");
+                    if (codeErreurEmail) {
+                      setCodeErreurEmail("");
                       setSuggestion(null);
                     }
                   }}
                   className="w-full rounded-md border border-[#C6B06B] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-green aria-[invalid=true]:border-red-700"
                 />
-                {erreurEmail && (
+                {codeErreurEmail && (
                   <p id="email-erreur" role="alert" className="mt-1 text-sm text-red-700">
-                    {erreurEmail}{" "}
+                    {messageErreurEmail}{" "}
                     {suggestion && (
                       <button
                         type="button"
                         onClick={corrigerEmail}
                         className="font-medium underline underline-offset-2"
                       >
-                        Oui, corriger
+                        {t("formulaire.corriger")}
                       </button>
                     )}
                   </p>
@@ -149,88 +168,81 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label
-                  htmlFor="telephone"
-                  className="mb-1 block text-sm font-medium"
-                >
-                  Téléphone / WhatsApp (facultatif)
+                <label htmlFor="telephone" className="mb-1 block text-sm font-medium">
+                  {t("formulaire.telephone")}
                 </label>
                 <input
                   id="telephone"
                   name="telephone"
                   type="tel"
                   autoComplete="tel"
-                  placeholder="+33, +221, etc."
+                  placeholder={t("formulaire.telephonePlaceholder")}
                   className="w-full rounded-md border border-[#C6B06B] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-green"
                 />
               </div>
 
               <div>
                 <label htmlFor="objet" className="mb-1 block text-sm font-medium">
-                  Objet de votre demande
+                  {t("formulaire.objet")}
                 </label>
                 <select
                   id="objet"
                   name="objet"
-                  defaultValue="Disponibilités"
+                  defaultValue="disponibilites"
                   className="w-full rounded-md border border-[#C6B06B] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-green"
                 >
-                  <option>Disponibilités</option>
-                  <option>Question sur un bungalow</option>
-                  <option>Informations pratiques</option>
-                  <option>Autre demande</option>
+                  <option value="disponibilites">{t("objets.disponibilites")}</option>
+                  <option value="bungalow">{t("objets.bungalow")}</option>
+                  <option value="infos">{t("objets.infos")}</option>
+                  <option value="autre">{t("objets.autre")}</option>
                 </select>
               </div>
 
               <div>
-                <label
-                  htmlFor="message"
-                  className="mb-1 block text-sm font-medium"
-                >
-                  Votre message *
+                <label htmlFor="message" className="mb-1 block text-sm font-medium">
+                  {t("formulaire.message")}
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   required
                   rows={5}
-                  placeholder="Comment pouvons-nous vous aider ?"
+                  placeholder={t("formulaire.messagePlaceholder")}
                   className="w-full resize-y rounded-md border border-[#C6B06B] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-green"
                 />
               </div>
-              <div aria-hidden="true" className="absolute left-[-9999px]">
-                  <label htmlFor="website">Ne pas remplir</label>
-                  <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
-              </div>
-              <p className="text-xs text-gray-600">
-                Les informations saisies servent à répondre à votre demande.
-              </p>
 
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={statut === "envoi"}>
-                      {statut === "envoi" ? "Envoi en cours…" : "Envoyer mon message"}
+              <div aria-hidden="true" className="absolute left-[-9999px]">
+                <label htmlFor="website">{t("formulaire.antispam")}</label>
+                <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </div>
+
+              <p className="text-xs text-gray-600">{t("formulaire.mention")}</p>
+
+              <Button type="submit" className="w-full" disabled={statut === "envoi"}>
+                {statut === "envoi"
+                  ? t("formulaire.envoiEnCours")
+                  : t("formulaire.envoyer")}
               </Button>
 
               {statut === "succes" && (
                 <p role="status" className="text-sm text-green">
-                Merci, votre message a bien été envoyé. Nous vous répondrons rapidement.
+                  {t("formulaire.succes")}
                 </p>
-                  )}
+              )}
               {statut === "erreur" && (
                 <div role="alert" className="space-y-2 text-sm text-red-700">
-                  <p>{erreur}</p>
+                  <p>{messageErreur}</p>
                   <a
                     href="https://wa.me/34637251773"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-medium underline underline-offset-4"
                   >
-                    Nous écrire sur WhatsApp
+                    {t("formulaire.whatsappErreur")}
                   </a>
                 </div>
-                  )}
+              )}
             </form>
           </section>
 
@@ -238,12 +250,12 @@ export default function ContactPage() {
           <div className="space-y-8">
             <section className="rounded-lg bg-[#FFFEF6] p-6 shadow-sm md:p-8">
               <h2 className="mb-5 font-serif text-2xl text-green">
-                Nos coordonnées
+                {t("coordonnees.titre")}
               </h2>
 
               <div className="space-y-5">
                 <div>
-                  <h3 className="font-semibold">E-mail</h3>
+                  <h3 className="font-semibold">{t("coordonnees.email")}</h3>
                   <a
                     href="mailto:contact@casanoppalu.com"
                     className="break-all text-green underline underline-offset-4"
@@ -253,18 +265,15 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold">WhatsApp</h3>
+                  <h3 className="font-semibold">{t("coordonnees.whatsapp")}</h3>
                   <p className="mb-3">+34 637 251 773</p>
-                 <Button
-                    href="https://wa.me/34637251773"
-                    target="_blank"
-                    >
-                    Nous contacter sur WhatsApp
-                </Button>
+                  <Button href="https://wa.me/34637251773" target="_blank">
+                    {t("coordonnees.boutonWhatsapp")}
+                  </Button>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold">Adresse</h3>
+                  <h3 className="font-semibold">{t("coordonnees.adresse")}</h3>
                   <p>Casa Noppalu</p>
                   <p>Piste des Charrettes, Angle Serigne Falou - Saly Niakhnakhal</p>
                 </div>
@@ -275,23 +284,20 @@ export default function ContactPage() {
             <section className="overflow-hidden rounded-lg bg-[#FFFEF6] shadow-sm">
               <div className="p-6">
                 <h2 className="mb-2 font-serif text-2xl text-green">
-                  Itinéraire
+                  {t("itineraire.titre")}
                 </h2>
-                {/* <p className="mb-4 text-sm">
-                  Retrouvez Casa Noppalu à Saly, au Sénégal.
-                </p> */}
                 <a
                   href="https://www.google.com/maps/search/?api=1&query=C2J3%2BF9W%20Mbour%20Senegal"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium text-green underline underline-offset-4"
                 >
-                  Ouvrir l’itinéraire dans Google Maps
+                  {t("itineraire.ouvrir")}
                 </a>
               </div>
 
               <iframe
-                title="Localisation de Casa Noppalu à Saly, Sénégal"
+                title={t("itineraire.carteTitre")}
                 src="https://maps.google.com/maps?q=C2J3%2BF9W%20Mbour%20Senegal&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 className="h-72 w-full border-0"
                 loading="lazy"
