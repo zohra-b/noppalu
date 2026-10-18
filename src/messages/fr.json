@@ -1,5 +1,36 @@
 {
   "Header": {
-    "accueil": "Accueil"
+    "logoAlt": "Logo Casa Noppalu",
+    "slogan": "Calme & Sérénité",
+    "accueil": "Accueil",
+    "bungalows": "Bungalows",
+    "presentation": "Présentation",
+    "contact": "Contact",
+    "langueActuelle": "Langue actuelle : {langue}"
+  },
+
+  "Footer": {
+    "bungalows": "Bungalows",
+    "contact": "Contact",
+    "droits": "© {annee} Casa Noppalu. Tous droits réservés."
+  },
+  
+  "Accueil": {
+    "surtitre": "Casa Noppalu, Maison d'hôtes au Sénégal",
+    "titre": "Votre pied à terre avec piscine à Saly",
+    "intro": "À Saly, dans le quartier résidentiel de Niakhnakhal, Casa Noppalu vous accueille dans un cadre simple et confortable, loin des grands complexes hôteliers. Nos trois bungalows indépendants et climatisés, équipés d'une kitchenette et du wifi, vous offrent la liberté d'organiser vos journées à votre rythme, tout en profitant de la piscine, du jardin et de la plage, accessible en dix minutes à pied.",
+    "photos": {
+      "jardin1": "Le jardin de Casa Noppalu",
+      "jardin2": "Une adorable salamandre",
+      "jardin3": "La terrasse pour l'apéro",
+      "jardin4": "Un escargot nous rend visite",
+      "piscine1": "La piscine de Casa Noppalu",
+      "plage": "La plage à proximité"
+    },
+    "bungalowsSurtitre": "Votre séjour",
+    "bungalowsTitre": "Nos bungalows",
+    "bungalowsIntro": "Nos bungalows vous offrent un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d’un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d’une télévision connectée.",
+    "decouvrir": "Découvrir ce bungalow",
+    "voirBungalows": "Voir les bungalows"
   }
 }

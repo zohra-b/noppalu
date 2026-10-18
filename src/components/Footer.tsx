@@ -1,6 +1,9 @@
-import {Link} from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 export default function Footer() {
+  const t = useTranslations("Footer");
+
   return (
     <footer className="w-full bg-green text-sand">
       {/* Première ligne : trois blocs */}
@@ -62,17 +65,17 @@ export default function Footer() {
         {/* Bloc droit : navigation */}
         <nav className="flex items-center justify-center gap-6 text-sm sm:justify-end">
           <Link href="/#bungalows" className="hover:text-linen">
-            Nos bungalows
+            {t("bungalows")}
           </Link>
           <Link href="/contact" className="hover:text-linen">
-            Contact
+            {t("contact")}
           </Link>
         </nav>
       </div>
 
       {/* Deuxième ligne : droits réservés */}
       <div className="border-t border-sand/40 px-6 py-3 text-center text-xs">
-        © {new Date().getFullYear()} Casa Noppalu. Tous droits réservés.
+        {t("droits", { annee: String(new Date().getFullYear()) })}
       </div>
     </footer>
   );

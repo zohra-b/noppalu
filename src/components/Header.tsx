@@ -1,8 +1,10 @@
 "use client"; 
 
 import { useState } from "react";
-import { Link } from "@/i18n/navigation";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 import { bungalows } from "@/lib/bungalows";
 
 const langues = [ 
@@ -13,11 +15,21 @@ const langues = [
 const bungalowsPublies = bungalows.filter((b) => b.publie);
 
 export default function Header () {
-    const [langueActuelle, setLangueActuelle] = useState("fr"); 
+    const t = useTranslations("Header");
+    const locale = useLocale();
+    const pathname = usePathname();
+    const router = useRouter();
+
     const [menuLanguesOuvert, setMenuLanguesOuvert] = useState(false); 
     const [menuBungalowsOuvert, setMenuBungalowsOuvert] = useState(false);
-    const langueSelectionnee = langues.find( 
-                (langue) => langue.code === langueActuelle )!;
+
+    const languesActives = langues.filter((l) =>
+        (routing.locales as readonly string[]).includes(l.code),
+        );
+    const plusieursLangues = languesActives.length > 1;
+    const langueSelectionnee =
+    languesActives.find((l) => l.code === locale) ?? languesActives[0];
+
 
          
     return (
@@ -28,7 +40,7 @@ export default function Header () {
                 <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                      <Image
                         src = "/images/logo-rond.png"
-                        alt = "Logo Casa Noppalu"
+                        alt = {t("logoAlt")}
                         width={128}
                         height={128}
                         className="h-14 w-14 shrink-0 object-contain sm:h-16 sm:w-16 lg:h-20 lg:w-20 "
@@ -38,7 +50,7 @@ export default function Header () {
                         Casa Noppalu
                         </p>
                     <p className="font-serif text-base italic text-sand">
-                        Calme & Sérénité
+                        {t("slogan")}
                         </p>
                         </div>
                 </div>
@@ -48,12 +60,13 @@ export default function Header () {
             <nav className="flex items-center gap-6">
                 <Link 
                     href="/"
-                    className="text-green hover:text-sand">Accueil 
+                    className="text-green hover:text-sand">
+                         {t("accueil")}
                 </Link>
 
                 {bungalowsPublies.length === 0 ? (
                     <Link href="/bungalows" className="text-green hover:text-sand">
-                        Bungalows
+                        {t("bungalows")}
                     </Link>
                     ) : (
                         <div
@@ -63,7 +76,7 @@ export default function Header () {
                         >
                         
                         <Link href="/bungalows" className="text-green hover:text-sand">
-                        Bungalows
+                        {t("bungalows")}
                         </Link>
 
                         {menuBungalowsOuvert && (
@@ -73,7 +86,7 @@ export default function Header () {
                                 onClick={() => setMenuBungalowsOuvert(false)}
                                 className="block px-4 py-2 text-green hover:bg-linen"
                                 >
-                                Présentation
+                                {t("presentation")}
                                 </Link>
                                 {bungalowsPublies.map((b) => (
                                 <Link
@@ -93,17 +106,19 @@ export default function Header () {
 
                 <Link 
                     href="/contact"
-                    className="text-green hover:text-sand">Contact 
+                    className="text-green hover:text-sand"> 
+                    {t("contact")} 
                 </Link>
 
                 {/* Sélecteur de langue */}
+                {plusieursLangues && (
                 <div 
                 className="relative"
                 onMouseEnter={() => setMenuLanguesOuvert(true)}
                 onMouseLeave={() => setMenuLanguesOuvert(false)}> 
                     <button
                         type="button"
-                        aria-label={`Langue actuelle : ${langueSelectionnee.nom}`}
+                        aria-label={t("langueActuelle",{ langue: langueSelectionnee.nom})}
                         aria-expanded={menuLanguesOuvert}
                         className="rounded-md p-2 hover:bg-white/50"
                         >
@@ -114,28 +129,31 @@ export default function Header () {
 
                     {menuLanguesOuvert && ( 
                         <div className="absolute right-0 top-full z-50 min-w-36 rounded-md bg-white py-2 shadow-lg"> 
-                        {langues 
-                            .filter((langue) => langue.code !== langueActuelle) 
-                            .map((langue) => ( 
+                        {languesActives 
+                            .filter((l) => l.code !== locale) 
+                            .map((l) => ( 
                                 <button 
-                                    key={langue.code} 
+                                    key={l.code} 
                                     type="button" 
-                                    onClick={() => { 
-                                        setLangueActuelle(langue.code); 
+                                    onClick={() => {
+                                        router.replace(pathname, {
+                                        locale: l.code as (typeof routing.locales)[number],
+                                        });
                                         setMenuLanguesOuvert(false); }} 
                                     className="flex w-full items-center gap-3 px-4 py-2 text-left hover:bg-linen" 
                                     > 
                                 <span className="text-xl"> 
-                                    {langue.drapeau} 
+                                    {l.drapeau} 
                                     </span> 
                                 <span className="text-sm text-foreground"> 
-                                    {langue.nom} 
+                                    {l.nom} 
                                     </span> 
                                 </button> 
                             ))} 
                             </div> 
                         )} 
                     </div>
+                )}
             </nav>
 
 
