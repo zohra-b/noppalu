@@ -19,6 +19,7 @@ export default function Header () {
     const langueSelectionnee = langues.find( 
                 (langue) => langue.code === langueActuelle )!;
 
+         
     return (
        <header className="w-full bg-linen px-4 py-2 sm:px-6">
             {/* Partie gauche : logo et identité */}

@@ -45,26 +45,37 @@ export default function ContactPage() {
     setErreur("");
 
     try {
+      const controleur = new AbortController();
+      const minuteur = setTimeout(() => controleur.abort(), 15000);
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(donnees),
-      });
-      const json = await res.json();
+        signal: controleur.signal,
+      }).finally(() => clearTimeout(minuteur));
+
+      const json = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setErreur(json.error ?? "Une erreur est survenue.");
+        setErreur(
+          json.error ?? "L’envoi a échoué. Réessayez ou contactez-nous par WhatsApp."
+        );
         setStatut("erreur");
         return;
       }
       formulaire.reset();
       setStatut("succes");
-    } catch {
-      setErreur("Connexion impossible. Réessayez dans un instant.");
+    } catch (err) {
+      setErreur(
+        err instanceof DOMException && err.name === "AbortError"
+          ? "Le serveur met trop de temps à répondre. Vos informations sont conservées : réessayez."
+          : "Connexion impossible. Vérifiez votre connexion internet puis réessayez."
+      );
       setStatut("erreur");
     }
   }
-
+  
   return (
     <main className="flex-1 bg-linen px-6 py-2 text-[#222222]">
       <div className="mx-auto max-w-6xl">
@@ -208,7 +219,17 @@ export default function ContactPage() {
                 </p>
                   )}
               {statut === "erreur" && (
-                <p role="alert" className="text-sm text-red-700">{erreur}</p>
+                <div role="alert" className="space-y-2 text-sm text-red-700">
+                  <p>{erreur}</p>
+                  <a
+                    href="https://wa.me/34637251773"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium underline underline-offset-4"
+                  >
+                    Nous écrire sur WhatsApp
+                  </a>
+                </div>
                   )}
             </form>
           </section>
