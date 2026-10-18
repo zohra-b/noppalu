@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { validerEmail } from "@/lib/validation";
 
 const OBJETS = [
   "Disponibilités",
@@ -11,7 +12,6 @@ const OBJETS = [
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
 export async function POST(req: Request) {
   const apiKey = process.env.RESEND_API_KEY;
@@ -49,9 +49,11 @@ export async function POST(req: Request) {
   if (nom.length < 2 || nom.length > 100) {
     return NextResponse.json({ error: "Nom invalide." }, { status: 400 });
   }
-  if (!isEmail(email) || email.length > 200) {
-    return NextResponse.json({ error: "Adresse e-mail invalide." }, { status: 400 });
+    const problemeEmail = validerEmail(email);
+  if (problemeEmail) {
+    return NextResponse.json({ error: problemeEmail }, { status: 400 });
   }
+  
   if (telephone.length > 30) {
     return NextResponse.json({ error: "Numéro de téléphone invalide." }, { status: 400 });
   }

@@ -1,8 +1,9 @@
 
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import Button from "@/components/Button";
+import { suggererEmail, validerEmail } from "@/lib/validation";
 
 type Statut = "repos" | "envoi" | "succes" | "erreur";
 
@@ -10,13 +11,38 @@ export default function ContactPage() {
   const [statut, setStatut] = useState<Statut>("repos");
   const [erreur, setErreur] = useState("");
 
+  const emailRef = useRef<HTMLInputElement>(null);
+  const [erreurEmail, setErreurEmail] = useState("");
+  const [suggestion, setSuggestion] = useState<string | null>(null);
+
+  function corrigerEmail() {
+    if (emailRef.current && suggestion) emailRef.current.value = suggestion;
+    setErreurEmail("");
+    setSuggestion(null);
+  }
+
   async function envoyerMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatut("envoi");
-    setErreur("");
-
+    
     const formulaire = event.currentTarget;
     const donnees = Object.fromEntries(new FormData(formulaire));
+
+    const email = String(donnees.email ?? "").trim();
+    donnees.email = email;
+
+    const probleme = validerEmail(email);
+    const corrige = probleme ? null : suggererEmail(email);
+    if (probleme || corrige) {
+      setErreurEmail(probleme ?? `Vouliez-vous écrire ${corrige} ?`);
+      setSuggestion(corrige);
+      emailRef.current?.focus();
+      return;
+    }
+
+    setErreurEmail("");
+    setSuggestion(null);
+    setStatut("envoi");
+    setErreur("");
 
     try {
       const res = await fetch("/api/contact", {
@@ -78,14 +104,37 @@ export default function ContactPage() {
                 <label htmlFor="email" className="mb-1 block text-sm font-medium">
                   Adresse e-mail *
                 </label>
-                <input
+                                <input
+                  ref={emailRef}
                   id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
-                  className="w-full rounded-md border border-[#C6B06B] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-green"
+                  aria-invalid={!!erreurEmail}
+                  aria-describedby={erreurEmail ? "email-erreur" : undefined}
+                  onChange={() => {
+                    if (erreurEmail) {
+                      setErreurEmail("");
+                      setSuggestion(null);
+                    }
+                  }}
+                  className="w-full rounded-md border border-[#C6B06B] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-green aria-[invalid=true]:border-red-700"
                 />
+                {erreurEmail && (
+                  <p id="email-erreur" role="alert" className="mt-1 text-sm text-red-700">
+                    {erreurEmail}{" "}
+                    {suggestion && (
+                      <button
+                        type="button"
+                        onClick={corrigerEmail}
+                        className="font-medium underline underline-offset-2"
+                      >
+                        Oui, corriger
+                      </button>
+                    )}
+                  </p>
+                )}
               </div>
 
               <div>
