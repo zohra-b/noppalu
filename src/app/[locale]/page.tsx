@@ -14,6 +14,7 @@ export default async function Home({
   setRequestLocale(locale);
 
   const t = await getTranslations("Accueil");
+  const tb = await getTranslations("Bungalows");
   
   const photosAccueil = [
     { src: "/images/jardin1.png", alt: "Le jardin de Casa Noppalu" },
@@ -43,7 +44,7 @@ export default async function Home({
             </p> 
           </div>
 
-          <Gallery photos = {photosAccueil}/>
+          <Gallery photos = {photosAccueil} priority/>
         
         </div>
       </section>
@@ -73,7 +74,7 @@ export default async function Home({
   >
     <div className="relative aspect-4/3">
       <Image
-        src={bungalow.photos[0].src}
+        src={bungalow.photos[0]}
         alt={bungalow.nom}
         fill
         className="object-cover"
@@ -87,7 +88,7 @@ export default async function Home({
       </h3>
 
       <p className="mb-5 leading-7 text-[#222222]">
-        {bungalow.resume}
+        {tb(`items.${bungalow.slug}.resume`)}
       </p>
 
       <Link

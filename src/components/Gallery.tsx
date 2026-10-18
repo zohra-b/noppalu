@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 type Photo = { src: string; alt: string };
@@ -16,6 +17,7 @@ export default function Gallery({
   priority = false,
   sizes = "(max-width: 768px) 100vw, 50vw",
 }: Props) {
+  const t = useTranslations("Gallery");
   const [actuelle, setActuelle] = useState(0);
 
   if (photos.length === 0) return null;
@@ -37,7 +39,7 @@ export default function Gallery({
           src={photos[actuelle].src}
           alt={photos[actuelle].alt}
           fill
-          priority={priority}
+          loading={priority ? "eager" : undefined}
           className="object-cover"
           sizes={sizes}
         />
@@ -48,7 +50,7 @@ export default function Gallery({
           <button
             type="button"
             onClick={precedente}
-            aria-label="Photo précédente"
+            aria-label={t("precedente")}
             className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-4 py-2 text-xl text-[#2F6036] shadow"
           >
             ‹
@@ -57,7 +59,7 @@ export default function Gallery({
           <button
             type="button"
             onClick={suivante}
-            aria-label="Photo suivante"
+            aria-label={t("suivante")}
             className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-4 py-2 text-xl text-[#2F6036] shadow"
           >
             ›
@@ -69,7 +71,7 @@ export default function Gallery({
                 key={photo.src}
                 type="button"
                 onClick={() => setActuelle(index)}
-                aria-label={`Afficher la photo ${index + 1}`}
+                aria-label={t("afficher", { numero: index + 1 })}
                 aria-current={actuelle === index}
                 className={`h-2.5 w-2.5 rounded-full ${
                   actuelle === index ? "bg-[#2F6036]" : "bg-[#C6B06B]"

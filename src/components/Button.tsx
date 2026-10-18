@@ -36,6 +36,21 @@ export default function Button({
     `${baseClasses} ${variantClasses[variant]} ${className}`.trim();
 
   if (href) {
+    const externe = /^(https?:|mailto:|tel:)/.test(href);
+
+    if (externe) {
+      return (
+        <a
+          href={href}
+          target={target}
+          rel={target === "_blank" ? "noopener noreferrer" : undefined}
+          className={classes}
+        >
+          {children}
+        </a>
+      );
+    }
+
     return (
       <Link
         href={href}

@@ -1,21 +1,28 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "../globals.css";
 
-export const metadata: Metadata = {
-  title: {
-    default: "Casa Noppalu | Maison d'hôtes à Saly, Sénégal",
-    template: "%s | Casa Noppalu",
-  },
-  description:
-    "Découvrez nos trois bungalows indépendants et climatisés à Saly, Niakhnakhal. Jardin arboré, piscine et plage à dix minutes à pied.",
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
 
-};
+  return {
+    title: {
+      default: t("titre"),
+      template: "%s | Casa Noppalu",
+    },
+    description: t("description"),
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
