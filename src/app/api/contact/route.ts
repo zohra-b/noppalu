@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const OBJETS = [
   "Disponibilités",
   "Question sur un bungalow",
@@ -16,6 +14,19 @@ const escapeHtml = (s: string) =>
 const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
 export async function POST(req: Request) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.CONTACT_FROM_EMAIL;
+  const to = process.env.CONTACT_TO_EMAIL;
+
+  if (!apiKey || !from || !to) {
+    console.error("Contact : variable d'environnement manquante");
+    return NextResponse.json(
+      { error: "L'envoi a échoué. Contactez-nous directement à contact@casanoppalu.com ou par WhatsApp." },
+      { status: 500 }
+    );
+  }
+
+  const resend = new Resend(apiKey);
   let body: Record<string, unknown>;
   try {
     body = await req.json();
@@ -51,23 +62,25 @@ export async function POST(req: Request) {
     );
   }
 
-  const { error } = await resend.emails.send({
-    from: process.env.CONTACT_FROM_EMAIL!,
-    to: process.env.CONTACT_TO_EMAIL!,
-    replyTo: email,
-    subject: `Casa Noppalu - ${objet} (${nom})`,
-    text: `Nom : ${nom}\nE-mail : ${email}\nTéléphone / WhatsApp : ${telephone || "Non renseigné"}\nObjet : ${objet}\n\nMessage :\n${message}`,
-    html: `
-      <p><strong>Nom :</strong> ${escapeHtml(nom)}</p>
-      <p><strong>E-mail :</strong> ${escapeHtml(email)}</p>
-      <p><strong>Téléphone / WhatsApp :</strong> ${escapeHtml(telephone || "Non renseigné")}</p>
-      <p><strong>Objet :</strong> ${escapeHtml(objet)}</p>
-      <p style="white-space:pre-wrap">${escapeHtml(message)}</p>
+  try {
+    const { error } = await resend.emails.send({
+      from,
+      to,
+      replyTo: email,
+      subject: `Casa Noppalu - ${objet} (${nom})`,
+      text: `Nom : ${nom}\nE-mail : ${email}\nTéléphone / WhatsApp : ${telephone || "Non renseigné"}\nObjet : ${objet}\n\nMessage :\n${message}`,
+      html: `
+        <p><strong>Nom :</strong> ${escapeHtml(nom)}</p>
+        <p><strong>E-mail :</strong> ${escapeHtml(email)}</p>
+        <p><strong>Téléphone / WhatsApp :</strong> ${escapeHtml(telephone || "Non renseigné")}</p>
+        <p><strong>Objet :</strong> ${escapeHtml(objet)}</p>
+        <p style="white-space:pre-wrap">${escapeHtml(message)}</p>
     `,
   });
 
-  if (error) {
-    console.error("Resend error:", error);
+  if (error) throw error;
+  } catch (err)  {
+    console.error("Contact : échec d'envoi", err);
     return NextResponse.json(
       { error: "L'envoi a échoué. Réessayez ou contactez-nous par WhatsApp." },
       { status: 500 }

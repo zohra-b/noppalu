@@ -184,9 +184,9 @@ export default function ContactPage() {
 
                 <div>
                   <h3 className="font-semibold">WhatsApp</h3>
-                  <p className="mb-3">+221 76 866 33 67</p>
+                  <p className="mb-3">+34 637 251 773</p>
                  <Button
-                    href="https://wa.me/221768663367"
+                    href="https://wa.me/34637251773"
                     target="_blank"
                     >
                     Nous contacter sur WhatsApp
