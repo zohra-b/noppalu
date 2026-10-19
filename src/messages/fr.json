@@ -124,8 +124,8 @@
     "conditionsTitre": "Conditions et informations pratiques",
     "tarifsTitre": "Tarifs",
     "tarifs": {
-      "basse": "Basse saison (mai à octobre)",
-      "haute": "Haute saison (novembre à juin)",
+      "basse": "Basse saison (juin à octobre)",
+      "haute": "Haute saison (novembre à mai)",
       "fetes": "Fêtes de fin d'année (15 déc. au 5 janv.)",
       "parNuit": "{prix} FCFA/nuit"
     },
@@ -138,7 +138,7 @@
       "paiement": "Paiement : virement, Wave, Paypal"
     }
   },
-  
+
   "Gallery": {
     "precedente": "Photo précédente",
     "suivante": "Photo suivante",
