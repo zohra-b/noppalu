@@ -129,3 +129,34 @@ export async function getIndisponibilites(slug: string): Promise<Periode[]> {
     fin: l.end_date,
   }));
 }
+  /**
+ * Périodes occupées de tous les studios publiés, regroupées par studio
+ * (dates uniquement). Les périodes déjà terminées sont ignorées.
+ */
+export async function getToutesIndisponibilites(): Promise<
+  Record<string, Periode[]>
+> {
+  const aujourdhui = new Date().toISOString().slice(0, 10);
+  const { data, error } = await createPublicClient()
+    .from("availability_public")
+    .select("bungalow_slug, start_date, end_date")
+    .gte("end_date", aujourdhui)
+    .order("start_date", { ascending: true });
+
+  if (error) {
+    throw new Error(`Lecture des disponibilités impossible : ${error.message}`);
+  }
+
+  const parStudio: Record<string, Periode[]> = {};
+  for (const l of data as {
+    bungalow_slug: string;
+    start_date: string;
+    end_date: string;
+  }[]) {
+    (parStudio[l.bungalow_slug] ??= []).push({
+      debut: l.start_date,
+      fin: l.end_date,
+    });
+  }
+  return parStudio;
+}

@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import BungalowInfos from "@/components/BungalowInfos";
-import { getBungalows, getReglages, texteLocalise } from "@/lib/data";
+import Calendrier from "@/components/Calendrier";
+import {
+  getBungalows,
+  getReglages,
+  getToutesIndisponibilites,
+  texteLocalise,
+} from "@/lib/data";
 
 export const revalidate = 60;
 
@@ -21,10 +27,16 @@ export default async function BungalowsPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("Bungalows");
 
-  const [bungalows, reglages] = await Promise.all([
+  const [bungalows, reglages, periodes] = await Promise.all([
     getBungalows(),
     getReglages(),
+    // En cas d'erreur, on masque le calendrier plutôt que d'afficher des dates à tort libres
+    getToutesIndisponibilites().catch(() => null),
   ]);
+
+  const publies = bungalows
+    .filter((b) => b.publie)
+    .map(({ slug, nom }) => ({ slug, nom }));
 
   // Équipements présents dans tous les studios
   const communs =
@@ -46,6 +58,14 @@ export default async function BungalowsPage({ params }: Props) {
           </h1>
           <p className="mt-4 max-w-full leading-7">{t("intro")}</p>
         </header>
+
+        {periodes && publies.length > 0 && (
+          <Calendrier
+            studios={publies}
+            periodesParStudio={periodes}
+            aujourdhui={new Date().toISOString().slice(0, 10)}
+          />
+        )}
 
         <BungalowInfos
           equipements={communs}

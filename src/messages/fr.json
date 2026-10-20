@@ -139,14 +139,20 @@
     }
   },
 
-  "Calendrier": {
+    "Calendrier": {
     "titre": "Disponibilités",
     "intro": "Adressez-nous vos demandes de réservations, nous vous répondrons dans les plus brefs délais",
+    "introGeneral": "Sélectionnez un studio si vous souhaitez consulter ses disponibilités en particulier .Adressez-nous vos demandes de réservations, nous vous répondrons dans les plus brefs délais.",
+    "choixStudio": "Studio affiché",
+    "tous": "Tous",
     "precedent": "Mois précédent",
     "suivant": "Mois suivant",
     "libre": "Disponible",
+    "partiel": "Partiellement disponible",
     "occupee": "Indisponible",
-    "passee": "Date passée"
+    "passee": "Date passée",
+    "libresCeJour": "Nuit du {date}, disponible : {liste}",
+    "aucunLibre": "Nuit du {date} : aucun studio disponible"
   },
 
   "Gallery": {

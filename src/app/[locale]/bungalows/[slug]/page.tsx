@@ -92,7 +92,8 @@ export default async function BungalowPage({ params }: Props) {
 
         {periodes && (
           <Calendrier
-            periodes={periodes}
+            studios={[{ slug: bungalow.slug, nom: bungalow.nom }]}
+            periodesParStudio={{ [slug]: periodes }}
             aujourdhui={new Date().toISOString().slice(0, 10)}
           />
         )}
