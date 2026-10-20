@@ -5,7 +5,7 @@ import { validerEmail } from "@/lib/validation";
 // Codes envoyés par le formulaire -> libellés français pour ton e-mail
 const OBJETS: Record<string, string> = {
   disponibilites: "Disponibilités",
-  bungalow: "Question sur un bungalow",
+  bungalow: "Question sur un studio",
   infos: "Informations pratiques",
   autre: "Autre demande",
 };

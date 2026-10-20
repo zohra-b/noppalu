@@ -3,14 +3,14 @@
     "logoAlt": "Logo Casa Noppalu",
     "slogan": "Calme & Sérénité",
     "accueil": "Accueil",
-    "bungalows": "Bungalows",
+    "bungalows": "Nos studios",
     "presentation": "Présentation",
     "contact": "Contact",
     "langueActuelle": "Langue actuelle : {langue}"
   },
 
   "Footer": {
-    "bungalows": "Bungalows",
+    "bungalows": "Nos studios",
     "contact": "Contact",
     "droits": "© {annee} Casa Noppalu. Tous droits réservés."
   },
@@ -18,7 +18,7 @@
   "Accueil": {
     "surtitre": "Casa Noppalu, Maison d'hôtes au Sénégal",
     "titre": "Votre pied à terre avec piscine à Saly",
-    "intro": "À Saly, dans le quartier résidentiel de Niakhnakhal, Casa Noppalu vous accueille dans un cadre simple et confortable, loin des grands complexes hôteliers. Nos trois bungalows indépendants et climatisés, équipés d'une kitchenette et du wifi, vous offrent la liberté d'organiser vos journées à votre rythme, tout en profitant de la piscine, du jardin et de la plage, accessible en dix minutes à pied.",
+    "intro": "À Saly, dans le quartier résidentiel de Niakhnakhal, Casa Noppalu vous accueille dans un cadre simple et confortable, loin des grands complexes hôteliers. Nos trois studios indépendants et climatisés, équipés d'une kitchenette et du wifi, vous offrent la liberté d'organiser vos journées à votre rythme, tout en profitant de la piscine, du jardin et de la plage, accessible en dix minutes à pied.",
     "photos": {
       "jardin1": "Le jardin de Casa Noppalu",
       "jardin2": "Une adorable salamandre",
@@ -28,17 +28,17 @@
       "plage": "La plage à proximité"
     },
     "bungalowsSurtitre": "Votre séjour",
-    "bungalowsTitre": "Nos bungalows",
-    "bungalowsIntro": "Nos bungalows vous offrent un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d'un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d'une télévision connectée.",
-    "decouvrir": "Découvrir ce bungalow",
-    "voirBungalows": "Voir les bungalows"
+    "bungalowsTitre": "Nos studios",
+    "bungalowsIntro": "Nos studios vous offrent un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d'un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d'une télévision connectée.",
+    "decouvrir": "Découvrir ce studio",
+    "voirBungalows": "Voir les studios"
   },
 
   "Contact": {
     "metaTitre": "Contact",
-    "metaDescription": "Contactez Casa Noppalu, maison d'hôtes à Saly (Sénégal) : disponibilités, questions sur nos bungalows, informations pratiques.",
+    "metaDescription": "Contactez Casa Noppalu, maison d'hôtes à Saly (Sénégal) : disponibilités, questions sur nos logements, informations pratiques.",
     "titre": "Contact",
-    "intro": "Une question sur Casa Noppalu ou sur nos bungalows ? Écrivez-nous, nous vous répondrons avec plaisir.",
+    "intro": "Une question sur Casa Noppalu ou sur nos studios ? Écrivez-nous, nous vous répondrons avec plaisir.",
     "formulaire": {
       "titre": "Envoyez-nous un message",
       "nom": "Nom *",
@@ -58,7 +58,7 @@
     },
     "objets": {
       "disponibilites": "Disponibilités",
-      "bungalow": "Question sur un bungalow",
+      "bungalow": "Question sur un studio",
       "infos": "Informations pratiques",
       "autre": "Autre demande"
     },
@@ -89,24 +89,24 @@
     }
   },
   "Bungalows": {
-    "metaTitre": "Nos bungalows",
-    "metaDescription": "Trois bungalows indépendants et climatisés à Saly, avec climatisation, kitchenette, Wi-Fi et accès à la piscine.",
-    "metaTitreBungalow": "Bungalow {nom}",
+    "metaTitre": "Nos studios",
+    "metaDescription": "Trois studios indépendants et climatisés à Saly, avec climatisation, kitchenette, Wi-Fi et accès à la piscine.",
+    "metaTitreBungalow": "Studio {nom}",
     "surtitre": "Votre séjour",
-    "titre": "Nos bungalows",
-    "intro": "Casa Noppalu dispose de trois bungalows indépendants pour recevoir deux personnes. Climatisés et dotés d'un coin kitchenette, ils offrent un espace privé pour profiter pleinement de votre séjour à Saly, avec un accès à la piscine et au jardin.",
+    "titre": "Nos studios",
+    "intro": "Casa Noppalu dispose de trois studios indépendants pour recevoir deux personnes. Climatisés et dotés d'un coin kitchenette, ils offrent un espace privé pour profiter pleinement de votre séjour à Saly, avec un accès à la piscine et au jardin.",
     "retour": "← Présentation",
     "descriptionTitre": "Description",
-    "photoAlt": "Bungalow {nom}",
+    "photoAlt": "Studio {nom}",
     "items": {
       "manguier": {
-        "resume": "Bungalow indépendant et climatisé avec lit de 160 cm, kitchenette et accès à la piscine."
+        "resume": "Studio indépendant et climatisé avec lit de 160 cm, kitchenette et accès à la piscine."
       },
       "cocotier": {
-        "resume": "Bungalow indépendant et climatisé avec lit de 160 cm, kitchenette et accès à la piscine."
+        "resume": "Studio indépendant et climatisé avec lit de 160 cm, kitchenette et accès à la piscine."
       },
       "bananier": {
-        "resume": "Bungalow indépendant et climatisé avec lit de 140 cm, kitchenette et accès à la piscine."
+        "resume": "Studio indépendant et climatisé avec lit de 140 cm, kitchenette et accès à la piscine."
       }
     }
   },
@@ -132,7 +132,7 @@
     "transfert": "Transfert de / vers l'aéroport sur demande ({prix} FCFA)",
     "sejourTitre": "Conditions de séjour",
     "conditions": {
-      "capacite": "Capacité : 2 personnes par bungalow",
+      "capacite": "Capacité : 2 personnes par studio",
       "sejour": "Séjour minimum : 2 nuits. Réservation : minimum 24h avant.",
       "horaires": "Accès au logement : à partir de 14h. Sortie du logement : avant 11h. (service de bagagerie offert)",
       "paiement": "Paiement : virement, Wave, Paypal"
@@ -149,7 +149,7 @@
     "titre": "Cette page n’existe pas",
     "texte": "Le lien est peut-être ancien ou mal saisi. Voici où aller :",
     "accueil": "Accueil",
-    "bungalows": "Les bungalows",
+    "bungalows": "Nos studios",
     "contact": "Contact"
   },
 
@@ -161,7 +161,7 @@
 
   "Metadata": {
     "titre": "Casa Noppalu | Maison d'hôtes à Saly, Sénégal",
-    "description": "Découvrez nos trois bungalows indépendants et climatisés à Saly, Niakhnakhal. Jardin arboré, piscine et plage à dix minutes à pied."
+    "description": "Découvrez nos trois studios indépendants et climatisés à Saly, Niakhnakhal. Jardin arboré, piscine et plage à dix minutes à pied."
   }
 
 }
