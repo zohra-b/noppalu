@@ -2,24 +2,33 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { bungalows, getBungalow, infosCommunes } from "@/lib/bungalows";
 import BungalowInfos from "@/components/BungalowInfos";
 import Gallery from "@/components/Gallery";
+import {
+  getBungalow,
+  getBungalows,
+  getReglages,
+  texteLocalise,
+} from "@/lib/data";
+import { photosDe } from "@/lib/photos";
+
+export const revalidate = 60;
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const bungalows = await getBungalows();
   return bungalows.filter((b) => b.publie).map((b) => ({ slug: b.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const bungalow = getBungalow(slug);
+  const bungalow = await getBungalow(slug);
   if (!bungalow || !bungalow.publie) return {};
   const t = await getTranslations({ locale, namespace: "Bungalows" });
   return {
     title: t("metaTitreBungalow", { nom: bungalow.nom }),
-    description: t(`items.${slug}.resume`),
+    description: texteLocalise(bungalow.resume, locale),
   };
 }
 
@@ -27,19 +36,21 @@ export default async function BungalowPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const bungalow = getBungalow(slug);
+  const bungalow = await getBungalow(slug);
   if (!bungalow || !bungalow.publie) notFound();
 
-  const t = await getTranslations("Bungalows");
+  const [t, reglages] = await Promise.all([
+    getTranslations("Bungalows"),
+    getReglages(),
+  ]);
 
-  const photos = bungalow.photos.map((src) => ({
+  const photos = photosDe(slug).map((src) => ({
     src,
     alt: t("photoAlt", { nom: bungalow.nom }),
   }));
 
-  // Description facultative : ajoute la clé "items.<slug>.description" dans fr.json
-  const cleDescription = `items.${slug}.description`;
-  const description = t.has(cleDescription) ? t(cleDescription) : null;
+  const resume = texteLocalise(bungalow.resume, locale);
+  const description = texteLocalise(bungalow.description, locale);
 
   return (
     <main className="flex-1 px-6 py-10 text-[#222222] md:px-12">
@@ -58,7 +69,7 @@ export default async function BungalowPage({ params }: Props) {
           <h1 className="text-3xl font-semibold text-[#2F6036] md:text-4xl">
             {bungalow.nom}
           </h1>
-          <p className="mt-3 text-lg">{t(`items.${slug}.resume`)}</p>
+          {resume && <p className="mt-3 text-lg">{resume}</p>}
         </header>
 
         {photos.length > 0 && (
@@ -77,13 +88,11 @@ export default async function BungalowPage({ params }: Props) {
         )}
 
         <BungalowInfos
-          equipements={[
-            { icone: "lit", valeur: bungalow.lit },
-            ...infosCommunes.equipements,
-          ]}
-          tarifs={infosCommunes.tarifs}
-          transfertAeroport={infosCommunes.transfertAeroport}
-          conditions={infosCommunes.conditions}
+          litCm={bungalow.litCm}
+          equipements={bungalow.equipements}
+          tarifs={reglages.afficherPrix ? reglages.tarifs : null}
+          prixTransfert={reglages.afficherPrix ? reglages.prixTransfert : null}
+          conditions={texteLocalise(reglages.conditions, locale) ?? []}
         />
       </div>
     </main>

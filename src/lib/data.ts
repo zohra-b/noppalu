@@ -18,6 +18,7 @@ export type Bungalow = {
 
 export type Reglages = {
   tarifs: Tarifs;
+  afficherPrix: boolean;
   prixTransfert: number;
   conditions: Record<string, string[]>;
 };
@@ -52,8 +53,8 @@ const COLONNES =
   "slug, nom, ordre, publie, capacite, lit_cm, equipements, resume, description";
 
 /**
- * Bungalows visibles du public, dans l'ordre d'affichage.
- * La RLS ne renvoie de toute façon que les bungalows publiés.
+ * Tous les bungalows, dans l'ordre d'affichage (publiés ou non).
+ * C'est à l'appelant (la page qui apelle la vue) de filtrer sur `publie` quand c'est nécessaire.
  */
 export async function getBungalows(): Promise<Bungalow[]> {
   const { data, error } = await createPublicClient()
@@ -65,7 +66,7 @@ export async function getBungalows(): Promise<Bungalow[]> {
   return (data as LigneBungalow[]).map(versBungalow);
 }
 
-/** Un bungalow par slug, ou null s'il n'existe pas ou n'est pas publié. */
+/** Un bungalow par slug, ou null s'il n'existe pas. Vérifier `publie` avant d'afficher sa page. */
 export async function getBungalow(slug: string): Promise<Bungalow | null> {
   const { data, error } = await createPublicClient()
     .from("bungalows")
@@ -81,7 +82,7 @@ export async function getBungalow(slug: string): Promise<Bungalow | null> {
 export async function getReglages(): Promise<Reglages> {
   const { data, error } = await createPublicClient()
     .from("site_settings")
-    .select("prix_basse, prix_haute, prix_fetes, prix_transfert, conditions")
+    .select("prix_basse, prix_haute, prix_fetes, prix_transfert, conditions, afficher_prix")
     .single();
 
   if (error) throw new Error(`Lecture des réglages impossible : ${error.message}`);
@@ -93,6 +94,7 @@ export async function getReglages(): Promise<Reglages> {
     },
     prixTransfert: data.prix_transfert,
     conditions: data.conditions as Record<string, string[]>,
+    afficherPrix: data.afficher_prix,
   };
 }
 

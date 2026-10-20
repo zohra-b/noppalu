@@ -126,7 +126,7 @@
     "tarifs": {
       "basse": "Basse saison (juin à octobre)",
       "haute": "Haute saison (novembre à mai)",
-      "fetes": "Fêtes de fin d'année (15 déc. au 5 janv.)",
+      "fetes": "Fêtes de fin d'année ({debut} au {fin})",
       "parNuit": "{prix} FCFA/nuit"
     },
     "transfert": "Transfert de / vers l'aéroport sur demande ({prix} FCFA)",

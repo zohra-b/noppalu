@@ -5,16 +5,17 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { bungalows } from "@/lib/bungalows";
 
 const langues = [ 
     { code: "fr", nom: "Français", drapeau: "🇫🇷" }, 
     { code: "en", nom: "English", drapeau: "🇬🇧" }, 
     { code: "es", nom: "Español", drapeau: "🇪🇸" }, ];
     
-const bungalowsPublies = bungalows.filter((b) => b.publie);
 
-export default function Header () {
+type StudioMenu = { slug: string; nom: string };
+
+export default function Header({ bungalows }: { bungalows: StudioMenu[] }) {
+    const bungalowsPublies = bungalows;
     const t = useTranslations("Header");
     const locale = useLocale();
     const pathname = usePathname();

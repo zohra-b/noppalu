@@ -1,18 +1,33 @@
-import type { MetadataRoute } from "next";
-import { bungalows } from "@/lib/bungalows";
+import type { MetadataRoute } from 'next';
 
-// Liste toutes les pages que tu veux voir indexées.
-// Aide Google à découvrir tes pages plus vite, surtout sur un site neuf qui n’a pas encore de liens entrants. 
+const base = 'https://www.casanoppalu.com';
 
-const base = "https://www.casanoppalu.com";
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const { data: bungalows, error } = await fetch(
+    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/bungalows?select=slug,publie&publie=eq.true`,
+    {
+      headers: {
+        apikey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}`,
+      },
+    }
+  ).then((res) => res.json());
 
-export default function sitemap(): MetadataRoute.Sitemap {
+  if (error) {
+    console.error('Erreur fetch bungalows:', error);
+    return [
+      { url: base },
+      { url: `${base}/bungalows` },
+      { url: `${base}/contact` },
+    ];
+  }
+
   return [
     { url: base },
     { url: `${base}/bungalows` },
     { url: `${base}/contact` },
-    ...bungalows
-      .filter((b) => b.publie)
-      .map((b) => ({ url: `${base}/bungalows/${b.slug}` })),
+    ...bungalows.map((b: { slug: string }) => ({
+      url: `${base}/bungalows/${b.slug}`,
+    })),
   ];
 }

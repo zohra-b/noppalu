@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getBungalows } from "@/lib/data";
 import "../globals.css";
 
 export async function generateMetadata({
@@ -43,6 +44,8 @@ export default async function RootLayout({
 
   setRequestLocale(locale);
 
+  const bungalows = await getBungalows().catch(() => []);
+
   return (
     <html
       lang={locale}
@@ -50,7 +53,11 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
-        <Header/>
+        <Header 
+            bungalows={bungalows
+            .filter((b) => b.publie)
+            .map(({ slug, nom }) => ({ slug, nom }))}
+            />
         {children}
         <Footer/>
         </NextIntlClientProvider>

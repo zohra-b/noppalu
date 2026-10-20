@@ -9,14 +9,17 @@ import {
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Button from "@/components/Button";
-import type {
-  ConditionCle,
-  Equipement,
-  IconeNom,
-  LigneTarif,
-} from "@/lib/bungalows";
+import type { EquipementCode } from "@/lib/data";
+import {
+  PERIODES,
+  formaterJourMois,
+  type SaisonCle,
+  type Tarifs,
+} from "@/lib/saisons";
 
-const icones: Record<IconeNom, LucideIcon> = {
+type CodeIcone = EquipementCode | "lit";
+
+const icones: Record<CodeIcone, LucideIcon> = {
   lit: BedDouble,
   clim: Snowflake,
   cuisine: Utensils,
@@ -25,22 +28,41 @@ const icones: Record<IconeNom, LucideIcon> = {
   piscine: Waves,
 };
 
+const SAISONS: SaisonCle[] = ["basse", "haute", "fetes"];
+
 type Props = {
-  equipements: Equipement[];
-  tarifs: LigneTarif[];
-  transfertAeroport?: number;
-  conditions: ConditionCle[];
+  litCm?: number;
+  equipements: EquipementCode[];
+  tarifs: Tarifs | null; // null = prix masqués
+  prixTransfert: number | null;
+  conditions: string[];
 };
 
 export default function BungalowInfos({
+  litCm,
   equipements,
   tarifs,
-  transfertAeroport,
+  prixTransfert,
   conditions,
 }: Props) {
   const t = useTranslations("BungalowInfos");
   const locale = useLocale();
   const formaterPrix = (n: number) => new Intl.NumberFormat(locale).format(n);
+
+  const lignes: { code: CodeIcone; valeur?: string }[] = [
+    ...(litCm ? [{ code: "lit" as const, valeur: `${litCm} cm` }] : []),
+    ...equipements.map((code) => ({ code })),
+  ];
+
+  function libelleSaison(cle: SaisonCle) {
+    if (cle === "fetes") {
+      return t("tarifs.fetes", {
+        debut: formaterJourMois(PERIODES.fetes.debut, locale),
+        fin: formaterJourMois(PERIODES.fetes.fin, locale),
+      });
+    }
+    return t(`tarifs.${cle}`);
+  }
 
   return (
     <>
@@ -50,15 +72,15 @@ export default function BungalowInfos({
         </h2>
 
         <ul className="grid gap-4 md:grid-cols-2">
-          {equipements.map((e) => {
-            const Icone = icones[e.icone];
+          {lignes.map((l) => {
+            const Icone = icones[l.code];
             return (
-              <li key={e.icone} className="flex items-start gap-3">
+              <li key={l.code} className="flex items-start gap-3">
                 <Icone
                   className="mt-0.5 h-6 w-6 shrink-0 text-[#2F6036]"
                   aria-hidden="true"
                 />
-                <span>{t(`equipements.${e.icone}`, { valeur: e.valeur ?? "" })}</span>
+                <span>{t(`equipements.${l.code}`, { valeur: l.valeur ?? "" })}</span>
               </li>
             );
           })}
@@ -74,33 +96,41 @@ export default function BungalowInfos({
           {t("conditionsTitre")}
         </h2>
 
-        <h3 className="mb-2 text-lg font-semibold text-[#2F6036]">
-          {t("tarifsTitre")}
-        </h3>
-        <dl className="max-w-xl divide-y divide-[#C6B06B]/40 rounded-lg bg-[#FFFEF6] text-sm shadow-sm">
-          {tarifs.map((tarif) => (
-            <div key={tarif.cle} className="flex justify-between gap-4 px-4 py-2">
-              <dt>{t(`tarifs.${tarif.cle}`)}</dt>
-              <dd className="font-semibold">
-                {t("tarifs.parNuit", { prix: formaterPrix(tarif.prix) })}
-              </dd>
-            </div>
-          ))}
-        </dl>
-        {transfertAeroport && (
-          <p className="mt-3 text-sm text-gray-600">
-            {t("transfert", { prix: formaterPrix(transfertAeroport) })}
-          </p>
+        {tarifs && (
+          <>
+            <h3 className="mb-2 text-lg font-semibold text-[#2F6036]">
+              {t("tarifsTitre")}
+            </h3>
+            <dl className="max-w-xl divide-y divide-[#C6B06B]/40 rounded-lg bg-[#FFFEF6] text-sm shadow-sm">
+              {SAISONS.map((cle) => (
+                <div key={cle} className="flex justify-between gap-4 px-4 py-2">
+                  <dt>{libelleSaison(cle)}</dt>
+                  <dd className="font-semibold">
+                    {t("tarifs.parNuit", { prix: formaterPrix(tarifs[cle]) })}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            {prixTransfert && (
+              <p className="mt-3 text-sm text-gray-600">
+                {t("transfert", { prix: formaterPrix(prixTransfert) })}
+              </p>
+            )}
+          </>
         )}
 
-        <h3 className="mb-2 mt-8 text-lg font-semibold text-[#2F6036]">
-          {t("sejourTitre")}
-        </h3>
-        <ul className="list-disc space-y-1 pl-5">
-          {conditions.map((c) => (
-            <li key={c}>{t(`conditions.${c}`)}</li>
-          ))}
-        </ul>
+        {conditions.length > 0 && (
+          <>
+            <h3 className="mb-2 mt-8 text-lg font-semibold text-[#2F6036]">
+              {t("sejourTitre")}
+            </h3>
+            <ul className="list-disc space-y-1 pl-5">
+              {conditions.map((c, i) => (
+                <li key={i}>{c}</li>
+              ))}
+            </ul>
+          </>
+        )}
       </section>
     </>
   );
