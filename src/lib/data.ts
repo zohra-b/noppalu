@@ -105,3 +105,27 @@ export function texteLocalise<T>(
 ): T | undefined {
   return valeurs?.[locale] ?? valeurs?.fr;
 }
+
+export type Periode = { debut: string; fin: string }; // fin exclusive (jour du départ)
+
+/**
+ * Périodes occupées d'un bungalow publié (dates uniquement, aucune donnée privée).
+ * Lit la vue `availability_public`. Les périodes déjà terminées sont ignorées.
+ */
+export async function getIndisponibilites(slug: string): Promise<Periode[]> {
+  const aujourdhui = new Date().toISOString().slice(0, 10);
+  const { data, error } = await createPublicClient()
+    .from("availability_public")
+    .select("start_date, end_date")
+    .eq("bungalow_slug", slug)
+    .gte("end_date", aujourdhui)
+    .order("start_date", { ascending: true });
+
+  if (error) {
+    throw new Error(`Lecture des disponibilités impossible : ${error.message}`);
+  }
+  return (data as { start_date: string; end_date: string }[]).map((l) => ({
+    debut: l.start_date,
+    fin: l.end_date,
+  }));
+}

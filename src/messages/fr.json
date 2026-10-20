@@ -139,6 +139,16 @@
     }
   },
 
+  "Calendrier": {
+    "titre": "Disponibilités",
+    "intro": "Adressez-nous vos demandes de réservations, nous vous répondrons dans les plus brefs délais",
+    "precedent": "Mois précédent",
+    "suivant": "Mois suivant",
+    "libre": "Disponible",
+    "occupee": "Indisponible",
+    "passee": "Date passée"
+  },
+
   "Gallery": {
     "precedente": "Photo précédente",
     "suivante": "Photo suivante",

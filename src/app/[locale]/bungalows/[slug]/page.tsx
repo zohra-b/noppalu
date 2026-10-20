@@ -4,9 +4,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import BungalowInfos from "@/components/BungalowInfos";
 import Gallery from "@/components/Gallery";
+import Calendrier from "@/components/Calendrier";
 import {
   getBungalow,
   getBungalows,
+  getIndisponibilites,
   getReglages,
   texteLocalise,
 } from "@/lib/data";
@@ -39,9 +41,10 @@ export default async function BungalowPage({ params }: Props) {
   const bungalow = await getBungalow(slug);
   if (!bungalow || !bungalow.publie) notFound();
 
-  const [t, reglages] = await Promise.all([
+  const [t, reglages, periodes] = await Promise.all([
     getTranslations("Bungalows"),
     getReglages(),
+    getIndisponibilites(slug).catch(() => null),  // En cas d'erreur, on masque le calendrier plutôt que d'afficher des dates à tort libres
   ]);
 
   const photos = photosDe(slug).map((src) => ({
@@ -85,6 +88,13 @@ export default async function BungalowPage({ params }: Props) {
             </h2>
             <p className="max-w-3xl leading-7">{description}</p>
           </section>
+        )}
+
+        {periodes && (
+          <Calendrier
+            periodes={periodes}
+            aujourdhui={new Date().toISOString().slice(0, 10)}
+          />
         )}
 
         <BungalowInfos
