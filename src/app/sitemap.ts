@@ -1,33 +1,30 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
+import { routing } from "@/i18n/routing";
+import { getBungalows } from "@/lib/data";
 
-const base = 'https://www.casanoppalu.com';
+const base = "https://www.casanoppalu.com";
+
+// Le sitemap se met à jour au plus toutes les heures
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { data: bungalows, error } = await fetch(
-    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/bungalows?select=slug,publie&publie=eq.true`,
-    {
-      headers: {
-        apikey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}`,
-      },
-    }
-  ).then((res) => res.json());
-
-  if (error) {
-    console.error('Erreur fetch bungalows:', error);
-    return [
-      { url: base },
-      { url: `${base}/bungalows` },
-      { url: `${base}/contact` },
-    ];
+  let slugs: string[] = [];
+  try {
+    const bungalows = await getBungalows();
+    slugs = bungalows.filter((b) => b.publie).map((b) => b.slug);
+  } catch (e) {
+    // Si la base est injoignable, on liste au moins les pages fixes
+    console.error("Sitemap : lecture des bungalows impossible", e);
   }
 
-  return [
-    { url: base },
-    { url: `${base}/bungalows` },
-    { url: `${base}/contact` },
-    ...bungalows.map((b: { slug: string }) => ({
-      url: `${base}/bungalows/${b.slug}`,
-    })),
+  const chemins = [
+    "",
+    "/bungalows",
+    "/contact",
+    ...slugs.map((slug) => `/bungalows/${slug}`),
   ];
+
+  return routing.locales.flatMap((locale) =>
+    chemins.map((chemin) => ({ url: `${base}/${locale}${chemin}` })),
+  );
 }
