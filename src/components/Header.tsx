@@ -58,12 +58,10 @@ export default function Header({ bungalows }: { bungalows: StudioMenu[] }) {
                     </Link>
 
             {/* Partie droite : nav et langues*/}
-            <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-6">
-                <Link 
-                    href="/"
-                    className="text-green hover:text-sand">
-                         {t("accueil")}
-                </Link>
+            <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm sm:gap-6 sm:text-base">
+                    <Link href="/" className="hidden text-green hover:text-sand sm:inline">
+                        {t("accueil")}
+                    </Link>
 
                 {bungalowsPublies.length === 0 ? (
                     <Link href="/bungalows" className="text-green hover:text-sand">
