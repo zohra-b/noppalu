@@ -190,4 +190,4 @@ export async function getStudiosLibres(
     (occupes.data as { bungalow_slug: string }[]).map((l) => l.bungalow_slug)
   );
   return studios.filter((s) => s.publie && !pris.has(s.slug));
-}
+} 
