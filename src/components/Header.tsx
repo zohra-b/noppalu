@@ -58,7 +58,7 @@ export default function Header({ bungalows }: { bungalows: StudioMenu[] }) {
                     </Link>
 
             {/* Partie droite : nav et langues*/}
-            <nav className="flex items-center gap-6">
+            <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-6">
                 <Link 
                     href="/"
                     className="text-green hover:text-sand">
@@ -110,6 +110,15 @@ export default function Header({ bungalows }: { bungalows: StudioMenu[] }) {
                     className="text-green hover:text-sand"> 
                     {t("contact")} 
                 </Link>
+
+                {bungalowsPublies.length > 0 && (
+            <Link
+              href="/reservation"
+              className="rounded-md bg-green px-4 py-1.5 text-sm font-medium text-linen transition-colors hover:bg-[#244D2B]"
+            >
+              {t("reserver")}
+            </Link>
+          )}
 
                 {/* Sélecteur de langue */}
                 {plusieursLangues && (

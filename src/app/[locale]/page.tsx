@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import Gallery from "@/components/Gallery";
 import { getBungalows, texteLocalise } from "@/lib/data";
 import { photosDe } from "@/lib/photos";
+import Button from "@/components/Button";
 
 export const revalidate = 60;
 
@@ -17,6 +18,7 @@ export default async function Home({
 
   const t = await getTranslations("Accueil");
   const bungalows = await getBungalows();
+  const reservationOuverte = bungalows.some((b) => b.publie);
 
   const photosAccueil = [
     { src: "/images/jardin1.png", alt: t("photos.jardin1") },
@@ -44,6 +46,11 @@ export default async function Home({
             <p className="max-w-full text-base leading-7 text-[#222222]">
               {t("intro")}
             </p>
+            {reservationOuverte && (
+              <Button href="/reservation" className="mt-5">
+                {t("reserver")}
+              </Button>
+            )}
           </div>
 
           <Gallery photos={photosAccueil} priority />

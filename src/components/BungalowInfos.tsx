@@ -8,7 +8,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import Button from "@/components/Button";
 import type { EquipementCode } from "@/lib/data";
 import {
   PERIODES,
@@ -85,10 +84,6 @@ export default function BungalowInfos({
             );
           })}
         </ul>
-
-        <Button href="/contact" className="mt-8">
-          {t("demanderDispo")}
-        </Button>
       </section>
 
       <section className="mt-10">
@@ -120,16 +115,13 @@ export default function BungalowInfos({
         )}
 
         {conditions.length > 0 && (
-          <>
-            <h3 className="mb-2 mt-8 text-lg font-semibold text-[#2F6036]">
-              {t("sejourTitre")}
-            </h3>
-            <ul className="list-disc space-y-1 pl-5">
-              {conditions.map((c, i) => (
-                <li key={i}>{c}</li>
-              ))}
-            </ul>
-          </>
+          <ul
+            className={`list-disc space-y-1 pl-5 ${tarifs ? "mt-6" : ""}`}
+          >
+            {conditions.map((c, i) => (
+              <li key={i}>{c}</li>
+            ))}
+          </ul>
         )}
       </section>
     </>

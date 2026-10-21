@@ -17,10 +17,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Sitemap : lecture des bungalows impossible", e);
   }
 
-  const chemins = [
+    const chemins = [
     "",
     "/bungalows",
     "/contact",
+    // La page de demande n'existe que si au moins un studio est publié
+    ...(slugs.length > 0 ? ["/reservation"] : []),
     ...slugs.map((slug) => `/bungalows/${slug}`),
   ];
 

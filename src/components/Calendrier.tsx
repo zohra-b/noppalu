@@ -2,6 +2,7 @@
 
 import { useState, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import Button from "@/components/Button";
 import type { Periode } from "@/lib/data";
 
 type Studio = { slug: string; nom: string };
@@ -29,6 +30,9 @@ function aujourdhuiNavigateur(): string {
   const d = new Date();
   return cleJour(d.getFullYear(), d.getMonth(), d.getDate());
 }
+
+const CLASSE_FLECHE =
+  "flex h-9 w-9 items-center justify-center rounded-md text-xl text-[#2F6036] hover:bg-white disabled:opacity-30 disabled:hover:bg-transparent";
 
 type Props = {
   studios: Studio[];
@@ -85,17 +89,7 @@ export default function Calendrier({
   }
 
   const [anneeJ, moisJ] = aujourdhui.split("-").map(Number);
-  const indexMois = anneeJ * 12 + (moisJ - 1) + decalage;
-  const annee = Math.floor(indexMois / 12);
-  const mois = indexMois % 12;
-
-  const titreBrut = new Intl.DateTimeFormat(locale, {
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(annee, mois, 1)));
-  const titreMois =
-    titreBrut.charAt(0).toLocaleUpperCase(locale) + titreBrut.slice(1);
+  const indexBase = anneeJ * 12 + (moisJ - 1) + decalage;
 
   const formatSemaine = new Intl.DateTimeFormat(locale, {
     weekday: "short",
@@ -114,68 +108,86 @@ export default function Calendrier({
   const entetes = Array.from({ length: 7 }, (_, i) =>
     formatSemaine.format(new Date(Date.UTC(2024, 0, 1 + i))),
   );
-  const casesVides = (new Date(Date.UTC(annee, mois, 1)).getUTCDay() + 6) % 7;
-  const nbJours = new Date(Date.UTC(annee, mois + 1, 0)).getUTCDate();
 
   const options = [{ slug: "tous", nom: t("tous") }, ...studios];
 
-  return (
-    <section className="mb-10 rounded-lg bg-[#FFFEF6] p-6 shadow-sm md:p-8">
-      <h2 className="mb-2 font-serif text-2xl text-[#2F6036]">{t("titre")}</h2>
-      <p className="mb-6 max-w-3xl text-sm leading-6 text-gray-600">
-        {plusieurs ? t("introGeneral") : t("intro")}
-      </p>
+  const flechePrecedente = (
+    <button
+      type="button"
+      onClick={() => changerMois(-1)}
+      disabled={decalage === 0}
+      aria-label={t("precedent")}
+      className={CLASSE_FLECHE}
+    >
+      ‹
+    </button>
+  );
 
-      {plusieurs && (
-        <div
-          role="group"
-          aria-label={t("choixStudio")}
-          className="mb-5 flex flex-wrap gap-2"
-        >
-          {options.map((o) => (
-            <button
-              key={o.slug}
-              type="button"
-              aria-pressed={choix === o.slug}
-              onClick={() => {
-                setChoix(o.slug);
-                setJourChoisi(null);
-              }}
-              className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-                choix === o.slug
-                  ? "border-[#2F6036] bg-[#2F6036] text-white"
-                  : "border-[#C6B06B] text-[#2F6036] hover:bg-white"
-              }`}
-            >
-              {o.nom}
-            </button>
-          ))}
-        </div>
-      )}
+  // Un mois : en-tête avec ses flèches, jours de la semaine, grille.
+  // `position` 0 = mois de gauche (toujours visible), 1 = mois de droite (ordinateur seulement).
+  function mois(position: 0 | 1) {
+    const index = indexBase + position;
+    const annee = Math.floor(index / 12);
+    const m = index % 12;
 
-      <div className="max-w-md">
-        <div className="mb-3 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => changerMois(-1)}
-            disabled={decalage === 0}
-            aria-label={t("precedent")}
-            className="rounded-md px-3 py-1 text-xl text-[#2F6036] hover:bg-white disabled:opacity-30 disabled:hover:bg-transparent"
+    const titreBrut = new Intl.DateTimeFormat(locale, {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(new Date(Date.UTC(annee, m, 1)));
+    const titre =
+      titreBrut.charAt(0).toLocaleUpperCase(locale) + titreBrut.slice(1);
+
+    const casesVides = (new Date(Date.UTC(annee, m, 1)).getUTCDay() + 6) % 7;
+    const nbJours = new Date(Date.UTC(annee, m + 1, 0)).getUTCDate();
+
+    return (
+      <div
+        className={
+          position === 1
+            ? "hidden md:block md:w-72 lg:w-80"
+            : "md:w-72 lg:w-80"
+        }
+      >
+        <div className="mb-2 flex items-center justify-between">
+          {position === 0 ? (
+            flechePrecedente
+          ) : (
+            <span className="h-9 w-9" aria-hidden="true" />
+          )}
+
+          <p
+            aria-live={position === 0 ? "polite" : undefined}
+            className="font-medium text-[#2F6036]"
           >
-            ‹
-          </button>
-          <p aria-live="polite" className="font-medium text-[#2F6036]">
-            {titreMois}
+            {titre}
           </p>
-          <button
-            type="button"
-            onClick={() => changerMois(1)}
-            disabled={decalage >= MOIS_MAX}
-            aria-label={t("suivant")}
-            className="rounded-md px-3 py-1 text-xl text-[#2F6036] hover:bg-white disabled:opacity-30 disabled:hover:bg-transparent"
-          >
-            ›
-          </button>
+
+          {position === 0 ? (
+            <>
+              {/* Sur téléphone, la flèche « suivant » est ici ; sur ordinateur, elle est au-dessus du mois de droite */}
+              <button
+                type="button"
+                onClick={() => changerMois(1)}
+                disabled={decalage >= MOIS_MAX}
+                aria-label={t("suivant")}
+                className={`${CLASSE_FLECHE} md:hidden`}
+              >
+                ›
+              </button>
+              <span className="hidden h-9 w-9 md:block" aria-hidden="true" />
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => changerMois(1)}
+              disabled={decalage + 1 >= MOIS_MAX}
+              aria-label={t("suivant")}
+              className={CLASSE_FLECHE}
+            >
+              ›
+            </button>
+          )}
         </div>
 
         <div
@@ -195,7 +207,7 @@ export default function Calendrier({
           ))}
           {Array.from({ length: nbJours }, (_, i) => {
             const jour = i + 1;
-            const cle = cleJour(annee, mois, jour);
+            const cle = cleJour(annee, m, jour);
             const s = statut(cle);
             const interactif = choix === "tous" && plusieurs && s !== "passee";
             const libelle = `${dateLongue(cle)}, ${t(s)}`;
@@ -226,6 +238,50 @@ export default function Calendrier({
             );
           })}
         </ul>
+      </div>
+    );
+  }
+
+  return (
+    <section className="mb-10 rounded-lg bg-[#FFFEF6] p-5 shadow-sm md:p-6">
+      <h2 className="mb-2 font-serif text-2xl text-[#2F6036]">{t("titre")}</h2>
+      <p className="mb-5 text-sm leading-6 text-gray-600">
+        {plusieurs ? t("introGeneral") : t("intro")}
+      </p>
+
+      {plusieurs && (
+        <div
+          role="group"
+          aria-label={t("choixStudio")}
+          className="mb-4 flex flex-wrap gap-2"
+        >
+          {options.map((o) => (
+            <button
+              key={o.slug}
+              type="button"
+              aria-pressed={choix === o.slug}
+              onClick={() => {
+                setChoix(o.slug);
+                setJourChoisi(null);
+              }}
+              className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+                choix === o.slug
+                  ? "border-[#2F6036] bg-[#2F6036] text-white"
+                  : "border-[#C6B06B] text-[#2F6036] hover:bg-white"
+              }`}
+            >
+              {o.nom}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="max-w-md md:max-w-none">
+        {/* Sur ordinateur : espace égal à gauche, entre les deux mois et à droite */}
+        <div className="md:flex md:justify-evenly">
+          {mois(0)}
+          {mois(1)}
+        </div>
 
         <p aria-live="polite" className="mt-3 min-h-6 text-sm text-[#222222]">
           {choix === "tous" && jourChoisi
@@ -240,31 +296,42 @@ export default function Calendrier({
             : ""}
         </p>
 
-        <ul className="mt-2 flex flex-wrap gap-4 text-xs text-gray-600">
-          <li className="flex items-center gap-2">
-            <span
-              className={`h-4 w-4 rounded ${CLASSES.libre}`}
-              aria-hidden="true"
-            />
-            {t("libre")}
-          </li>
-          {choix === "tous" && plusieurs && (
+        <div className="mt-2 md:flex md:items-center md:justify-between md:gap-6">
+          <ul className="flex flex-wrap gap-4 text-xs text-gray-600">
             <li className="flex items-center gap-2">
               <span
-                className={`h-4 w-4 rounded ${CLASSES.partiel}`}
+                className={`h-4 w-4 rounded ${CLASSES.libre}`}
                 aria-hidden="true"
               />
-              {t("partiel")}
+              {t("libre")}
             </li>
-          )}
-          <li className="flex items-center gap-2">
-            <span
-              className="h-4 w-4 rounded bg-[#8B3017]/15"
-              aria-hidden="true"
-            />
-            {t("occupee")}
-          </li>
-        </ul>
+            {choix === "tous" && plusieurs && (
+              <li className="flex items-center gap-2">
+                <span
+                  className={`h-4 w-4 rounded ${CLASSES.partiel}`}
+                  aria-hidden="true"
+                />
+                {t("partiel")}
+              </li>
+            )}
+            <li className="flex items-center gap-2">
+              <span
+                className="h-4 w-4 rounded bg-[#8B3017]/15"
+                aria-hidden="true"
+              />
+              {t("occupee")}
+            </li>
+          </ul>
+
+          <Button
+            href={
+              choix === "tous" ? "/reservation" : `/reservation?studio=${choix}`
+            }
+            className="mt-5 md:mt-0"
+          >
+            {t("reserver")}
+          </Button>
+        </div>
       </div>
     </section>
   );
