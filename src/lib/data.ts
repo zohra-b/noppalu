@@ -160,3 +160,34 @@ export async function getToutesIndisponibilites(): Promise<
   }
   return parStudio;
 }
+
+/**
+ * Studios publiés libres pendant TOUT le séjour (arrivée incluse, départ exclu).
+ * Une période occupée gêne le séjour si elle commence avant le départ
+ * et se termine après l'arrivée : un départ le jour de notre arrivée,
+ * ou une arrivée le jour de notre départ, ne gênent pas.
+ */
+export async function getStudiosLibres(
+  arrivee: string,
+  depart: string
+): Promise<Bungalow[]> {
+  const [studios, occupes] = await Promise.all([
+    getBungalows(),
+    createPublicClient()
+      .from("availability_public")
+      .select("bungalow_slug")
+      .lt("start_date", depart)
+      .gt("end_date", arrivee),
+  ]);
+
+  if (occupes.error) {
+    throw new Error(
+      `Lecture des disponibilités impossible : ${occupes.error.message}`
+    );
+  }
+
+  const pris = new Set(
+    (occupes.data as { bungalow_slug: string }[]).map((l) => l.bungalow_slug)
+  );
+  return studios.filter((s) => s.publie && !pris.has(s.slug));
+}
