@@ -38,12 +38,15 @@ type Props = {
   studios: Studio[];
   periodesParStudio: Record<string, Periode[]>;
   aujourdhui: string; // AAAA-MM-JJ, calculé par le serveur
+  // "page" : pages studios (avec bouton de demande) ; "reservation" : intégré à la page de demande
+  variante?: "page" | "reservation";
 };
 
 export default function Calendrier({
   studios,
   periodesParStudio,
   aujourdhui: aujourdhuiServeur,
+  variante = "page",
 }: Props) {
   const t = useTranslations("Calendrier");
   const locale = useLocale();
@@ -110,6 +113,13 @@ export default function Calendrier({
   );
 
   const options = [{ slug: "tous", nom: t("tous") }, ...studios];
+
+  const intro =
+    variante === "reservation"
+      ? t("introReservation")
+      : plusieurs
+        ? t("introGeneral")
+        : t("intro");
 
   const flechePrecedente = (
     <button
@@ -243,11 +253,13 @@ export default function Calendrier({
   }
 
   return (
-    <section className="mb-10 rounded-lg bg-[#FFFEF6] p-5 shadow-sm md:p-6">
+    <section
+      className={`rounded-lg bg-[#FFFEF6] p-5 shadow-sm md:p-6 ${
+        variante === "page" ? "mb-10" : ""
+      }`}
+    >
       <h2 className="mb-2 font-serif text-2xl text-[#2F6036]">{t("titre")}</h2>
-      <p className="mb-5 text-sm leading-6 text-gray-600">
-        {plusieurs ? t("introGeneral") : t("intro")}
-      </p>
+      <p className="mb-5 text-sm leading-6 text-gray-600">{intro}</p>
 
       {plusieurs && (
         <div
@@ -323,14 +335,18 @@ export default function Calendrier({
             </li>
           </ul>
 
-          <Button
-            href={
-              choix === "tous" ? "/reservation" : `/reservation?studio=${choix}`
-            }
-            className="mt-5 md:mt-0"
-          >
-            {t("reserver")}
-          </Button>
+          {variante === "page" && (
+            <Button
+              href={
+                choix === "tous"
+                  ? "/reservation"
+                  : `/reservation?studio=${choix}`
+              }
+              className="mt-5 md:mt-0"
+            >
+              {t("reserver")}
+            </Button>
+          )}
         </div>
       </div>
     </section>

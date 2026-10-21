@@ -155,6 +155,7 @@
     "passee": "Date passée",
     "libresCeJour": "Nuit du {date}, disponible : {liste}",
     "aucunLibre": "Nuit du {date} : aucun studio disponible",
+    "introReservation": "Consultez les disponibilités de nos studios, puis choisissez vos dates ci-dessous.",
     "reserver": "Faire une demande de réservation"
   },
 

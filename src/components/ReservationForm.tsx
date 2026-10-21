@@ -9,6 +9,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import Button from "@/components/Button";
+import Calendrier from "@/components/Calendrier";
 import { Link } from "@/i18n/navigation";
 import type { Periode } from "@/lib/data";
 import { prixDuSejour, type Tarifs } from "@/lib/saisons";
@@ -289,6 +290,13 @@ export default function ReservationForm({
 
   return (
     <div className="space-y-6">
+              {/* Disponibilités : même calendrier que sur les pages studios */}
+      <Calendrier
+        studios={studios}
+        periodesParStudio={periodesParStudio}
+        aujourdhui={aujourdhui}
+        variante="reservation"
+      />
       {/* 1. Dates */}
       <section className={CLASSE_CARTE}>
         <h2 className="mb-4 font-serif text-2xl text-green">
