@@ -3,7 +3,7 @@
 
 export const REGLES = {
   nuitsMin: 2,
-  nuitsMax: 14, 
+  nuitsMax: 14, // règle commerciale (protège aussi le serveur contre les dates absurdes)
   delaiMinJours: 1, // arrivée au plus tôt demain (24 h d'avance)
   horizonMois: 18, // même limite que le calendrier public
 } as const;
@@ -27,10 +27,17 @@ export type EntreeSejour = {
 const FORMAT = /^\d{4}-\d{2}-\d{2}$/;
 const MS_PAR_JOUR = 86_400_000;
 
-// Renvoie l'instant UTC de minuit, ou null si la date est invalide ou inexistante.
+// Années acceptées. Pendant que le visiteur tape l'année au clavier, le champ de date
+// passe par des valeurs comme 0002 ou 0020 : elles doivent être traitées comme « pas encore saisie ».
+// (Date.UTC lit aussi les années 0 à 99 comme 1900 à 1999, ce qui faussait la vérification.)
+const ANNEE_MIN = 2000;
+const ANNEE_MAX = 2100;
+
+// Renvoie l'instant UTC de minuit, ou null si la date est invalide, inexistante ou hors plage.
 function lireDate(s: string): number | null {
   if (!FORMAT.test(s)) return null;
   const [a, m, j] = s.split("-").map(Number);
+  if (a < ANNEE_MIN || a > ANNEE_MAX) return null;
   const d = new Date(Date.UTC(a, m - 1, j));
   if (
     d.getUTCFullYear() !== a ||
@@ -40,6 +47,11 @@ function lireDate(s: string): number | null {
     return null;
   }
   return d.getTime();
+}
+
+/** Vrai si la chaîne est une vraie date AAAA-MM-JJ, avec une année entre 2000 et 2100. */
+export function dateValide(s: string): boolean {
+  return lireDate(s) !== null;
 }
 
 /** Date du jour au Sénégal (fuseau UTC toute l'année), au format AAAA-MM-JJ. */

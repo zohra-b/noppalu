@@ -17,6 +17,7 @@ import {
   REGLES,
   ajouterJours,
   aujourdhuiSenegal,
+  dateValide,
   nombreNuits,
   validerSejour,
 } from "@/lib/sejour";
@@ -39,14 +40,6 @@ type Props = {
   aujourdhui: string; // AAAA-MM-JJ, calculé par le serveur
 };
 
-const FORMAT_DATE = /^\d{4}-\d{2}-\d{2}$/;
-
-// Vérifie qu'une chaîne est une vraie date AAAA-MM-JJ (refuse 2026-02-30, les années à 5 chiffres, etc.)
-function dateValide(s: string): boolean {
-  if (!FORMAT_DATE.test(s)) return false;
-  const d = new Date(`${s}T00:00:00Z`);
-  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
-}
 
 const CODES_CONNUS = [
   "nom_invalide",
@@ -139,7 +132,7 @@ export default function ReservationForm({
     ? ajouterJours(arrivee, REGLES.nuitsMin)
     : minArrivee;
 
-  const datesSaisies = arrivee !== "" && depart !== "";
+  const datesSaisies = dateValide(arrivee) && dateValide(depart);
   const erreurSejour = datesSaisies
     ? validerSejour(
         { arrivee, depart, voyageurs, capacite: maxCapacite },

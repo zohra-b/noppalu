@@ -15,7 +15,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className="h-full antialiased">
+    <html lang="fr" className="h-full antialiased suppressHydrationWarning">
       <body className="flex min-h-full flex-col bg-linen text-[#222222]">
         {children}
       </body>

@@ -49,7 +49,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className=" h-full antialiased"
+      className=" h-full antialiased suppressHydrationWarning"
     >
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
