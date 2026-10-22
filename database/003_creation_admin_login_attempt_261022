@@ -1,0 +1,13 @@
+create table public.admin_login_attempts (
+  id          bigint generated always as identity primary key,
+  created_at  timestamptz not null default now(),
+  ip_hash     text    not null,
+  success     boolean not null
+);
+
+create index admin_login_attempts_idx
+  on public.admin_login_attempts (ip_hash, created_at desc);
+
+alter table public.admin_login_attempts enable row level security;
+revoke all on public.admin_login_attempts from anon, authenticated;
+grant select, insert, delete on public.admin_login_attempts to service_role;

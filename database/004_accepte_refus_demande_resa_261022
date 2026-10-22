@@ -1,0 +1,59 @@
+-- 1. Lien entre un blocage de dates et la demande qui l'a créé
+alter table public.availability_blocks
+  add column request_id uuid references public.booking_requests(id) on delete set null;
+
+create unique index availability_blocks_request_id_key
+  on public.availability_blocks (request_id)
+  where request_id is not null;
+
+-- 2. Droits du code serveur sur les disponibilités (sans effet s'ils existent déjà)
+grant select, insert, update, delete on public.availability_blocks to service_role;
+
+-- 3. Accepter une demande : bloque les dates ET change le statut, en une seule opération
+create or replace function public.accepter_demande(p_id uuid)
+returns void
+language plpgsql
+set search_path = ''
+as $$
+declare
+  d public.booking_requests%rowtype;
+begin
+  select * into d from public.booking_requests where id = p_id for update;
+  if not found then raise exception 'demande_introuvable'; end if;
+  if d.status <> 'nouvelle' then raise exception 'statut_invalide'; end if;
+
+  insert into public.availability_blocks
+    (bungalow_slug, start_date, end_date, source, guest_name, note, request_id)
+  values
+    (d.bungalow_slug, d.start_date, d.end_date, 'demande_site', d.guest_name,
+     'Demande acceptée', d.id);
+
+  update public.booking_requests set status = 'acceptee' where id = d.id;
+end;
+$$;
+
+-- 4. Annuler une demande acceptée ou payée : libère les dates ET change le statut
+create or replace function public.annuler_demande(p_id uuid)
+returns void
+language plpgsql
+set search_path = ''
+as $$
+declare
+  d public.booking_requests%rowtype;
+begin
+  select * into d from public.booking_requests where id = p_id for update;
+  if not found then raise exception 'demande_introuvable'; end if;
+  if d.status not in ('acceptee', 'en_attente_paiement', 'payee') then
+    raise exception 'statut_invalide';
+  end if;
+
+  delete from public.availability_blocks where request_id = d.id;
+  update public.booking_requests set status = 'expiree' where id = d.id;
+end;
+$$;
+
+-- 5. Ces fonctions ne doivent être appelables que par le code serveur
+revoke all on function public.accepter_demande(uuid) from public, anon, authenticated;
+revoke all on function public.annuler_demande(uuid) from public, anon, authenticated;
+grant execute on function public.accepter_demande(uuid) to service_role;
+grant execute on function public.annuler_demande(uuid) to service_role;
