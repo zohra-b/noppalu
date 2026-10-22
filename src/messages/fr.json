@@ -213,7 +213,7 @@
       "message_trop_long": "Votre message est trop long (2 000 caractères maximum).",
       "studio_inconnu": "Ce studio n'est pas disponible à la réservation.",
       "studio_indisponible": "Ce studio n'est plus disponible sur ces dates. Choisissez d'autres dates ou un autre studio.",
-      "dates_invalides": "Ces dates ne sont pas valides.",
+      "dates_invalides": "Date invalide : vérifiez le jour, le mois et l'année.",
       "depart_avant_arrivee": "La date de départ doit être après la date d'arrivée.",
       "arrivee_trop_proche": "L'arrivée doit avoir lieu au plus tôt demain. Pour un séjour immédiat, contactez-nous.",
       "arrivee_trop_lointaine": "Nous n'ouvrons pas encore les demandes aussi loin à l'avance.",

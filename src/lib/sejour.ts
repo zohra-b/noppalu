@@ -28,7 +28,7 @@ const FORMAT = /^\d{4}-\d{2}-\d{2}$/;
 const MS_PAR_JOUR = 86_400_000;
 
 // Années acceptées. Pendant que le visiteur tape l'année au clavier, le champ de date
-// passe par des valeurs comme 0002 ou 0020 : elles doivent être traitées comme « pas encore saisie ».
+// passe par des valeurs comme 0002 ou 0020 : elles ne doivent pas faire planter la page.
 // (Date.UTC lit aussi les années 0 à 99 comme 1900 à 1999, ce qui faussait la vérification.)
 const ANNEE_MIN = 2000;
 const ANNEE_MAX = 2100;
@@ -52,6 +52,23 @@ function lireDate(s: string): number | null {
 /** Vrai si la chaîne est une vraie date AAAA-MM-JJ, avec une année entre 2000 et 2100. */
 export function dateValide(s: string): boolean {
   return lireDate(s) !== null;
+}
+
+export type EtatDate = "vide" | "en_cours" | "invalide" | "ok";
+
+/**
+ * Situation d'un champ de date :
+ * - "vide"     : rien de saisi ;
+ * - "en_cours" : année à 1, 2 ou 3 chiffres (0002, 0020, 0202) : le visiteur est encore en train de taper ;
+ * - "invalide" : saisie terminée mais impossible (1111, 2150, 20261…) ;
+ * - "ok"       : date valide.
+ */
+export function etatDate(s: string): EtatDate {
+  if (s === "") return "vide";
+  if (dateValide(s)) return "ok";
+  const annee = /^(\d+)-\d{2}-\d{2}$/.exec(s);
+  if (annee && Number(annee[1]) < 1000) return "en_cours";
+  return "invalide";
 }
 
 /** Date du jour au Sénégal (fuseau UTC toute l'année), au format AAAA-MM-JJ. */

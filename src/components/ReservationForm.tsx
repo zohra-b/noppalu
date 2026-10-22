@@ -18,6 +18,7 @@ import {
   ajouterJours,
   aujourdhuiSenegal,
   dateValide,
+  etatDate,
   nombreNuits,
   validerSejour,
 } from "@/lib/sejour";
@@ -39,7 +40,6 @@ type Props = {
   tarifs: Tarifs | null; // null = prix masqués
   aujourdhui: string; // AAAA-MM-JJ, calculé par le serveur
 };
-
 
 const CODES_CONNUS = [
   "nom_invalide",
@@ -64,7 +64,7 @@ const CODES_CONNUS = [
 ];
 
 const CLASSE_CHAMP =
-  "w-full rounded-md border border-[#C6B06B] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-green";
+  "w-full rounded-md border border-[#C6B06B] bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-green aria-[invalid=true]:border-red-700";
 const CLASSE_CARTE = "rounded-lg bg-[#FFFEF6] p-6 shadow-sm md:p-8";
 
 // Date du jour (Sénégal) côté navigateur. Pendant le premier affichage, on utilise
@@ -104,6 +104,9 @@ export default function ReservationForm({
   const [depart, setDepart] = useState(() => dateParam("depart"));
   const [voyageurs, setVoyageurs] = useState(Math.min(2, maxCapacite));
   const [choix, setChoix] = useState(preference);
+  const [champActif, setChampActif] = useState<"arrivee" | "depart" | null>(
+    null,
+  );
   const [champs, setChamps] = useState({
     nom: "",
     email: "",
@@ -132,6 +135,17 @@ export default function ReservationForm({
     ? ajouterJours(arrivee, REGLES.nuitsMin)
     : minArrivee;
 
+  // Une date est « en erreur » si elle est complète mais impossible (1111, 2150…),
+  // ou si l'année est restée incomplète une fois le champ quitté.
+  // Pendant la frappe de l'année, on ne dit rien.
+  const dateEnErreur = (cle: "arrivee" | "depart", valeur: string) => {
+    const etat = etatDate(valeur);
+    return etat === "invalide" || (etat === "en_cours" && champActif !== cle);
+  };
+  const arriveeEnErreur = dateEnErreur("arrivee", arrivee);
+  const departEnErreur = dateEnErreur("depart", depart);
+
+  // Les calculs n'ont lieu que sur des dates complètes et plausibles
   const datesSaisies = dateValide(arrivee) && dateValide(depart);
   const erreurSejour = datesSaisies
     ? validerSejour(
@@ -142,19 +156,20 @@ export default function ReservationForm({
   const datesValides = datesSaisies && erreurSejour === null;
   const nuits = datesValides ? nombreNuits(arrivee, depart) : 0;
 
-    const estLibre = (s: Studio) =>
+  const estLibre = (s: Studio) =>
     s.capacite >= voyageurs &&
     !(periodesParStudio[s.slug] ?? []).some(
       (p) => p.debut < depart && p.fin > arrivee,
     );
 
-    const libres = datesValides ? studios.filter(estLibre) : [];
+  const libres = datesValides ? studios.filter(estLibre) : [];
 
-  // Studio retenu : celui qui est coché, sinon l'unique studio libre
+  // Studio retenu : celui qui est coché s'il est libre, sinon l'unique studio libre
   const choisi =
     libres.find((s) => s.slug === choix) ??
     (libres.length === 1 ? libres[0] : null);
 
+  // Le studio choisi (ou préféré) n'est pas libre sur les dates saisies
   const notePreference =
     datesValides &&
     choix !== "" &&
@@ -283,13 +298,14 @@ export default function ReservationForm({
 
   return (
     <div className="space-y-6">
-              {/* Disponibilités : même calendrier que sur les pages studios */}
+      {/* Disponibilités : même calendrier que sur les pages studios */}
       <Calendrier
         studios={studios}
         periodesParStudio={periodesParStudio}
         aujourdhui={aujourdhui}
         variante="reservation"
       />
+
       {/* 1. Dates */}
       <section className={CLASSE_CARTE}>
         <h2 className="mb-4 font-serif text-2xl text-green">
@@ -310,6 +326,9 @@ export default function ReservationForm({
               value={arrivee}
               min={minArrivee}
               onChange={(e) => changerArrivee(e.target.value)}
+              onFocus={() => setChampActif("arrivee")}
+              onBlur={() => setChampActif(null)}
+              aria-invalid={arriveeEnErreur}
               className={CLASSE_CHAMP}
             />
           </div>
@@ -324,6 +343,9 @@ export default function ReservationForm({
               value={depart}
               min={minDepart}
               onChange={(e) => setDepart(e.target.value)}
+              onFocus={() => setChampActif("depart")}
+              onBlur={() => setChampActif(null)}
+              aria-invalid={departEnErreur}
               className={CLASSE_CHAMP}
             />
           </div>
@@ -351,7 +373,9 @@ export default function ReservationForm({
         </div>
 
         <p aria-live="polite" className="mt-3 min-h-6 text-sm">
-          {erreurSejour ? (
+          {arriveeEnErreur || departEnErreur ? (
+            <span className="text-red-700">{erreurTexte("dates_invalides")}</span>
+          ) : erreurSejour ? (
             <span className="text-red-700">{erreurTexte(erreurSejour)}</span>
           ) : datesValides ? (
             t("nuits", { n: nuits })
@@ -361,7 +385,7 @@ export default function ReservationForm({
         </p>
       </section>
 
-          {/* 2. Choix du studio : toujours visible. Avant les dates, état neutre ;
+      {/* 2. Choix du studio : toujours visible. Avant les dates, état neutre ;
           ensuite les studios occupés sont grisés et non sélectionnables. */}
       <section className={CLASSE_CARTE}>
         <h2 className="mb-2 font-serif text-2xl text-green">
@@ -397,7 +421,9 @@ export default function ReservationForm({
           {studios.map((s) => {
             // Sans dates valides, aucun studio n'est présenté comme occupé
             const libre = !datesValides || estLibre(s);
-            const actif = datesValides ? choisi?.slug === s.slug : choix === s.slug;
+            const actif = datesValides
+              ? choisi?.slug === s.slug
+              : choix === s.slug;
             return (
               <label
                 key={s.slug}
@@ -494,7 +520,7 @@ export default function ReservationForm({
                 onChange={(e) => modifier("email", e.target.value)}
                 aria-invalid={!!codeErreurEmail}
                 aria-describedby={codeErreurEmail ? "email-erreur" : undefined}
-                className={`${CLASSE_CHAMP} aria-[invalid=true]:border-red-700`}
+                className={CLASSE_CHAMP}
               />
               {codeErreurEmail && (
                 <p
