@@ -1,6 +1,7 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 /**
  * Client Supabase lié à la session de l'utilisateur connecté (cookies).
@@ -25,7 +26,7 @@ export async function createSessionClient() {
           );
         } catch {
           // Appelé depuis un composant serveur, qui ne peut pas écrire de cookies :
-          // le proxy (étape B3) renouvellera la session.
+          // le proxy renouvelle déjà la session à chaque requête.
         }
       },
     },
@@ -46,4 +47,14 @@ export async function getAdmin() {
   if (error || !data.user) return null;
   if (data.user.email?.toLowerCase() !== adminEmail) return null;
   return data.user;
+}
+
+/**
+ * À appeler en TÊTE de chaque page et de chaque action de l'administration.
+ * Sans session administrateur valide, renvoie vers le formulaire de connexion.
+ */
+export async function requireAdmin() {
+  const admin = await getAdmin();
+  if (!admin) redirect("/admin");
+  return admin;
 }
