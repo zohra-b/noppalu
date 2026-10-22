@@ -1,0 +1,129 @@
+-- ============================================================
+-- Casa Noppalu : schéma de PRODUCTION (sans données)
+-- À exécuter UNE SEULE FOIS, dans le projet casa-noppalu-prod
+-- ============================================================
+
+create extension if not exists btree_gist;
+
+-- ------------------------------------------------------------
+-- 1. Studios
+-- ------------------------------------------------------------
+create table public.bungalows (
+  slug         text primary key
+               check (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+  nom          text    not null check (length(trim(nom)) > 0),
+  ordre        integer not null default 0,
+  publie       boolean not null default false,
+  capacite     integer not null check (capacite between 1 and 20),
+  lit_cm       integer not null check (lit_cm between 80 and 250),
+  equipements  text[]  not null default '{}'
+               check (equipements <@ array['clim','wifi','tv','piscine','cuisine']::text[]),
+  resume       jsonb   not null default '{}'::jsonb,
+  description  jsonb   not null default '{}'::jsonb
+);
+
+-- ------------------------------------------------------------
+-- 2. Réglages du site (une seule ligne)
+-- ------------------------------------------------------------
+create table public.site_settings (
+  id              boolean primary key default true check (id),
+  prix_basse      integer not null check (prix_basse >= 0),
+  prix_haute      integer not null check (prix_haute >= 0),
+  prix_fetes      integer not null check (prix_fetes >= 0),
+  prix_transfert  integer not null check (prix_transfert >= 0),
+  conditions      jsonb   not null default '{}'::jsonb,
+  afficher_prix   boolean not null default false
+);
+
+-- ------------------------------------------------------------
+-- 3. Disponibilités (nuits, date de fin EXCLUSIVE)
+-- ------------------------------------------------------------
+create table public.availability_blocks (
+  id             uuid primary key default gen_random_uuid(),
+  bungalow_slug  text not null references public.bungalows(slug),
+  start_date     date not null,   -- première nuit
+  end_date       date not null,   -- exclusive : jour du départ
+  source         text not null
+                 check (source in ('manuel','airbnb','booking','demande_site','indisponible')),
+  guest_name     text,            -- privé
+  note           text,            -- privé
+  created_at     timestamptz not null default now(),
+
+  constraint dates_valides check (end_date > start_date),
+  constraint pas_de_chevauchement exclude using gist (
+    bungalow_slug with =,
+    daterange(start_date, end_date, '[)') with &&
+  )
+);
+
+-- ------------------------------------------------------------
+-- 4. Demandes de réservation
+-- ------------------------------------------------------------
+create table public.booking_requests (
+  id               uuid primary key default gen_random_uuid(),
+  created_at       timestamptz not null default now(),
+  bungalow_slug    text    not null references public.bungalows(slug),
+  start_date       date    not null,  -- première nuit
+  end_date         date    not null,  -- exclusive : jour du départ
+  guests           integer not null check (guests between 1 and 20),
+  guest_name       text    not null check (length(trim(guest_name)) between 2 and 100),
+  email            text    not null check (length(email) <= 200),
+  phone            text    check (phone is null or length(phone) <= 30),
+  message          text    check (message is null or length(message) <= 2000),
+  locale           text    not null default 'fr',
+  estimated_total  integer check (estimated_total is null or estimated_total >= 0),
+  status           text    not null default 'nouvelle'
+                   check (status in ('nouvelle','acceptee','refusee','expiree',
+                                     'en_attente_paiement','payee')),
+
+  constraint demande_dates_valides check (end_date > start_date)
+);
+
+create index booking_requests_statut_idx
+  on public.booking_requests (status, created_at desc);
+
+-- ------------------------------------------------------------
+-- 5. Sécurité : RLS sur les quatre tables
+-- ------------------------------------------------------------
+alter table public.bungalows           enable row level security;
+alter table public.site_settings       enable row level security;
+alter table public.availability_blocks enable row level security;
+alter table public.booking_requests    enable row level security;
+
+-- Studios et réglages : lecture publique (rien de secret)
+create policy "lecture publique des bungalows"
+  on public.bungalows for select
+  to anon, authenticated
+  using (true);
+
+create policy "lecture publique des reglages"
+  on public.site_settings for select
+  to anon, authenticated
+  using (true);
+
+-- availability_blocks et booking_requests : AUCUNE politique,
+-- donc aucun accès via l'API publique.
+
+-- ------------------------------------------------------------
+-- 6. Droits explicites
+-- ------------------------------------------------------------
+grant select on public.bungalows     to anon, authenticated;
+grant select on public.site_settings to anon, authenticated;
+
+revoke all on public.availability_blocks from anon, authenticated;
+revoke all on public.booking_requests    from anon, authenticated;
+
+-- Vue publique : uniquement studio, début, fin, pour les studios publiés
+create view public.availability_public as
+  select b.bungalow_slug, b.start_date, b.end_date
+  from public.availability_blocks b
+  join public.bungalows g on g.slug = b.bungalow_slug
+  where g.publie;
+
+grant select on public.availability_public to anon, authenticated;
+
+-- Code serveur (clé secrète) : accès complet aux tables
+grant select, insert, update, delete
+  on public.bungalows, public.site_settings,
+     public.availability_blocks, public.booking_requests
+  to service_role;

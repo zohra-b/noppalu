@@ -1,0 +1,28 @@
+insert into public.bungalows
+  (slug, nom, ordre, publie, capacite, lit_cm, equipements, resume, description)
+values
+  ('manguier', 'Manguier', 1, false, 2, 160,
+   array['clim','wifi','tv','piscine','cuisine'],
+   '{"fr": "Studio indépendant et climatisé avec lit de 160 cm, kitchenette et accès à la piscine."}',
+   '{}'),
+  ('cocotier', 'Cocotier', 2, false, 2, 160,
+   array['clim','wifi','tv','piscine','cuisine'],
+   '{"fr": "Studio indépendant et climatisé avec lit de 160 cm, kitchenette et accès à la piscine."}',
+   '{}'),
+  ('bananier', 'Bananier', 3, false, 2, 140,
+   array['clim','wifi','tv','piscine','cuisine'],
+   '{"fr": "Studio indépendant et climatisé avec lit de 140 cm, kitchenette et accès à la piscine."}',
+   '{}');
+
+insert into public.site_settings
+  (prix_basse, prix_haute, prix_fetes, prix_transfert, conditions, afficher_prix)
+values
+  (35000, 40000, 50000, 20000,
+   '{"fr": [
+     "Capacité : 2 personnes par studio",
+     "Séjour minimum : 2 nuits. Réservation : minimum 24h avant.",
+     "Accès au logement : à partir de 14h. Sortie du logement : avant 11h. (service de bagagerie offert)",
+     "Paiement : virement, Wave, Paypal",
+     "Séjour maximum : 14 nuits. Pour un séjour plus long, contactez-nous."
+   ]}',
+   false);
