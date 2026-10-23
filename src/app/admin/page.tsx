@@ -60,6 +60,17 @@ export default async function AdminPage() {
               )}
             </Link>
           </li>
+          <li>
+            <Link
+              href="/admin/calendrier"
+              className="block rounded-lg bg-[#FFFEF6] p-5 shadow-sm transition-colors hover:bg-white"
+            >
+              <span className="block font-semibold text-green">Calendrier</span>
+              <span className="block text-sm text-gray-600">
+                Les nuits occupées de chaque studio.
+              </span>
+            </Link>
+          </li>
         </ul>
       </main>
     </>

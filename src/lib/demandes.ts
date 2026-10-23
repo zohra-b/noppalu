@@ -1,6 +1,8 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+export { LIBELLES_SOURCE } from "@/lib/blocages-types";
+
 export type StatutDemande =
   | "nouvelle"
   | "acceptee"
@@ -167,13 +169,6 @@ export const CLASSES_STATUT: Record<StatutDemande, string> = {
   expiree: "bg-gray-200 text-gray-600",
 };
 
-export const LIBELLES_SOURCE: Record<string, string> = {
-  manuel: "Blocage manuel",
-  indisponible: "Indisponible",
-  airbnb: "Airbnb",
-  booking: "Booking.com",
-  demande_site: "Demande acceptée du site",
-};
 
 const formatDate = new Intl.DateTimeFormat("fr", {
   dateStyle: "long",
