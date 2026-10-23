@@ -6,18 +6,31 @@ import {
   CLASSES_STATUT,
   LIBELLES_SOURCE,
   LIBELLES_STATUT,
+  delaiDepasse,
+  echeancePaiement,
   formaterDate,
   formaterDateHeure,
-  formaterMontant,
   getConflits,
   getDemande,
   pluriel,
   type Conflit,
 } from "@/lib/demandes";
+import {
+  messageAcceptation,
+  messageAnnulation,
+  messageConfirmation,
+  messageRefus,
+} from "@/lib/messages-demande";
+import { formaterMontantDouble } from "@/lib/monnaie";
+import {
+  coordonneesIncompletes,
+  getCoordonneesPaiement,
+} from "@/lib/paiement";
 import { nombreNuits } from "@/lib/sejour";
 import { requireAdmin } from "@/lib/supabase/session";
 import EnteteAdmin from "../../EnteteAdmin";
 import BoutonsDemande from "./BoutonsDemande";
+import CopierMessage from "./CopierMessage";
 
 export const metadata: Metadata = { title: "Demande" };
 
@@ -76,18 +89,66 @@ export default async function DemandePage({
   }
   const datesLibres = conflits === null ? true : conflits.length === 0; // la base refuse de toute façon un chevauchement
 
+  const acceptee =
+    demande.statut === "acceptee" || demande.statut === "en_attente_paiement";
+  const payee = demande.statut === "payee";
+  const refusee = demande.statut === "refusee";
+  const annulee = demande.statut === "expiree";
+  const aUnMessage = acceptee || payee || refusee || annulee;
+  const etaitPayee = demande.payeeLe !== null;
+
+  const paiement = acceptee ? await getCoordonneesPaiement() : null;
+  const echeance = echeancePaiement(demande);
+  const enRetard = delaiDepasse(demande);
+
   const nuits = nombreNuits(demande.arrivee, demande.depart);
   const whatsapp = lienWhatsApp(demande.telephone);
 
-  const sujet = "Casa Noppalu - Votre demande de réservation";
-  const corps = [
-    `Bonjour ${demande.nom},`,
-    "",
-    `Merci pour votre demande de réservation du studio ${studio}, du ${formaterDate(demande.arrivee)} au ${formaterDate(demande.depart)} (${pluriel(nuits, "nuit")}, ${pluriel(demande.voyageurs, "voyageur")}).`,
-    "",
-    "",
-  ].join("\n");
-  const mailto = `mailto:${demande.email}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(corps)}`;
+  const donneesMessage = {
+    nom: demande.nom,
+    studio,
+    arrivee: demande.arrivee,
+    depart: demande.depart,
+    nuits,
+    voyageurs: demande.voyageurs,
+    montantFcfa: demande.estimation,
+  };
+
+  // Message prérempli selon l'avancement de la demande
+  const message = acceptee
+    ? messageAcceptation({ ...donneesMessage, paiement }, demande.langue)
+    : payee
+      ? messageConfirmation({ ...donneesMessage, paiement: null }, demande.langue)
+      : refusee
+        ? messageRefus({ ...donneesMessage, paiement: null }, demande.langue)
+        : annulee
+          ? messageAnnulation(
+              { ...donneesMessage, paiement: null, reservationPayee: etaitPayee },
+              demande.langue,
+            )
+          : {
+              sujet: "Casa Noppalu - Votre demande de réservation",
+              texte: [
+                `Bonjour ${demande.nom},`,
+                "",
+                `Merci pour votre demande de réservation du studio ${studio}, du ${formaterDate(demande.arrivee)} au ${formaterDate(demande.depart)} (${pluriel(nuits, "nuit")}, ${pluriel(demande.voyageurs, "voyageur")}).`,
+                "",
+                "",
+              ].join("\n"),
+            };
+
+  const titreMessage = acceptee
+    ? "Message d'acceptation"
+    : payee
+      ? "Message de confirmation"
+      : refusee
+        ? "Message de refus"
+        : "Message d'annulation";
+
+  const mailto = `mailto:${demande.email}?subject=${encodeURIComponent(message.sujet)}&body=${encodeURIComponent(message.texte)}`;
+  const lienWa = whatsapp
+    ? `${whatsapp}?text=${encodeURIComponent(message.texte)}`
+    : null;
 
   return (
     <>
@@ -111,6 +172,24 @@ export default async function DemandePage({
           </span>
         </div>
 
+        {acceptee && echeance && (
+          <section className={`${CARTE} ${enRetard ? "border border-red-700" : ""}`}>
+            <h2 className="mb-1 font-semibold text-green">Paiement</h2>
+            {enRetard ? (
+              <p className="text-sm font-medium text-red-700">
+                Délai de paiement dépassé (échéance : le{" "}
+                {formaterDateHeure(echeance.toISOString())}). Enregistrez le
+                paiement s&apos;il est arrivé, ou libérez les dates.
+              </p>
+            ) : (
+              <p className="text-sm">
+                Paiement attendu avant le{" "}
+                {formaterDateHeure(echeance.toISOString())}.
+              </p>
+            )}
+          </section>
+        )}
+
         <section className={CARTE}>
           <h2 className="mb-1 font-semibold text-green">Séjour</h2>
           <dl className="divide-y divide-[#C6B06B]/40">
@@ -121,7 +200,7 @@ export default async function DemandePage({
             {demande.estimation !== null && (
               <Ligne
                 libelle="Estimation"
-                valeur={formaterMontant(demande.estimation)}
+                valeur={formaterMontantDouble(demande.estimation)}
               />
             )}
           </dl>
@@ -183,9 +262,9 @@ export default async function DemandePage({
             <a href={mailto} className={LIEN_CONTACT}>
               Écrire par e-mail
             </a>
-            {whatsapp && (
+            {lienWa && (
               <a
-                href={whatsapp}
+                href={lienWa}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={LIEN_CONTACT}
@@ -193,6 +272,7 @@ export default async function DemandePage({
                 WhatsApp
               </a>
             )}
+            {aUnMessage && <CopierMessage texte={message.texte} />}
             {demande.telephone && (
               <a
                 href={`tel:${demande.telephone.replace(/[^\d+]/g, "")}`}
@@ -210,9 +290,45 @@ export default async function DemandePage({
           )}
         </section>
 
+        {aUnMessage && (
+          <section className={CARTE}>
+            <h2 className="mb-2 font-semibold text-green">{titreMessage}</h2>
+
+            {acceptee && coordonneesIncompletes(paiement) && (
+              <p className="mb-3 text-sm font-medium text-[#8B3017]">
+                Coordonnées de paiement incomplètes : complétez la table
+                payment_details dans Supabase avant d&apos;envoyer ce message.
+                Les passages entre crochets sont à remplacer.
+              </p>
+            )}
+
+            {(refusee || annulee) && (
+              <p className="mb-3 text-sm text-gray-600">
+                Rien n&apos;est envoyé automatiquement : envoyez ce message au
+                client (e-mail ou WhatsApp) après l&apos;avoir relu.
+              </p>
+            )}
+
+            {annulee && etaitPayee && (
+              <p className="mb-3 text-sm font-medium text-[#8B3017]">
+                Cette réservation avait été payée : réglez le remboursement avec
+                le client, selon la politique d&apos;annulation, et précisez-le
+                dans le message.
+              </p>
+            )}
+
+            <p className="mb-2 text-xs text-gray-500">
+              Objet : {message.sujet}
+            </p>
+            <p className="whitespace-pre-wrap text-sm leading-6">
+              {message.texte}
+            </p>
+          </section>
+        )}
+
         {demande.message && (
           <section className={CARTE}>
-            <h2 className="mb-2 font-semibold text-green">Message</h2>
+            <h2 className="mb-2 font-semibold text-green">Message du client</h2>
             <p className="whitespace-pre-wrap text-sm leading-6">
               {demande.message}
             </p>
@@ -221,10 +337,24 @@ export default async function DemandePage({
 
         <section className={CARTE}>
           <h2 className="mb-3 font-semibold text-green">Traiter la demande</h2>
+          {payee && (
+            <p
+              className={`mb-3 text-sm ${
+                demande.confirmationEnvoyeeLe
+                  ? "text-green"
+                  : "font-medium text-[#8B3017]"
+              }`}
+            >
+              {demande.confirmationEnvoyeeLe
+                ? `Confirmation envoyée au client le ${formaterDateHeure(demande.confirmationEnvoyeeLe)}.`
+                : "La confirmation n'a pas encore été envoyée au client."}
+            </p>
+          )}
           <BoutonsDemande
             id={demande.id}
             statut={demande.statut}
             datesLibres={datesLibres}
+            email={demande.email}
           />
         </section>
       </main>

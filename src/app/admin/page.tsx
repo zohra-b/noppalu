@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { delaiDepasse, getDemandes } from "@/lib/demandes";
 import { getAdmin } from "@/lib/supabase/session";
 import EnteteAdmin from "./EnteteAdmin";
 import FormulaireConnexion from "./FormulaireConnexion";
@@ -19,6 +20,13 @@ export default async function AdminPage() {
     );
   }
 
+  const demandes = await getDemandes().catch((e) => {
+    console.error("Admin : lecture des demandes impossible", e);
+    return null;
+  });
+  const nouvelles = demandes?.filter((d) => d.statut === "nouvelle").length ?? 0;
+  const enRetard = demandes?.filter((d) => delaiDepasse(d)).length ?? 0;
+
   return (
     <>
       <EnteteAdmin />
@@ -36,8 +44,20 @@ export default async function AdminPage() {
                 Demandes de réservation
               </span>
               <span className="block text-sm text-gray-600">
-                Les demandes reçues depuis le site.
+                {demandes === null
+                  ? "Les demandes reçues depuis le site."
+                  : nouvelles === 0
+                    ? "Aucune nouvelle demande."
+                    : `${nouvelles} ${nouvelles > 1 ? "nouvelles demandes" : "nouvelle demande"} à traiter`}
               </span>
+              {enRetard > 0 && (
+                <span className="mt-1 block text-sm font-medium text-red-700">
+                  {enRetard}{" "}
+                  {enRetard > 1
+                    ? "délais de paiement dépassés"
+                    : "délai de paiement dépassé"}
+                </span>
+              )}
             </Link>
           </li>
         </ul>

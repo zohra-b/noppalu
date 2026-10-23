@@ -6,15 +6,17 @@ import { traiterDemande, type EtatAction } from "../actions";
 const BASE =
   "w-full rounded-md px-5 py-3 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50";
 const PRIMAIRE = `${BASE} bg-green text-linen hover:bg-[#244D2B]`;
+const SECONDAIRE = `${BASE} border border-green text-green hover:bg-green hover:text-linen`;
 const DANGER = `${BASE} border border-red-700 text-red-700 hover:bg-red-700 hover:text-white`;
 
 type Props = {
   id: string;
   statut: string;
   datesLibres: boolean;
+  email: string;
 };
 
-export default function BoutonsDemande({ id, statut, datesLibres }: Props) {
+export default function BoutonsDemande({ id, statut, datesLibres, email }: Props) {
   const [etat, action, enCours] = useActionState<EtatAction, FormData>(
     traiterDemande,
     null,
@@ -59,14 +61,17 @@ export default function BoutonsDemande({ id, statut, datesLibres }: Props) {
       {acceptee && (
         <>
           <p className="text-sm leading-6 text-gray-600">
-            Les dates sont bloquées sur le calendrier. Quand le paiement est
-            arrivé, enregistrez-le ci-dessous.
+            Les dates sont bloquées. Quand le paiement est arrivé, enregistrez-le
+            ci-dessous : un e-mail de confirmation sera envoyé au client.
           </p>
           <button
             type="submit"
             name="action"
             value="payee"
             disabled={enCours}
+            onClick={confirmer(
+              `Marquer cette demande comme payée ? Un e-mail de confirmation de réservation sera envoyé à ${email}.`,
+            )}
             className={PRIMAIRE}
           >
             Paiement reçu
@@ -87,18 +92,30 @@ export default function BoutonsDemande({ id, statut, datesLibres }: Props) {
       )}
 
       {statut === "payee" && (
-        <button
-          type="submit"
-          name="action"
-          value="annuler"
-          disabled={enCours}
-          onClick={confirmer(
-            "Annuler cette réservation payée et libérer les dates ? Pensez à régler un éventuel remboursement avec le client.",
-          )}
-          className={DANGER}
-        >
-          Annuler la réservation et libérer les dates
-        </button>
+        <>
+          <button
+            type="submit"
+            name="action"
+            value="renvoyer"
+            disabled={enCours}
+            onClick={confirmer(`Renvoyer l'e-mail de confirmation à ${email} ?`)}
+            className={SECONDAIRE}
+          >
+            Renvoyer la confirmation
+          </button>
+          <button
+            type="submit"
+            name="action"
+            value="annuler"
+            disabled={enCours}
+            onClick={confirmer(
+              "Annuler cette réservation payée et libérer les dates ? Pensez à régler un éventuel remboursement avec le client, selon la politique d'annulation.",
+            )}
+            className={DANGER}
+          >
+            Annuler la réservation et libérer les dates
+          </button>
+        </>
       )}
 
       {(statut === "refusee" || statut === "expiree") && (
@@ -108,6 +125,11 @@ export default function BoutonsDemande({ id, statut, datesLibres }: Props) {
       {etat?.erreur && (
         <p role="alert" className="text-sm text-red-700">
           {etat.erreur}
+        </p>
+      )}
+      {etat?.attention && (
+        <p role="alert" className="text-sm font-medium text-[#8B3017]">
+          {etat.attention}
         </p>
       )}
       {etat?.ok && (

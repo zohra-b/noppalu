@@ -1,0 +1,70 @@
+-- LANCER CHAQUE REQUETE SEPAREMENT
+
+-- 1. Suivi du paiement
+alter table public.booking_requests
+  add column accepted_at timestamptz,
+  add column paid_at timestamptz,
+  add column confirmation_sent_at timestamptz;
+
+-- 2. accepter_demande enregistre l'heure d'acceptation (départ du délai de 72 h)
+create or replace function public.accepter_demande(p_id uuid)
+returns void
+language plpgsql
+set search_path = ''
+as $$
+declare
+  d public.booking_requests%rowtype;
+begin
+  select * into d from public.booking_requests where id = p_id for update;
+  if not found then raise exception 'demande_introuvable'; end if;
+  if d.status <> 'nouvelle' then raise exception 'statut_invalide'; end if;
+
+  insert into public.availability_blocks
+    (bungalow_slug, start_date, end_date, source, guest_name, note, request_id)
+  values
+    (d.bungalow_slug, d.start_date, d.end_date, 'demande_site', d.guest_name,
+     'Demande acceptée', d.id);
+
+  update public.booking_requests
+  set status = 'acceptee', accepted_at = now()
+  where id = d.id;
+end;
+$$;
+
+revoke all on function public.accepter_demande(uuid) from public, anon, authenticated;
+grant execute on function public.accepter_demande(uuid) to service_role;
+
+-- 3. Coordonnées de paiement : table PRIVÉE (aucun accès public)
+create table public.payment_details (
+  id            boolean primary key default true check (id),
+  wave_number   text,
+  iban          text,
+  iban_holder   text,
+  paypal_email  text
+);
+
+alter table public.payment_details enable row level security;
+revoke all on public.payment_details from anon, authenticated;
+grant select, update on public.payment_details to service_role;
+
+insert into public.payment_details (iban_holder) values ('Aziz Sanhaji');
+
+-- 4. Conditions du site (texte français) : paiement et annulation
+update public.site_settings
+set conditions = jsonb_set(
+  conditions, '{fr}',
+  (select jsonb_agg(
+            case when e.value = to_jsonb('Paiement : virement, Wave, Paypal'::text)
+                 then to_jsonb('Paiement de la totalité du séjour sous 72 h après l''acceptation de votre demande : virement, Wave ou PayPal.'::text)
+                 else e.value end
+            order by e.ord)
+   from jsonb_array_elements(conditions->'fr') with ordinality as e(value, ord))
+)
+where conditions->'fr' @> to_jsonb('Paiement : virement, Wave, Paypal'::text);
+
+update public.site_settings
+set conditions = jsonb_set(
+  conditions, '{fr}',
+  (conditions->'fr') || to_jsonb('Annulation : remboursement à 100 % si vous annulez 15 jours ou plus avant l''arrivée, à 50 % entre 14 et 8 jours avant, aucun remboursement à 7 jours ou moins.'::text)
+)
+where not (conditions->'fr' @> to_jsonb('Annulation : remboursement à 100 % si vous annulez 15 jours ou plus avant l''arrivée, à 50 % entre 14 et 8 jours avant, aucun remboursement à 7 jours ou moins.'::text));

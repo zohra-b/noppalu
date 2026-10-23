@@ -21,8 +21,11 @@ export type Demande = {
   telephone: string | null;
   message: string | null;
   langue: string;
-  estimation: number | null;
+  estimation: number | null; // en FCFA
   statut: StatutDemande;
+  accepteeLe: string | null;
+  payeeLe: string | null;
+  confirmationEnvoyeeLe: string | null;
 };
 
 type Ligne = {
@@ -39,10 +42,13 @@ type Ligne = {
   locale: string;
   estimated_total: number | null;
   status: StatutDemande;
+  accepted_at: string | null;
+  paid_at: string | null;
+  confirmation_sent_at: string | null;
 };
 
 const COLONNES =
-  "id, created_at, bungalow_slug, start_date, end_date, guests, guest_name, email, phone, message, locale, estimated_total, status";
+  "id, created_at, bungalow_slug, start_date, end_date, guests, guest_name, email, phone, message, locale, estimated_total, status, accepted_at, paid_at, confirmation_sent_at";
 
 function versDemande(l: Ligne): Demande {
   return {
@@ -59,6 +65,9 @@ function versDemande(l: Ligne): Demande {
     langue: l.locale,
     estimation: l.estimated_total,
     statut: l.status,
+    accepteeLe: l.accepted_at,
+    payeeLe: l.paid_at,
+    confirmationEnvoyeeLe: l.confirmation_sent_at,
   };
 }
 
@@ -119,6 +128,25 @@ export async function getConflits(
   }));
 }
 
+// --- Délai de paiement ---
+
+export const DELAI_PAIEMENT_HEURES = 72;
+
+/** Heure limite de paiement d'une demande acceptée, ou null. */
+export function echeancePaiement(d: Demande): Date | null {
+  if (d.statut !== "acceptee" && d.statut !== "en_attente_paiement") return null;
+  if (!d.accepteeLe) return null;
+  return new Date(
+    new Date(d.accepteeLe).getTime() + DELAI_PAIEMENT_HEURES * 3_600_000,
+  );
+}
+
+/** Vrai si une demande acceptée n'a pas été payée dans le délai. */
+export function delaiDepasse(d: Demande): boolean {
+  const echeance = echeancePaiement(d);
+  return echeance !== null && echeance.getTime() < Date.now();
+}
+
 // --- Présentation ---
 
 export const LIBELLES_STATUT: Record<StatutDemande, string> = {
@@ -165,10 +193,6 @@ export function formaterDate(cle: string): string {
 
 export function formaterDateHeure(iso: string): string {
   return formatDateHeure.format(new Date(iso));
-}
-
-export function formaterMontant(n: number): string {
-  return `${new Intl.NumberFormat("fr").format(n)} FCFA`;
 }
 
 export function pluriel(n: number, mot: string): string {

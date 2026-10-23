@@ -21,8 +21,8 @@ values
    '{"fr": [
      "Capacité : 2 personnes par studio",
      "Séjour minimum : 2 nuits. Réservation : minimum 24h avant.",
+     "Séjour maximum : 14 nuits. Pour un séjour plus long, contactez-nous."
      "Accès au logement : à partir de 14h. Sortie du logement : avant 11h. (service de bagagerie offert)",
      "Paiement : virement, Wave, Paypal",
-     "Séjour maximum : 14 nuits. Pour un séjour plus long, contactez-nous."
    ]}',
    false);

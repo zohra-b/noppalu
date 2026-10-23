@@ -4,6 +4,7 @@ import { getBungalows } from "@/lib/data";
 import {
   CLASSES_STATUT,
   LIBELLES_STATUT,
+  delaiDepasse,
   formaterDate,
   formaterDateHeure,
   getDemandes,
@@ -119,10 +120,17 @@ export default async function DemandesPage({
                         <span className="font-semibold text-green">
                           {noms.get(d.studioSlug) ?? d.studioSlug}
                         </span>
-                        <span
-                          className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${CLASSES_STATUT[d.statut]}`}
-                        >
-                          {LIBELLES_STATUT[d.statut]}
+                         <span className="flex shrink-0 flex-col items-end gap-1">
+                          <span
+                            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${CLASSES_STATUT[d.statut]}`}
+                          >
+                            {LIBELLES_STATUT[d.statut]}
+                          </span>
+                          {delaiDepasse(d) && (
+                            <span className="rounded-full bg-red-700 px-2.5 py-0.5 text-xs font-medium text-white">
+                              Délai dépassé
+                            </span>
+                          )}
                         </span>
                       </span>
                       <span className="mt-1 block text-sm">
