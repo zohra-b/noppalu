@@ -39,5 +39,5 @@ export const CLASSES_SOURCE: Record<SourceBlocage, string> = {
   airbnb: "bg-[#EA0F65]",
   booking: "bg-[#3AC7CC]",
   manuel: "bg-[#C6B06B]",
-  indisponible: "bg-gray-500",
+  indisponible: "bg-gray-800",
 };

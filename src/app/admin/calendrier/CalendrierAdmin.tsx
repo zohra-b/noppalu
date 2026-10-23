@@ -114,8 +114,8 @@ export default function CalendrierAdmin({
       <div
         className={
           position === 1
-            ? "hidden md:block md:w-72 lg:w-80"
-            : "md:w-72 lg:w-80"
+            ? "hidden md:block md:w-72 lg:w-96"
+            : "md:w-72 lg:w-96"
         }
       >
         <div className="mb-2 flex items-center justify-between">
@@ -200,7 +200,7 @@ export default function CalendrierAdmin({
                   onClick={() => setJourChoisi(cle === jourChoisi ? null : cle)}
                   aria-pressed={cle === jourChoisi}
                   aria-label={`${dateLongue(cle)}. ${resume(cle)}`}
-                  className={`flex aspect-square w-full flex-col justify-between rounded-md bg-white p-1 text-left text-xs ${anneau} ${passee ? "opacity-60" : ""}`}
+                  className={`flex aspect-square w-full flex-col justify-between rounded-md bg-white p-1 text-left text-xs lg:p-1.5 lg:text-sm ${anneau} ${passee ? "opacity-60" : ""}`}
                 >
                   <span>{jour}</span>
                   <span className="flex flex-col gap-0.5">
@@ -210,7 +210,7 @@ export default function CalendrierAdmin({
                         <span
                           key={s.slug}
                           className={`block rounded-sm ${
-                            choix === "tous" ? "h-1.5" : "h-3"
+                            choix === "tous" ? "h-1.5 lg:h-2" : "h-3 lg:h-4"
                           } ${b ? CLASSES_SOURCE[b.source] : LIBRE}`}
                         />
                       );
