@@ -6,11 +6,17 @@ import {
   CLASSES_SOURCE,
   LIBELLES_SOURCE,
   SOURCES,
+  estModifiable,
   type Blocage,
 } from "@/lib/blocages-types";
 import { nombreNuits } from "@/lib/sejour";
+import FormulaireBlocage from "./FormulaireBlocage";
 
 type Studio = { slug: string; nom: string };
+
+type Ouverture =
+  | { type: "nouveau"; cle: number; studio?: string; arrivee?: string }
+  | { type: "modifier"; id: string };
 
 const MOIS_ARRIERE = 12; // on peut remonter d'un an
 const MOIS_AVANT = 24; // et avancer de deux ans
@@ -55,6 +61,8 @@ export default function CalendrierAdmin({
   const [decalage, setDecalage] = useState(0); // 0 = mois en cours
   const [choix, setChoix] = useState("tous");
   const [jourChoisi, setJourChoisi] = useState<string | null>(null);
+  const [formulaire, setFormulaire] = useState<Ouverture | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   if (studios.length === 0) {
     return <p className="text-gray-600">Aucun studio n&apos;est enregistré.</p>;
@@ -83,6 +91,21 @@ export default function CalendrierAdmin({
   function changerMois(delta: number) {
     setDecalage((d) => d + delta);
     setJourChoisi(null);
+  }
+
+  function ouvrirNouveau() {
+    setMessage(null);
+    setFormulaire({
+      type: "nouveau",
+      cle: Date.now(),
+      studio: choix !== "tous" ? choix : undefined,
+      arrivee: jourChoisi ?? undefined,
+    });
+  }
+
+  function terminer(texte: string) {
+    setFormulaire(null);
+    setMessage(texte);
   }
 
   const [anneeJ, moisJ] = aujourdhui.split("-").map(Number);
@@ -228,37 +251,72 @@ export default function CalendrierAdmin({
   return (
     <div className="space-y-8">
       <section className="rounded-lg bg-[#FFFEF6] p-5 shadow-sm md:p-6">
-        {plusieurs && (
-          <div
-            role="group"
-            aria-label="Studio affiché"
-            className="mb-4 flex flex-wrap gap-2"
+        {message && (
+          <p
+            role="status"
+            className="mb-4 rounded-md bg-[#2F6036]/10 p-3 text-sm text-green"
           >
-            {options.map((o) => (
-              <button
-                key={o.slug}
-                type="button"
-                aria-pressed={choix === o.slug}
-                onClick={() => {
-                  setChoix(o.slug);
-                  setJourChoisi(null);
-                }}
-                className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-                  choix === o.slug
-                    ? "border-[#2F6036] bg-[#2F6036] text-white"
-                    : "border-[#C6B06B] text-[#2F6036] hover:bg-white"
-                }`}
-              >
-                {o.nom}
-              </button>
-            ))}
+            {message}
+          </p>
+        )}
+
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          {plusieurs ? (
+            <div
+              role="group"
+              aria-label="Studio affiché"
+              className="flex flex-wrap gap-2"
+            >
+              {options.map((o) => (
+                <button
+                  key={o.slug}
+                  type="button"
+                  aria-pressed={choix === o.slug}
+                  onClick={() => {
+                    setChoix(o.slug);
+                    setJourChoisi(null);
+                  }}
+                  className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+                    choix === o.slug
+                      ? "border-[#2F6036] bg-[#2F6036] text-white"
+                      : "border-[#C6B06B] text-[#2F6036] hover:bg-white"
+                  }`}
+                >
+                  {o.nom}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <span />
+          )}
+
+          <button
+            type="button"
+            onClick={ouvrirNouveau}
+            className="rounded-md bg-green px-4 py-1.5 text-sm font-medium text-linen transition-colors hover:bg-[#244D2B]"
+          >
+            + Nouveau blocage
+          </button>
+        </div>
+
+        {formulaire?.type === "nouveau" && (
+          <div className="mb-5">
+            <FormulaireBlocage
+              key={formulaire.cle}
+              studios={studios}
+              aujourdhui={aujourdhui}
+              initial={{ studio: formulaire.studio, arrivee: formulaire.arrivee }}
+              onSucces={terminer}
+              onAnnuler={() => setFormulaire(null)}
+            />
           </div>
         )}
 
         {choix === "tous" && plusieurs && (
           <p className="mb-4 text-xs text-gray-600">
             Les lignes colorées de chaque jour correspondent, de haut en bas, à :{" "}
-            {studios.map((s) => s.nom).join(", ")}.
+            {studios.map((s) => s.nom).join(", ")}. Chaque jour représente la
+            nuit qui commence ce jour-là.
           </p>
         )}
 
@@ -332,33 +390,70 @@ export default function CalendrierAdmin({
           <ul className="space-y-3">
             {aVenir.map((b) => {
               const n = nombreNuits(b.debut, b.fin);
+              const enModification =
+                formulaire?.type === "modifier" && formulaire.id === b.id;
+
               return (
-                <li key={b.id} className="rounded-lg bg-[#FFFEF6] p-4 text-sm shadow-sm">
-                  <div className="flex items-start justify-between gap-3">
-                    <span className="font-semibold text-green">
-                      {noms.get(b.studioSlug) ?? b.studioSlug}
-                    </span>
-                    <span className="flex shrink-0 items-center gap-2 text-xs">
-                      <span
-                        className={`h-3 w-3 rounded-sm ${CLASSES_SOURCE[b.source]}`}
-                        aria-hidden="true"
-                      />
-                      {LIBELLES_SOURCE[b.source]}
-                    </span>
-                  </div>
-                  <p className="mt-1">
-                    du {dateLongue(b.debut)} au {dateLongue(b.fin)} · {n} nuit
-                    {n > 1 ? "s" : ""}
-                  </p>
-                  {b.nom && <p className="text-gray-600">{b.nom}</p>}
-                  {b.note && <p className="text-gray-600">{b.note}</p>}
-                  {b.demandeId && (
-                    <Link
-                      href={`/admin/demandes/${b.demandeId}`}
-                      className="mt-1 inline-block text-green underline underline-offset-4"
-                    >
-                      Voir la demande
-                    </Link>
+                <li
+                  key={b.id}
+                  className="rounded-lg bg-[#FFFEF6] p-4 text-sm shadow-sm"
+                >
+                  {enModification ? (
+                    <FormulaireBlocage
+                      studios={studios}
+                      aujourdhui={aujourdhui}
+                      blocage={b}
+                      onSucces={terminer}
+                      onAnnuler={() => setFormulaire(null)}
+                    />
+                  ) : (
+                    <>
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="font-semibold text-green">
+                          {noms.get(b.studioSlug) ?? b.studioSlug}
+                        </span>
+                        <span className="flex shrink-0 items-center gap-2 text-xs">
+                          <span
+                            className={`h-3 w-3 rounded-sm ${CLASSES_SOURCE[b.source]}`}
+                            aria-hidden="true"
+                          />
+                          {LIBELLES_SOURCE[b.source]}
+                        </span>
+                      </div>
+                      <p className="mt-1">
+                        du {dateLongue(b.debut)} au {dateLongue(b.fin)} · {n} nuit
+                        {n > 1 ? "s" : ""}
+                      </p>
+                      {b.nom && <p className="text-gray-600">{b.nom}</p>}
+                      {(b.email || b.telephone) && (
+                        <p className="text-gray-600">
+                          {[b.email, b.telephone].filter(Boolean).join(" · ")}
+                        </p>
+                      )}
+                      {b.note && <p className="text-gray-600">{b.note}</p>}
+
+                      {estModifiable(b) ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMessage(null);
+                            setFormulaire({ type: "modifier", id: b.id });
+                          }}
+                          className="mt-2 rounded-md border border-green px-4 py-1.5 text-sm font-medium text-green transition-colors hover:bg-green hover:text-linen"
+                        >
+                          Modifier
+                        </button>
+                      ) : (
+                        b.demandeId && (
+                          <Link
+                            href={`/admin/demandes/${b.demandeId}`}
+                            className="mt-1 inline-block text-green underline underline-offset-4"
+                          >
+                            Voir la demande
+                          </Link>
+                        )
+                      )}
+                    </>
                   )}
                 </li>
               );

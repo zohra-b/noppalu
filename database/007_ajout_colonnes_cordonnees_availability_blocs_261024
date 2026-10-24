@@ -1,0 +1,3 @@
+alter table public.availability_blocks
+  add column guest_email text check (guest_email is null or length(guest_email) <= 200),
+  add column guest_phone text check (guest_phone is null or length(guest_phone) <= 30);
