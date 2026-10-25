@@ -10,4 +10,112 @@ alter table public.booking_requests
     check (payment_method is null
            or payment_method in ('wave', 'virement', 'paypal', 'especes', 'autre')),
   add column reminder_sent_at timestamptz;
+
+  -- 2. Créer une réservation (direct, Booking ou Airbnb) avec son blocage, en une seule opération
+create or replace function public.creer_reservation(
+  p_slug text,
+  p_debut date,
+  p_fin date,
+  p_origine text,
+  p_payee boolean,
+  p_nom text,
+  p_email text,
+  p_telephone text,
+  p_voyageurs integer,
+  p_montant integer,
+  p_message text,
+  p_langue text default 'fr'
+)
+returns uuid
+language plpgsql
+set search_path = ''
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+  v_source text;
+  v_nom text := nullif(btrim(p_nom), '');
+  v_email text := nullif(btrim(p_email), '');
+  v_tel text := nullif(btrim(p_telephone), '');
+begin
+  if p_origine not in ('direct', 'booking', 'airbnb') then
+    raise exception 'origine_invalide';
+  end if;
+
+  v_source := case p_origine
+    when 'booking' then 'booking'
+    when 'airbnb' then 'airbnb'
+    else 'manuel'
+  end;
+
+  insert into public.booking_requests
+    (id, bungalow_slug, start_date, end_date, guests, guest_name, email, phone,
+     message, locale, estimated_total, status, origin, accepted_at, paid_at)
+  values
+    (v_id, p_slug, p_debut, p_fin, p_voyageurs, v_nom, v_email, v_tel,
+     nullif(btrim(p_message), ''),
+     coalesce(nullif(btrim(p_langue), ''), 'fr'),
+     p_montant,
+     case when coalesce(p_payee, false) then 'payee' else 'acceptee' end,
+     p_origine,
+     now(),
+     case when coalesce(p_payee, false) then now() end);
+
+  insert into public.availability_blocks
+    (bungalow_slug, start_date, end_date, source, guest_name, guest_email,
+     guest_phone, request_id)
+  values
+    (p_slug, p_debut, p_fin, v_source, v_nom, v_email, v_tel, v_id);
+
+  return v_id;
+end;
+$$;
+
+-- 3. Modifier les dates d'une réservation acceptée ou payée (demande et blocage ensemble)
+create or replace function public.modifier_dates_reservation(
+  p_id uuid,
+  p_debut date,
+  p_fin date,
+  p_montant integer default null
+)
+returns void
+language plpgsql
+set search_path = ''
+as $$
+declare
+  d public.booking_requests%rowtype;
+begin
+  select * into d from public.booking_requests where id = p_id for update;
+  if not found then raise exception 'demande_introuvable'; end if;
+  if d.status not in ('acceptee', 'en_attente_paiement', 'payee') then
+    raise exception 'statut_invalide';
+  end if;
+
+  update public.availability_blocks
+  set start_date = p_debut, end_date = p_fin
+  where request_id = p_id;
+  if not found then raise exception 'blocage_introuvable'; end if;
+
+  update public.booking_requests
+  set start_date = p_debut,
+      end_date = p_fin,
+      estimated_total = coalesce(p_montant, estimated_total),
+      reminder_sent_at = null
+  where id = p_id;
+end;
+$$;
+
+-- 4. Ces fonctions ne doivent être appelables que par le code serveur
+revoke all on function
+  public.creer_reservation(text, date, date, text, boolean, text, text, text, integer, integer, text, text)
+  from public, anon, authenticated;
+revoke all on function
+  public.modifier_dates_reservation(uuid, date, date, integer)
+  from public, anon, authenticated;
+
+grant execute on function
+  public.creer_reservation(text, date, date, text, boolean, text, text, text, integer, integer, text, text)
+  to service_role;
+grant execute on function
+  public.modifier_dates_reservation(uuid, date, date, integer)
+  to service_role;
   
