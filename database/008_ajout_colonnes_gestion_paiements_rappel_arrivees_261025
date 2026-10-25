@@ -1,0 +1,13 @@
+-- Lance les trois blocs dans l’ordre, un par un.
+-- 1. Colonnes
+alter table public.booking_requests
+  alter column guest_name drop not null,
+  alter column email drop not null,
+  alter column guests drop not null,
+  add column origin text not null default 'site'
+    check (origin in ('site', 'direct', 'booking', 'airbnb')),
+  add column payment_method text
+    check (payment_method is null
+           or payment_method in ('wave', 'virement', 'paypal', 'especes', 'autre')),
+  add column reminder_sent_at timestamptz;
+  

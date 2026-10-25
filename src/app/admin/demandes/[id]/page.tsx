@@ -26,6 +26,12 @@ import {
   coordonneesIncompletes,
   getCoordonneesPaiement,
 } from "@/lib/paiement";
+import {
+  LIBELLES_ORIGINE,
+  LIBELLES_PAIEMENT,
+  confirmationAutomatique,
+  estPlateforme,
+} from "@/lib/reservations-types";
 import { nombreNuits } from "@/lib/sejour";
 import { requireAdmin } from "@/lib/supabase/session";
 import EnteteAdmin from "../../EnteteAdmin";
@@ -89,6 +95,10 @@ export default async function DemandePage({
   }
   const datesLibres = conflits === null ? true : conflits.length === 0; // la base refuse de toute façon un chevauchement
 
+  const origine = demande.origine;
+  const plateforme = estPlateforme(origine);
+  const envoiAuto = confirmationAutomatique(origine, demande.email);
+
   const acceptee =
     demande.statut === "acceptee" || demande.statut === "en_attente_paiement";
   const payee = demande.statut === "payee";
@@ -103,6 +113,7 @@ export default async function DemandePage({
 
   const nuits = nombreNuits(demande.arrivee, demande.depart);
   const whatsapp = lienWhatsApp(demande.telephone);
+  const nomClient = demande.nom ?? "Client sans nom";
 
   const donneesMessage = {
     nom: demande.nom,
@@ -112,9 +123,10 @@ export default async function DemandePage({
     nuits,
     voyageurs: demande.voyageurs,
     montantFcfa: demande.estimation,
+    origine,
   };
 
-  // Message prérempli selon l'avancement de la demande
+  // Message prérempli selon l'avancement de la réservation
   const message = acceptee
     ? messageAcceptation({ ...donneesMessage, paiement }, demande.langue)
     : payee
@@ -129,23 +141,27 @@ export default async function DemandePage({
           : {
               sujet: "Casa Noppalu - Votre demande de réservation",
               texte: [
-                `Bonjour ${demande.nom},`,
+                demande.nom ? `Bonjour ${demande.nom},` : "Bonjour,",
                 "",
-                `Merci pour votre demande de réservation du studio ${studio}, du ${formaterDate(demande.arrivee)} au ${formaterDate(demande.depart)} (${pluriel(nuits, "nuit")}, ${pluriel(demande.voyageurs, "voyageur")}).`,
+                `Merci pour votre demande de réservation du studio ${studio}, du ${formaterDate(demande.arrivee)} au ${formaterDate(demande.depart)} (${pluriel(nuits, "nuit")}${demande.voyageurs ? `, ${pluriel(demande.voyageurs, "voyageur")}` : ""}).`,
                 "",
                 "",
               ].join("\n"),
             };
 
   const titreMessage = acceptee
-    ? "Message d'acceptation"
+    ? plateforme
+      ? "Message de paiement"
+      : "Message d'acceptation"
     : payee
       ? "Message de confirmation"
       : refusee
         ? "Message de refus"
         : "Message d'annulation";
 
-  const mailto = `mailto:${demande.email}?subject=${encodeURIComponent(message.sujet)}&body=${encodeURIComponent(message.texte)}`;
+  const mailto = demande.email
+    ? `mailto:${demande.email}?subject=${encodeURIComponent(message.sujet)}&body=${encodeURIComponent(message.texte)}`
+    : null;
   const lienWa = whatsapp
     ? `${whatsapp}?text=${encodeURIComponent(message.texte)}`
     : null;
@@ -162,9 +178,12 @@ export default async function DemandePage({
         </Link>
 
         <div className="flex items-start justify-between gap-3">
-          <h1 className="font-serif text-2xl font-semibold text-green">
-            {studio}
-          </h1>
+          <div>
+            <h1 className="font-serif text-2xl font-semibold text-green">
+              {studio}
+            </h1>
+            <p className="text-sm text-gray-600">{LIBELLES_ORIGINE[origine]}</p>
+          </div>
           <span
             className={`shrink-0 rounded-full px-3 py-1 text-sm font-medium ${CLASSES_STATUT[demande.statut]}`}
           >
@@ -172,21 +191,41 @@ export default async function DemandePage({
           </span>
         </div>
 
-        {acceptee && echeance && (
-          <section className={`${CARTE} ${enRetard ? "border border-red-700" : ""}`}>
+        {acceptee && (
+          <section
+            className={`${CARTE} ${enRetard ? "border border-red-700" : ""}`}
+          >
             <h2 className="mb-1 font-semibold text-green">Paiement</h2>
-            {enRetard ? (
-              <p className="text-sm font-medium text-red-700">
-                Délai de paiement dépassé (échéance : le{" "}
-                {formaterDateHeure(echeance.toISOString())}). Enregistrez le
-                paiement s&apos;il est arrivé, ou libérez les dates.
-              </p>
+            {echeance ? (
+              enRetard ? (
+                <p className="text-sm font-medium text-red-700">
+                  Délai de paiement dépassé (échéance : le{" "}
+                  {formaterDateHeure(echeance.toISOString())}). Enregistrez le
+                  paiement s&apos;il est arrivé, ou libérez les dates.
+                </p>
+              ) : (
+                <p className="text-sm">
+                  Paiement attendu avant le{" "}
+                  {formaterDateHeure(echeance.toISOString())}.
+                </p>
+              )
             ) : (
               <p className="text-sm">
-                Paiement attendu avant le{" "}
-                {formaterDateHeure(echeance.toISOString())}.
+                Paiement à encaisser (à l&apos;arrivée ou par un autre moyen).
               </p>
             )}
+          </section>
+        )}
+
+        {payee && demande.payeeLe && (
+          <section className={CARTE}>
+            <h2 className="mb-1 font-semibold text-green">Paiement</h2>
+            <p className="text-sm">
+              Payée le {formaterDateHeure(demande.payeeLe)}
+              {demande.moyenPaiement
+                ? ` · ${LIBELLES_PAIEMENT[demande.moyenPaiement]}`
+                : ""}
+            </p>
           </section>
         )}
 
@@ -196,10 +235,12 @@ export default async function DemandePage({
             <Ligne libelle="Arrivée" valeur={formaterDate(demande.arrivee)} />
             <Ligne libelle="Départ" valeur={formaterDate(demande.depart)} />
             <Ligne libelle="Durée" valeur={pluriel(nuits, "nuit")} />
-            <Ligne libelle="Voyageurs" valeur={demande.voyageurs} />
+            {demande.voyageurs !== null && (
+              <Ligne libelle="Voyageurs" valeur={demande.voyageurs} />
+            )}
             {demande.estimation !== null && (
               <Ligne
-                libelle="Estimation"
+                libelle={origine === "site" ? "Estimation" : "Montant"}
                 valeur={formaterMontantDouble(demande.estimation)}
               />
             )}
@@ -242,10 +283,16 @@ export default async function DemandePage({
         <section className={CARTE}>
           <h2 className="mb-1 font-semibold text-green">Client</h2>
           <dl className="divide-y divide-[#C6B06B]/40">
-            <Ligne libelle="Nom" valeur={demande.nom} />
+            <Ligne libelle="Nom" valeur={nomClient} />
             <Ligne
               libelle="E-mail"
-              valeur={<span className="break-all">{demande.email}</span>}
+              valeur={
+                demande.email ? (
+                  <span className="break-all">{demande.email}</span>
+                ) : (
+                  "Non renseigné"
+                )
+              }
             />
             <Ligne
               libelle="Téléphone"
@@ -259,9 +306,11 @@ export default async function DemandePage({
           </dl>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            <a href={mailto} className={LIEN_CONTACT}>
-              Écrire par e-mail
-            </a>
+            {mailto && (
+              <a href={mailto} className={LIEN_CONTACT}>
+                Écrire par e-mail
+              </a>
+            )}
             {lienWa && (
               <a
                 href={lienWa}
@@ -302,14 +351,14 @@ export default async function DemandePage({
               </p>
             )}
 
-            {(refusee || annulee) && (
+            {(refusee || annulee || (payee && !envoiAuto)) && (
               <p className="mb-3 text-sm text-gray-600">
                 Rien n&apos;est envoyé automatiquement : envoyez ce message au
                 client (e-mail ou WhatsApp) après l&apos;avoir relu.
               </p>
             )}
 
-            {annulee && etaitPayee && (
+            {annulee && etaitPayee && !plateforme && (
               <p className="mb-3 text-sm font-medium text-[#8B3017]">
                 Cette réservation avait été payée : réglez le remboursement avec
                 le client, selon la politique d&apos;annulation, et précisez-le
@@ -328,7 +377,9 @@ export default async function DemandePage({
 
         {demande.message && (
           <section className={CARTE}>
-            <h2 className="mb-2 font-semibold text-green">Message du client</h2>
+            <h2 className="mb-2 font-semibold text-green">
+              {origine === "site" ? "Message du client" : "Note"}
+            </h2>
             <p className="whitespace-pre-wrap text-sm leading-6">
               {demande.message}
             </p>
@@ -337,7 +388,7 @@ export default async function DemandePage({
 
         <section className={CARTE}>
           <h2 className="mb-3 font-semibold text-green">Traiter la demande</h2>
-          {payee && (
+          {payee && envoiAuto && (
             <p
               className={`mb-3 text-sm ${
                 demande.confirmationEnvoyeeLe
@@ -355,6 +406,7 @@ export default async function DemandePage({
             statut={demande.statut}
             datesLibres={datesLibres}
             email={demande.email}
+            envoiAuto={envoiAuto}
           />
         </section>
       </main>

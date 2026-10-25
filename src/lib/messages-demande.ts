@@ -1,4 +1,5 @@
 import { enEuros, formaterEuros, formaterFcfa } from "@/lib/monnaie";
+import { estPlateforme, type OrigineDemande } from "@/lib/reservations-types";
 
 export type CoordonneesMessage = {
   wave: string | null;
@@ -8,14 +9,15 @@ export type CoordonneesMessage = {
 };
 
 export type DonneesMessage = {
-  nom: string;
+  nom: string | null;
   studio: string;
   arrivee: string; // AAAA-MM-JJ
   depart: string; // AAAA-MM-JJ
   nuits: number;
-  voyageurs: number;
+  voyageurs: number | null;
   montantFcfa: number | null;
   paiement: CoordonneesMessage | null;
+  origine: OrigineDemande;
   reservationPayee?: boolean; // utile pour le message d'annulation
 };
 
@@ -47,6 +49,13 @@ function dateLongue(cle: string, locale: string): string {
 
 const pluriel = (n: number, mot: string) => `${n} ${mot}${n > 1 ? "s" : ""}`;
 
+const salutation = (nom: string | null) =>
+  nom ? `Bonjour ${nom},` : "Bonjour,";
+
+// « 3 nuits, 2 voyageurs » (le nombre de voyageurs peut être inconnu)
+const detailSejour = (d: DonneesMessage) =>
+  `${pluriel(d.nuits, "nuit")}${d.voyageurs ? `, ${pluriel(d.voyageurs, "voyageur")}` : ""}`;
+
 const echapper = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -66,48 +75,77 @@ const fr: Generateur = {
   acceptation(d, locale) {
     const a = dateLongue(d.arrivee, locale);
     const dep = dateLongue(d.depart, locale);
+    const plateforme = estPlateforme(d.origine);
+    const p = d.paiement;
     const montant =
       d.montantFcfa !== null
         ? `${formaterFcfa(d.montantFcfa, locale)} (${formaterEuros(enEuros(d.montantFcfa), locale)})`
         : "[montant à indiquer]";
-    const p = d.paiement;
 
-    const texte = [
-      `Bonjour ${d.nom},`,
+    const intro =
+      d.origine === "site"
+        ? `Bonne nouvelle : le studio ${d.studio} est libre du ${a} au ${dep} (${detailSejour(d)}), on vous le réserve ! 🌴`
+        : `Merci pour votre réservation ! Le studio ${d.studio} est bien réservé du ${a} au ${dep} (${detailSejour(d)}). 🌴`;
+
+    const reglement = plateforme
+      ? `Montant du séjour : ${montant}, à régler à votre arrivée en espèces, ou à l'avance par l'un des moyens ci-dessous.`
+      : `Montant du séjour : ${montant}, à régler en totalité sous 72 h.`;
+
+    const moyens = plateforme
+      ? "(espèces à l'arrivée, virement bancaire, Wave ou PayPal)"
+      : "(virement bancaire, Wave ou PayPal)";
+
+    const lignes = [
+      salutation(d.nom),
       "",
-      `Bonne nouvelle : le studio ${d.studio} est libre du ${a} au ${dep} (${pluriel(d.nuits, "nuit")}, ${pluriel(d.voyageurs, "voyageur")}), on vous le réserve ! 🌴`,
+      intro,
       "",
-      `Montant du séjour : ${montant}, à régler en totalité sous 72 h.`,
+      reglement,
       "",
       "Vous pouvez payer par :",
       `– Wave : ${p?.wave ?? "[numéro à indiquer]"}`,
       `– Virement bancaire : IBAN ${p?.iban ?? "[IBAN à indiquer]"}, titulaire ${p?.titulaire ?? "[titulaire à indiquer]"}. Merci d'indiquer en libellé le nom de la personne qui a effectué la réservation.`,
       `– PayPal : ${p?.paypal ?? "[adresse à indiquer]"}`,
       "",
-      "Merci de nous préciser le mode de paiement choisi (virement bancaire, Wave ou PayPal). Si vous payez par virement, envoyez-nous aussi le justificatif.",
+      `Merci de nous préciser le mode de paiement choisi ${moyens}. Si vous payez par virement, envoyez-nous aussi le justificatif.`,
       "",
-      `Annulation : ${POLITIQUE_ANNULATION_FR}`,
-      "",
-      "Dès que nous aurons reçu votre paiement, nous vous enverrons la confirmation de votre réservation.",
-      "",
-      "À très vite !",
-      "L'équipe de Casa Noppalu",
-    ].join("\n");
+    ];
 
-    return { sujet: `Casa Noppalu - Votre séjour du ${a} au ${dep}`, texte };
+    // La politique d'annulation de Booking.com et d'Airbnb est celle de la plateforme
+    if (!plateforme) {
+      lignes.push(
+        `Annulation : ${POLITIQUE_ANNULATION_FR}`,
+        "",
+        "Dès que nous aurons reçu votre paiement, nous vous enverrons la confirmation de votre réservation.",
+        "",
+      );
+    }
+    lignes.push("À très vite !", "L'équipe de Casa Noppalu");
+
+    return {
+      sujet: `Casa Noppalu - Votre séjour du ${a} au ${dep}`,
+      texte: lignes.join("\n"),
+    };
   },
 
   confirmation(d, locale) {
     const a = dateLongue(d.arrivee, locale);
     const dep = dateLongue(d.depart, locale);
+    const plateforme = estPlateforme(d.origine);
+
+    const premier = plateforme
+      ? "Merci pour votre réservation ! On est ravis de vous accueillir à Saly !"
+      : "Bien reçu, merci ! Votre paiement est arrivé et votre réservation est confirmée. On est ravis de vous accueillir à Saly !";
 
     const paragraphes = [
-      `Bonjour ${d.nom},`,
-      "Bien reçu, merci ! Votre paiement est arrivé et votre réservation est confirmée. On est ravis de vous accueillir à Saly !",
-      `Studio ${d.studio}, du ${a} au ${dep} (${pluriel(d.nuits, "nuit")}, ${pluriel(d.voyageurs, "voyageur")}). Arrivée à partir de 14 h, départ avant 11 h (bagagerie offerte).`,
+      salutation(d.nom),
+      premier,
+      `Studio ${d.studio}, du ${a} au ${dep} (${detailSejour(d)}). Arrivée à partir de 14 h, départ avant 11 h (bagagerie offerte).`,
       `Où nous trouver : ${ADRESSE}\n${LIEN_MAPS}`,
       "Un transfert depuis ou vers l'aéroport est possible sur demande : dites-nous simplement l'heure de votre vol.",
-      `Rappel - annulation : ${POLITIQUE_ANNULATION_FR}`,
+      ...(plateforme
+        ? []
+        : [`Rappel - annulation : ${POLITIQUE_ANNULATION_FR}`]),
       `Une question ? Répondez simplement à cet e-mail ou écrivez-nous sur WhatsApp : ${LIEN_WHATSAPP}\nÀ très vite !\nL'équipe de Casa Noppalu`,
     ];
 
@@ -123,27 +161,35 @@ const fr: Generateur = {
     const dep = dateLongue(d.depart, locale);
 
     const texte = [
-      `Bonjour ${d.nom},`,
+      salutation(d.nom),
       "",
       `Merci pour votre demande de séjour au studio ${d.studio}, du ${a} au ${dep}. Malheureusement, nous ne pouvons pas y donner suite : nos studios ne sont pas disponibles à ces dates.`,
       "",
       "Si vos dates sont flexibles, ou si un autre studio vous convient, répondez simplement à ce message : nous regarderons ensemble ce qui est possible.",
       "",
-      "À bientôt !",
+      "À bientôt peut-être !",
       "L'équipe de Casa Noppalu",
     ].join("\n");
 
     return { sujet: `Casa Noppalu - Votre demande du ${a} au ${dep}`, texte };
   },
 
-    annulation(d, locale) {
+  annulation(d, locale) {
     const a = dateLongue(d.arrivee, locale);
     const dep = dateLongue(d.depart, locale);
     const payee = d.reservationPayee === true;
+    const plateforme = estPlateforme(d.origine);
+    // Une demande du site s'appelle « demande » tant qu'elle n'est pas payée ; les autres sont des réservations
+    const objet = payee || d.origine !== "site" ? "réservation" : "demande";
 
-    const lignes = [`Bonjour ${d.nom},`, ""];
+    const lignes = [salutation(d.nom), ""];
 
-    if (payee) {
+    if (plateforme) {
+      lignes.push(
+        `Nous vous confirmons l'annulation de votre réservation pour le studio ${d.studio}, du ${a} au ${dep}. Les dates ont été libérées.`,
+        "",
+      );
+    } else if (payee) {
       lignes.push(
         `Nous vous confirmons l'annulation de votre réservation pour le studio ${d.studio}, du ${a} au ${dep}. Les dates ont été libérées.`,
         "",
@@ -152,18 +198,18 @@ const fr: Generateur = {
       );
     } else {
       lignes.push(
-        "À ce jour, nous n'avons pas reçu le paiement relatif à votre demande, que nous vous demandions de régler dans les 72 h suivant son acceptation.",
+        `À ce jour, nous n'avons pas reçu le paiement relatif à votre ${objet}, que nous vous demandions de régler dans les 72 h suivant son acceptation.`,
         "",
-        `Nous vous confirmons donc l'annulation de votre demande pour le studio ${d.studio}, du ${a} au ${dep}. Les dates ont été libérées.`,
+        `Nous vous confirmons donc l'annulation de votre ${objet} pour le studio ${d.studio}, du ${a} au ${dep}. Les dates ont été libérées.`,
         "",
         "Si vous souhaitez toujours séjourner chez nous, répondez simplement à ce message : nous regarderons ce qui est possible.",
         "",
       );
     }
-    lignes.push("À bientôt !", "L'équipe de Casa Noppalu");
+    lignes.push("À bientôt peut-être !", "L'équipe de Casa Noppalu");
 
     return {
-      sujet: `Casa Noppalu - Annulation de votre ${payee ? "réservation" : "demande"} du ${a} au ${dep}`,
+      sujet: `Casa Noppalu - Annulation de votre ${objet} du ${a} au ${dep}`,
       texte: lignes.join("\n"),
     };
   },

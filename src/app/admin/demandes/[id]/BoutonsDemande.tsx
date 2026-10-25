@@ -1,6 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
+import {
+  LIBELLES_PAIEMENT,
+  MOYENS_PAIEMENT,
+} from "@/lib/reservations-types";
 import { traiterDemande, type EtatAction } from "../actions";
 
 const BASE =
@@ -13,10 +17,17 @@ type Props = {
   id: string;
   statut: string;
   datesLibres: boolean;
-  email: string;
+  email: string | null;
+  envoiAuto: boolean; // un e-mail de confirmation partira-t-il tout seul ?
 };
 
-export default function BoutonsDemande({ id, statut, datesLibres, email }: Props) {
+export default function BoutonsDemande({
+  id,
+  statut,
+  datesLibres,
+  email,
+  envoiAuto,
+}: Props) {
   const [etat, action, enCours] = useActionState<EtatAction, FormData>(
     traiterDemande,
     null,
@@ -62,15 +73,40 @@ export default function BoutonsDemande({ id, statut, datesLibres, email }: Props
         <>
           <p className="text-sm leading-6 text-gray-600">
             Les dates sont bloquées. Quand le paiement est arrivé, enregistrez-le
-            ci-dessous : un e-mail de confirmation sera envoyé au client.
+            ci-dessous
+            {envoiAuto
+              ? " : un e-mail de confirmation sera envoyé au client."
+              : " (aucun e-mail automatique pour cette réservation)."}
           </p>
+
+          <div>
+            <label htmlFor="moyen" className="mb-1 block text-sm font-medium">
+              Moyen de paiement (facultatif)
+            </label>
+            <select
+              id="moyen"
+              name="moyen"
+              defaultValue=""
+              className="w-full rounded-md border border-[#C6B06B] bg-white px-3 py-2 text-base outline-none focus:ring-2 focus:ring-green"
+            >
+              <option value="">Non précisé</option>
+              {MOYENS_PAIEMENT.map((m) => (
+                <option key={m} value={m}>
+                  {LIBELLES_PAIEMENT[m]}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button
             type="submit"
             name="action"
             value="payee"
             disabled={enCours}
             onClick={confirmer(
-              `Marquer cette demande comme payée ? Un e-mail de confirmation de réservation sera envoyé à ${email}.`,
+              envoiAuto
+                ? `Marquer cette réservation comme payée ? Un e-mail de confirmation sera envoyé à ${email}.`
+                : "Marquer cette réservation comme payée ? Aucun e-mail automatique ne sera envoyé.",
             )}
             className={PRIMAIRE}
           >
@@ -82,7 +118,7 @@ export default function BoutonsDemande({ id, statut, datesLibres, email }: Props
             value="annuler"
             disabled={enCours}
             onClick={confirmer(
-              "Annuler cette demande et libérer les dates sur le calendrier ?",
+              "Annuler cette réservation et libérer les dates sur le calendrier ?",
             )}
             className={DANGER}
           >
@@ -93,16 +129,20 @@ export default function BoutonsDemande({ id, statut, datesLibres, email }: Props
 
       {statut === "payee" && (
         <>
-          <button
-            type="submit"
-            name="action"
-            value="renvoyer"
-            disabled={enCours}
-            onClick={confirmer(`Renvoyer l'e-mail de confirmation à ${email} ?`)}
-            className={SECONDAIRE}
-          >
-            Renvoyer la confirmation
-          </button>
+          {envoiAuto && (
+            <button
+              type="submit"
+              name="action"
+              value="renvoyer"
+              disabled={enCours}
+              onClick={confirmer(
+                `Renvoyer l'e-mail de confirmation à ${email} ?`,
+              )}
+              className={SECONDAIRE}
+            >
+              Renvoyer la confirmation
+            </button>
+          )}
           <button
             type="submit"
             name="action"

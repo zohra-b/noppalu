@@ -135,11 +135,13 @@ export default async function DemandesPage({
                       </span>
                       <span className="mt-1 block text-sm">
                         {formaterDate(d.arrivee)} → {formaterDate(d.depart)} ·{" "}
-                        {pluriel(nombreNuits(d.arrivee, d.depart), "nuit")} ·{" "}
-                        {pluriel(d.voyageurs, "voyageur")}
+                        {pluriel(nombreNuits(d.arrivee, d.depart), "nuit")}
+                        {d.voyageurs !== null &&
+                          ` · ${pluriel(d.voyageurs, "voyageur")}`}
                       </span>
                       <span className="mt-1 block text-sm text-gray-600">
-                        {d.nom} · reçue le {formaterDateHeure(d.creeeLe)}
+                        {d.nom ?? "Client sans nom"} · reçue le{" "}
+                        {formaterDateHeure(d.creeeLe)}
                       </span>
                     </Link>
                   </li>

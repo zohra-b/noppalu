@@ -1,5 +1,10 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  aDelaiPaiement,
+  type MoyenPaiement,
+  type OrigineDemande,
+} from "@/lib/reservations-types";
 
 export { LIBELLES_SOURCE } from "@/lib/blocages-types";
 
@@ -17,17 +22,20 @@ export type Demande = {
   studioSlug: string;
   arrivee: string; // première nuit
   depart: string; // jour du départ (exclusif)
-  voyageurs: number;
-  nom: string;
-  email: string;
+  voyageurs: number | null;
+  nom: string | null;
+  email: string | null;
   telephone: string | null;
   message: string | null;
   langue: string;
-  estimation: number | null; // en FCFA
+  estimation: number | null; // en FCFA (montant de la réservation)
   statut: StatutDemande;
+  origine: OrigineDemande;
+  moyenPaiement: MoyenPaiement | null;
   accepteeLe: string | null;
   payeeLe: string | null;
   confirmationEnvoyeeLe: string | null;
+  rappelEnvoyeLe: string | null;
 };
 
 type Ligne = {
@@ -36,21 +44,24 @@ type Ligne = {
   bungalow_slug: string;
   start_date: string;
   end_date: string;
-  guests: number;
-  guest_name: string;
-  email: string;
+  guests: number | null;
+  guest_name: string | null;
+  email: string | null;
   phone: string | null;
   message: string | null;
   locale: string;
   estimated_total: number | null;
   status: StatutDemande;
+  origin: OrigineDemande;
+  payment_method: MoyenPaiement | null;
   accepted_at: string | null;
   paid_at: string | null;
   confirmation_sent_at: string | null;
+  reminder_sent_at: string | null;
 };
 
 const COLONNES =
-  "id, created_at, bungalow_slug, start_date, end_date, guests, guest_name, email, phone, message, locale, estimated_total, status, accepted_at, paid_at, confirmation_sent_at";
+  "id, created_at, bungalow_slug, start_date, end_date, guests, guest_name, email, phone, message, locale, estimated_total, status, origin, payment_method, accepted_at, paid_at, confirmation_sent_at, reminder_sent_at";
 
 function versDemande(l: Ligne): Demande {
   return {
@@ -67,9 +78,12 @@ function versDemande(l: Ligne): Demande {
     langue: l.locale,
     estimation: l.estimated_total,
     statut: l.status,
+    origine: l.origin,
+    moyenPaiement: l.payment_method,
     accepteeLe: l.accepted_at,
     payeeLe: l.paid_at,
     confirmationEnvoyeeLe: l.confirmation_sent_at,
+    rappelEnvoyeLe: l.reminder_sent_at,
   };
 }
 
@@ -130,20 +144,21 @@ export async function getConflits(
   }));
 }
 
-// --- Délai de paiement ---
+// --- Délai de paiement (demandes du site et réservations directes) ---
 
 export const DELAI_PAIEMENT_HEURES = 72;
 
-/** Heure limite de paiement d'une demande acceptée, ou null. */
+/** Heure limite de paiement d'une réservation acceptée, ou null si aucun délai ne s'applique. */
 export function echeancePaiement(d: Demande): Date | null {
   if (d.statut !== "acceptee" && d.statut !== "en_attente_paiement") return null;
+  if (!aDelaiPaiement(d.origine)) return null;
   if (!d.accepteeLe) return null;
   return new Date(
     new Date(d.accepteeLe).getTime() + DELAI_PAIEMENT_HEURES * 3_600_000,
   );
 }
 
-/** Vrai si une demande acceptée n'a pas été payée dans le délai. */
+/** Vrai si une réservation acceptée n'a pas été payée dans le délai. */
 export function delaiDepasse(d: Demande): boolean {
   const echeance = echeancePaiement(d);
   return echeance !== null && echeance.getTime() < Date.now();
@@ -153,8 +168,8 @@ export function delaiDepasse(d: Demande): boolean {
 
 export const LIBELLES_STATUT: Record<StatutDemande, string> = {
   nouvelle: "Nouvelle",
-  acceptee: "Acceptée",
-  en_attente_paiement: "Acceptée",
+  acceptee: "À encaisser",
+  en_attente_paiement: "À encaisser",
   payee: "Payée",
   refusee: "Refusée",
   expiree: "Annulée",
@@ -169,9 +184,12 @@ export const CLASSES_STATUT: Record<StatutDemande, string> = {
   expiree: "bg-gray-200 text-gray-600",
 };
 
-
 const formatDate = new Intl.DateTimeFormat("fr", {
   dateStyle: "long",
+  timeZone: "UTC",
+});
+const formatDateCourte = new Intl.DateTimeFormat("fr", {
+  dateStyle: "medium",
   timeZone: "UTC",
 });
 const formatDateHeure = new Intl.DateTimeFormat("fr", {
@@ -184,6 +202,12 @@ const formatDateHeure = new Intl.DateTimeFormat("fr", {
 export function formaterDate(cle: string): string {
   const [a, m, j] = cle.split("-").map(Number);
   return formatDate.format(new Date(Date.UTC(a, m - 1, j)));
+}
+
+/** « 2026-12-05 » devient « 5 déc. 2026 ». */
+export function formaterDateCourte(cle: string): string {
+  const [a, m, j] = cle.split("-").map(Number);
+  return formatDateCourte.format(new Date(Date.UTC(a, m - 1, j)));
 }
 
 export function formaterDateHeure(iso: string): string {

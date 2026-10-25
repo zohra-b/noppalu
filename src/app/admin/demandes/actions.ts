@@ -2,8 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { getBungalow } from "@/lib/data";
-import { getDemande } from "@/lib/demandes";
+import { getDemande, type Demande } from "@/lib/demandes";
 import { envoyerConfirmationPaiement } from "@/lib/emails-demande";
+import {
+  MOYENS_PAIEMENT,
+  confirmationAutomatique,
+} from "@/lib/reservations-types";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/supabase/session";
 
@@ -41,10 +45,7 @@ function rafraichirSitePublic() {
 }
 
 // Envoie la confirmation au client et note l'envoi
-async function envoyerEtNoter(id: string): Promise<boolean> {
-  const demande = await getDemande(id);
-  if (!demande) return false;
-
+async function envoyerEtNoter(demande: Demande): Promise<boolean> {
   const studio =
     (await getBungalow(demande.studioSlug))?.nom ?? demande.studioSlug;
   const envoye = await envoyerConfirmationPaiement(demande, studio);
@@ -53,7 +54,7 @@ async function envoyerEtNoter(id: string): Promise<boolean> {
     const { error } = await createAdminClient()
       .from("booking_requests")
       .update({ confirmation_sent_at: new Date().toISOString() })
-      .eq("id", id);
+      .eq("id", demande.id);
     if (error) console.error("Admin : envoi non noté", error);
   }
   return envoye;
@@ -84,7 +85,8 @@ export async function traiterDemande(
     } else if (action === "annuler") {
       const { error } = await admin.rpc("annuler_demande", { p_id: id });
       if (error) return { erreur: messageErreur(error) };
-            ok = "Demande annulée : les dates sont libérées. Pensez à prévenir le client avec le message préparé sur cette page.";
+      ok =
+        "Demande annulée : les dates sont libérées. Pensez à prévenir le client avec le message préparé sur cette page.";
     } else if (action === "refuser") {
       const { data, error } = await admin
         .from("booking_requests")
@@ -96,11 +98,21 @@ export async function traiterDemande(
       if (!data || data.length === 0) {
         return { erreur: "Cette demande a déjà été traitée. Rechargez la page." };
       }
-      ok = "Demande refusée. Pensez à prévenir le client avec le message préparé sur cette page.";;
+      ok =
+        "Demande refusée. Pensez à prévenir le client avec le message préparé sur cette page.";
     } else if (action === "payee") {
+      const moyenBrut = String(formData.get("moyen") ?? "");
+      const moyen = (MOYENS_PAIEMENT as string[]).includes(moyenBrut)
+        ? moyenBrut
+        : null;
+
       const { data, error } = await admin
         .from("booking_requests")
-        .update({ status: "payee", paid_at: new Date().toISOString() })
+        .update({
+          status: "payee",
+          paid_at: new Date().toISOString(),
+          payment_method: moyen,
+        })
         .eq("id", id)
         .in("status", ["acceptee", "en_attente_paiement"])
         .select("id");
@@ -108,11 +120,18 @@ export async function traiterDemande(
       if (!data || data.length === 0) {
         return { erreur: "Cette demande ne peut pas être marquée comme payée." };
       }
-      if (await envoyerEtNoter(id)) {
-        ok = "Paiement enregistré. L'e-mail de confirmation a été envoyé au client.";
+
+      const demande = await getDemande(id);
+      if (demande && confirmationAutomatique(demande.origine, demande.email)) {
+        if (await envoyerEtNoter(demande)) {
+          ok = "Paiement enregistré. L'e-mail de confirmation a été envoyé au client.";
+        } else {
+          attention =
+            "Paiement enregistré, mais l'e-mail de confirmation n'a pas pu être envoyé. Utilisez « Renvoyer la confirmation ».";
+        }
       } else {
-        attention =
-          "Paiement enregistré, mais l'e-mail de confirmation n'a pas pu être envoyé. Utilisez « Renvoyer la confirmation ».";
+        ok =
+          "Paiement enregistré. Aucun e-mail automatique pour cette réservation : utilisez le message de confirmation préparé sur cette page si besoin.";
       }
     } else {
       // renvoyer
@@ -122,7 +141,13 @@ export async function traiterDemande(
           erreur: "Seule une demande payée peut recevoir la confirmation.",
         };
       }
-      if (!(await envoyerEtNoter(id))) {
+      if (!confirmationAutomatique(demande.origine, demande.email)) {
+        return {
+          erreur:
+            "Pas d'envoi automatique pour cette réservation (Booking, Airbnb ou adresse e-mail absente) : utilisez le message préparé sur cette page.",
+        };
+      }
+      if (!(await envoyerEtNoter(demande))) {
         return { erreur: "L'envoi a échoué. Réessayez dans un instant." };
       }
       ok = "Confirmation envoyée au client.";
