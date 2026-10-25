@@ -7,11 +7,11 @@ import {
 } from "@/lib/reservations-types";
 import { traiterDemande, type EtatAction } from "../actions";
 
-const BASE =
-  "w-full rounded-md px-5 py-3 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50";
-const PRIMAIRE = `${BASE} bg-green text-linen hover:bg-[#244D2B]`;
-const SECONDAIRE = `${BASE} border border-green text-green hover:bg-green hover:text-linen`;
-const DANGER = `${BASE} border border-red-700 text-red-700 hover:bg-red-700 hover:text-white`;
+const BOUTON =
+  "min-w-40 flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50";
+const PRIMAIRE = `${BOUTON} bg-green text-linen hover:bg-[#244D2B]`;
+const SECONDAIRE = `${BOUTON} border border-green text-green hover:bg-green hover:text-linen`;
+const DANGER = `${BOUTON} border border-red-700 text-red-700 hover:bg-red-700 hover:text-white`;
 
 type Props = {
   id: string;
@@ -42,11 +42,11 @@ export default function BoutonsDemande({
   const acceptee = statut === "acceptee" || statut === "en_attente_paiement";
 
   return (
-    <form action={action} className="space-y-3">
+    <form action={action} className="space-y-2">
       <input type="hidden" name="id" value={id} />
 
       {statut === "nouvelle" && (
-        <>
+        <div className="flex flex-wrap gap-2">
           <button
             type="submit"
             name="action"
@@ -66,69 +66,64 @@ export default function BoutonsDemande({
           >
             Refuser
           </button>
-        </>
+        </div>
       )}
 
       {acceptee && (
         <>
-          <p className="text-sm leading-6 text-gray-600">
-            Les dates sont bloquées. Quand le paiement est arrivé, enregistrez-le
-            ci-dessous
+          <p className="text-sm text-gray-600">
+            Dates bloquées. Enregistrez le paiement (
             {envoiAuto
-              ? " : un e-mail de confirmation sera envoyé au client."
-              : " (aucun e-mail automatique pour cette réservation)."}
+              ? "e-mail de confirmation automatique"
+              : "pas d'e-mail automatique"}
+            ).
           </p>
-
-          <div>
-            <label htmlFor="moyen" className="mb-1 block text-sm font-medium">
-              Moyen de paiement (facultatif)
-            </label>
+          <div className="flex flex-wrap gap-2">
             <select
-              id="moyen"
               name="moyen"
               defaultValue=""
-              className="w-full rounded-md border border-[#C6B06B] bg-white px-3 py-2 text-base outline-none focus:ring-2 focus:ring-green"
+              aria-label="Moyen de paiement (facultatif)"
+              className="min-w-44 flex-1 rounded-md border border-[#C6B06B] bg-white px-3 py-2 text-base outline-none focus:ring-2 focus:ring-green md:text-sm"
             >
-              <option value="">Non précisé</option>
+              <option value="">Moyen de paiement</option>
               {MOYENS_PAIEMENT.map((m) => (
                 <option key={m} value={m}>
                   {LIBELLES_PAIEMENT[m]}
                 </option>
               ))}
             </select>
+            <button
+              type="submit"
+              name="action"
+              value="payee"
+              disabled={enCours}
+              onClick={confirmer(
+                envoiAuto
+                  ? `Marquer cette réservation comme payée ? Un e-mail de confirmation sera envoyé à ${email}.`
+                  : "Marquer cette réservation comme payée ? Aucun e-mail automatique ne sera envoyé.",
+              )}
+              className={PRIMAIRE}
+            >
+              Paiement reçu
+            </button>
+            <button
+              type="submit"
+              name="action"
+              value="annuler"
+              disabled={enCours}
+              onClick={confirmer(
+                "Annuler cette réservation et libérer les dates sur le calendrier ?",
+              )}
+              className={DANGER}
+            >
+              Annuler et libérer les dates
+            </button>
           </div>
-
-          <button
-            type="submit"
-            name="action"
-            value="payee"
-            disabled={enCours}
-            onClick={confirmer(
-              envoiAuto
-                ? `Marquer cette réservation comme payée ? Un e-mail de confirmation sera envoyé à ${email}.`
-                : "Marquer cette réservation comme payée ? Aucun e-mail automatique ne sera envoyé.",
-            )}
-            className={PRIMAIRE}
-          >
-            Paiement reçu
-          </button>
-          <button
-            type="submit"
-            name="action"
-            value="annuler"
-            disabled={enCours}
-            onClick={confirmer(
-              "Annuler cette réservation et libérer les dates sur le calendrier ?",
-            )}
-            className={DANGER}
-          >
-            Annuler et libérer les dates
-          </button>
         </>
       )}
 
       {statut === "payee" && (
-        <>
+        <div className="flex flex-wrap gap-2">
           {envoiAuto && (
             <button
               type="submit"
@@ -155,7 +150,7 @@ export default function BoutonsDemande({
           >
             Annuler la réservation et libérer les dates
           </button>
-        </>
+        </div>
       )}
 
       {(statut === "refusee" || statut === "expiree") && (

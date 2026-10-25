@@ -43,7 +43,7 @@ export const metadata: Metadata = { title: "Demande" };
 const UUID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-const CARTE = "rounded-lg bg-[#FFFEF6] p-5 shadow-sm";
+const CARTE = "rounded-lg bg-[#FFFEF6] p-4 shadow-sm";
 const LIEN_CONTACT =
   "flex-1 rounded-md border border-green px-4 py-2 text-center text-sm font-medium text-green transition-colors hover:bg-green hover:text-linen";
 
@@ -57,7 +57,7 @@ function lienWhatsApp(telephone: string | null): string | null {
 
 function Ligne({ libelle, valeur }: { libelle: string; valeur: React.ReactNode }) {
   return (
-    <div className="flex justify-between gap-4 py-2 text-sm">
+    <div className="flex justify-between gap-4 py-1.5 text-sm">
       <dt className="text-gray-600">{libelle}</dt>
       <dd className="text-right font-medium">{valeur}</dd>
     </div>
@@ -169,12 +169,12 @@ export default async function DemandePage({
   return (
     <>
       <EnteteAdmin />
-      <main className="mx-auto w-full max-w-3xl flex-1 space-y-4 px-4 py-6">
+      <main className="mx-auto w-full max-w-3xl flex-1 space-y-3 px-4 py-5">
         <Link
-          href="/admin/demandes"
+          href="/admin/reservations"
           className="text-sm text-green underline underline-offset-4"
         >
-          ← Demandes
+          ← Réservations
         </Link>
 
         <div className="flex items-start justify-between gap-3">
@@ -182,7 +182,10 @@ export default async function DemandePage({
             <h1 className="font-serif text-2xl font-semibold text-green">
               {studio}
             </h1>
-            <p className="text-sm text-gray-600">{LIBELLES_ORIGINE[origine]}</p>
+            <p className="text-sm text-gray-600">
+              {LIBELLES_ORIGINE[origine]} · {nomClient} ·{" "}
+              {formaterDate(demande.arrivee)} → {formaterDate(demande.depart)}
+            </p>
           </div>
           <span
             className={`shrink-0 rounded-full px-3 py-1 text-sm font-medium ${CLASSES_STATUT[demande.statut]}`}
@@ -191,67 +194,71 @@ export default async function DemandePage({
           </span>
         </div>
 
-        {acceptee && (
-          <section
-            className={`${CARTE} ${enRetard ? "border border-red-700" : ""}`}
-          >
-            <h2 className="mb-1 font-semibold text-green">Paiement</h2>
-            {echeance ? (
+        {/* Traitement : tout en haut, pour agir sans défiler */}
+        <section className={`${CARTE} ${enRetard ? "border border-red-700" : ""}`}>
+          <h2 className="mb-2 text-sm font-semibold text-green">
+            Traiter la demande
+          </h2>
+
+          {acceptee &&
+            (echeance ? (
               enRetard ? (
-                <p className="text-sm font-medium text-red-700">
+                <p className="mb-2 text-sm font-medium text-red-700">
                   Délai de paiement dépassé (échéance : le{" "}
                   {formaterDateHeure(echeance.toISOString())}). Enregistrez le
                   paiement s&apos;il est arrivé, ou libérez les dates.
                 </p>
               ) : (
-                <p className="text-sm">
+                <p className="mb-2 text-sm">
                   Paiement attendu avant le{" "}
                   {formaterDateHeure(echeance.toISOString())}.
                 </p>
               )
             ) : (
-              <p className="text-sm">
+              <p className="mb-2 text-sm">
                 Paiement à encaisser (à l&apos;arrivée ou par un autre moyen).
               </p>
-            )}
-          </section>
-        )}
+            ))}
 
-        {payee && demande.payeeLe && (
-          <section className={CARTE}>
-            <h2 className="mb-1 font-semibold text-green">Paiement</h2>
-            <p className="text-sm">
+          {payee && demande.payeeLe && (
+            <p className="mb-2 text-sm">
               Payée le {formaterDateHeure(demande.payeeLe)}
               {demande.moyenPaiement
                 ? ` · ${LIBELLES_PAIEMENT[demande.moyenPaiement]}`
                 : ""}
+              .
             </p>
-          </section>
-        )}
+          )}
+          {payee && envoiAuto && (
+            <p
+              className={`mb-2 text-sm ${
+                demande.confirmationEnvoyeeLe
+                  ? "text-green"
+                  : "font-medium text-[#8B3017]"
+              }`}
+            >
+              {demande.confirmationEnvoyeeLe
+                ? `Confirmation envoyée au client le ${formaterDateHeure(demande.confirmationEnvoyeeLe)}.`
+                : "La confirmation n'a pas encore été envoyée au client."}
+            </p>
+          )}
 
-        <section className={CARTE}>
-          <h2 className="mb-1 font-semibold text-green">Séjour</h2>
-          <dl className="divide-y divide-[#C6B06B]/40">
-            <Ligne libelle="Arrivée" valeur={formaterDate(demande.arrivee)} />
-            <Ligne libelle="Départ" valeur={formaterDate(demande.depart)} />
-            <Ligne libelle="Durée" valeur={pluriel(nuits, "nuit")} />
-            {demande.voyageurs !== null && (
-              <Ligne libelle="Voyageurs" valeur={demande.voyageurs} />
-            )}
-            {demande.estimation !== null && (
-              <Ligne
-                libelle={origine === "site" ? "Estimation" : "Montant"}
-                valeur={formaterMontantDouble(demande.estimation)}
-              />
-            )}
-          </dl>
+          <BoutonsDemande
+            id={demande.id}
+            statut={demande.statut}
+            datesLibres={datesLibres}
+            email={demande.email}
+            envoiAuto={envoiAuto}
+          />
         </section>
 
         {demande.statut === "nouvelle" && (
           <section
             className={`${CARTE} ${datesLibres ? "" : "border border-red-700"}`}
           >
-            <h2 className="mb-2 font-semibold text-green">Disponibilité</h2>
+            <h2 className="mb-1 text-sm font-semibold text-green">
+              Disponibilité
+            </h2>
             {conflits === null ? (
               <p className="text-sm text-gray-600">
                 Vérification impossible pour le moment. La base refusera de
@@ -263,7 +270,7 @@ export default async function DemandePage({
               </p>
             ) : (
               <div className="text-sm text-red-700">
-                <p className="mb-2 font-medium">
+                <p className="mb-1 font-medium">
                   Ces dates ne sont plus libres pour ce studio :
                 </p>
                 <ul className="list-disc space-y-1 pl-5">
@@ -281,7 +288,34 @@ export default async function DemandePage({
         )}
 
         <section className={CARTE}>
-          <h2 className="mb-1 font-semibold text-green">Client</h2>
+          <h2 className="mb-1 text-sm font-semibold text-green">Séjour</h2>
+          <dl className="divide-y divide-[#C6B06B]/40">
+            <Ligne libelle="Arrivée" valeur={formaterDate(demande.arrivee)} />
+            <Ligne libelle="Départ" valeur={formaterDate(demande.depart)} />
+            <Ligne libelle="Durée" valeur={pluriel(nuits, "nuit")} />
+            {demande.voyageurs !== null && (
+              <Ligne libelle="Voyageurs" valeur={demande.voyageurs} />
+            )}
+            {demande.estimation !== null && (
+              <Ligne
+                libelle={origine === "site" ? "Estimation" : "Montant"}
+                valeur={formaterMontantDouble(demande.estimation)}
+              />
+            )}
+          </dl>
+        </section>
+        {demande.message && (
+          <section className={CARTE}>
+            <h2 className="mb-2 text-sm font-semibold text-green">
+              {origine === "site" ? "Message du client" : "Note"}
+            </h2>
+            <p className="whitespace-pre-wrap text-sm leading-6">
+              {demande.message}
+            </p>
+          </section>
+        )}
+        <section className={CARTE}>
+          <h2 className="mb-1 text-sm font-semibold text-green">Client</h2>
           <dl className="divide-y divide-[#C6B06B]/40">
             <Ligne libelle="Nom" valeur={nomClient} />
             <Ligne
@@ -305,7 +339,7 @@ export default async function DemandePage({
             />
           </dl>
 
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             {mailto && (
               <a href={mailto} className={LIEN_CONTACT}>
                 Écrire par e-mail
@@ -341,7 +375,9 @@ export default async function DemandePage({
 
         {aUnMessage && (
           <section className={CARTE}>
-            <h2 className="mb-2 font-semibold text-green">{titreMessage}</h2>
+            <h2 className="mb-2 text-sm font-semibold text-green">
+              {titreMessage}
+            </h2>
 
             {acceptee && coordonneesIncompletes(paiement) && (
               <p className="mb-3 text-sm font-medium text-[#8B3017]">
@@ -375,40 +411,7 @@ export default async function DemandePage({
           </section>
         )}
 
-        {demande.message && (
-          <section className={CARTE}>
-            <h2 className="mb-2 font-semibold text-green">
-              {origine === "site" ? "Message du client" : "Note"}
-            </h2>
-            <p className="whitespace-pre-wrap text-sm leading-6">
-              {demande.message}
-            </p>
-          </section>
-        )}
-
-        <section className={CARTE}>
-          <h2 className="mb-3 font-semibold text-green">Traiter la demande</h2>
-          {payee && envoiAuto && (
-            <p
-              className={`mb-3 text-sm ${
-                demande.confirmationEnvoyeeLe
-                  ? "text-green"
-                  : "font-medium text-[#8B3017]"
-              }`}
-            >
-              {demande.confirmationEnvoyeeLe
-                ? `Confirmation envoyée au client le ${formaterDateHeure(demande.confirmationEnvoyeeLe)}.`
-                : "La confirmation n'a pas encore été envoyée au client."}
-            </p>
-          )}
-          <BoutonsDemande
-            id={demande.id}
-            statut={demande.statut}
-            datesLibres={datesLibres}
-            email={demande.email}
-            envoiAuto={envoiAuto}
-          />
-        </section>
+        
       </main>
     </>
   );
