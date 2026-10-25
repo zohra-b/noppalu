@@ -16,7 +16,9 @@ import { requireAdmin } from "@/lib/supabase/session";
 import CalendrierAdmin from "../calendrier/CalendrierAdmin";
 import EnteteAdmin from "../EnteteAdmin";
 import ListeReservations from "./ListeReservations";
+import Orphelins from "./Orphelins";
 import NouvelleReservation from "./NouvelleReservation";
+import { estOrphelin } from "@/lib/blocages-types";
 
 export const metadata: Metadata = { title: "Réservations" };
 
@@ -74,6 +76,15 @@ export default async function ReservationsPage({
 
     contenu = (
       <>
+        <Orphelins
+          orphelins={blocages.filter(estOrphelin).map((b) => ({
+            id: b.id,
+            studio: noms.get(b.studioSlug) ?? b.studioSlug,
+            debut: b.debut,
+            fin: b.fin,
+            nom: b.nom,
+          }))}
+        />
         <NouvelleReservation
           studios={studiosForm}
           tarifs={reglages ? reglages.tarifs : null}

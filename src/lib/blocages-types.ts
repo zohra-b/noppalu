@@ -98,3 +98,10 @@ export function validerBlocage(
   if (nombreNuits(debut, fin) > BLOCAGE.nuitsMax) return "bloc_trop_long";
   return null;
 };
+
+/** Blocage d'une demande du site dont la demande n'existe plus (supprimée dans la base). */
+export function estOrphelin(
+  b: Pick<Blocage, "source" | "demandeId">,
+): boolean {
+  return b.source === "demande_site" && b.demandeId === null;
+}

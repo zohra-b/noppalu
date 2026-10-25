@@ -217,3 +217,40 @@ export function formaterDateHeure(iso: string): string {
 export function pluriel(n: number, mot: string): string {
   return `${n} ${mot}${n > 1 ? "s" : ""}`;
 }
+
+// --- Rappel d'arrivée (e-mail quotidien) ---
+
+/**
+ * Réserve pour le rappel toutes les réservations acceptées ou payées dont l'arrivée
+ * tombe entre `aujourdhui` et `jusqua`, et qui n'ont pas encore été rappelées.
+ * Le marquage et la lecture se font en une seule requête : deux exécutions
+ * simultanées ne peuvent pas envoyer deux fois le même rappel.
+ */
+export async function reclamerRappels(
+  aujourdhui: string,
+  jusqua: string,
+): Promise<Demande[]> {
+  const { data, error } = await createAdminClient()
+    .from("booking_requests")
+    .update({ reminder_sent_at: new Date().toISOString() })
+    .in("status", ["acceptee", "en_attente_paiement", "payee"])
+    .gte("start_date", aujourdhui)
+    .lte("start_date", jusqua)
+    .is("reminder_sent_at", null)
+    .select(COLONNES);
+  if (error) throw new Error(`Réservation des rappels impossible : ${error.message}`);
+
+  return (data as Ligne[])
+    .map(versDemande)
+    .sort((a, b) => (a.arrivee < b.arrivee ? -1 : a.arrivee > b.arrivee ? 1 : 0));
+}
+
+/** Annule la réservation des rappels (si l'envoi de l'e-mail a échoué). */
+export async function annulerReclamationRappels(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  const { error } = await createAdminClient()
+    .from("booking_requests")
+    .update({ reminder_sent_at: null })
+    .in("id", ids);
+  if (error) console.error("Rappels : annulation du marquage impossible", error);
+}

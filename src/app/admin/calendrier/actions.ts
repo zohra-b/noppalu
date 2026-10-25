@@ -218,3 +218,37 @@ export async function supprimerBlocage(
   rafraichir();
   return { ok: "Dates libérées : le studio est de nouveau disponible sur le site." };
 }
+
+export async function libererOrphelin(
+  _etat: EtatBlocage,
+  formData: FormData,
+): Promise<EtatBlocage> {
+  await requireAdmin();
+
+  const id = String(formData.get("id") ?? "");
+  if (!UUID.test(id)) return { erreur: "Requête invalide." };
+
+  try {
+    // Seulement un blocage « demande du site » qui n'est plus rattaché à aucune demande
+    const { data, error } = await createAdminClient()
+      .from("availability_blocks")
+      .delete()
+      .eq("id", id)
+      .eq("source", "demande_site")
+      .is("request_id", null)
+      .select("id");
+    if (error) {
+      console.error("Admin : erreur lors de la libération d'un orphelin", error);
+      return { erreur: "L'opération a échoué. Réessayez dans un instant." };
+    }
+    if (!data || data.length === 0) {
+      return { erreur: "Ce blocage n'existe plus ou est rattaché à une demande." };
+    }
+  } catch (e) {
+    console.error("Admin : échec de la libération d'un orphelin", e);
+    return { erreur: "L'opération a échoué. Réessayez dans un instant." };
+  }
+
+  rafraichir();
+  return { ok: "Dates libérées." };
+}

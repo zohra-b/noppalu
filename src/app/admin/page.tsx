@@ -73,11 +73,11 @@ export default async function AdminPage() {
                 {arrivees.map((d) => {
                   const delai = nombreNuits(aujourdhui, d.arrivee);
                   return (
-                    <li
-                      key={d.id}
-                      className="rounded-lg bg-[#FFFEF6] p-3 shadow-sm"
-                    >
-                      <Link href={`/admin/demandes/${d.id}`} className="block">
+                    <li key={d.id}>
+                      <Link
+                        href={`/admin/demandes/${d.id}`}
+                        className="block rounded-lg bg-[#FFFEF6] p-3 shadow-sm transition-colors hover:bg-white"
+                      >
                         <span className="flex items-start justify-between gap-2">
                           <span className="font-semibold text-green">
                             {noms.get(d.studioSlug) ?? d.studioSlug}
@@ -109,14 +109,6 @@ export default async function AdminPage() {
                           </span>
                         )}
                       </Link>
-                      {d.telephone && (
-                        <a
-                          href={`tel:${d.telephone.replace(/[^\d+]/g, "")}`}
-                          className="mt-1 inline-block text-sm text-green underline underline-offset-4"
-                        >
-                          Appeler {d.telephone}
-                        </a>
-                      )}
                     </li>
                   );
                 })}
