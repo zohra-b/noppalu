@@ -103,7 +103,7 @@ function rafraichir() {
   revalidatePath("/[locale]/bungalows", "page");
   revalidatePath("/[locale]/bungalows/[slug]", "page");
   revalidatePath("/[locale]/reservation", "page");
-  revalidatePath("/admin/calendrier");
+  revalidatePath("/admin/reservations");
 }
 
 export async function creerBlocage(

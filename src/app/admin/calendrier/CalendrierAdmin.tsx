@@ -113,9 +113,13 @@ export default function CalendrierAdmin({
 
   const options = [{ slug: "tous", nom: "Tous" }, ...studios];
 
+       // Seuls les blocages sans réservation se gèrent ici : les réservations sont dans la liste
   const aVenir = blocages.filter(
-    (b) => b.fin > aujourdhui && (choix === "tous" || b.studioSlug === choix),
-  );
+       (b) =>
+         estModifiable(b) &&
+         b.fin > aujourdhui &&
+         (choix === "tous" || b.studioSlug === choix),
+     );
 
   // `position` 0 = mois de gauche (toujours visible), 1 = mois de droite (ordinateur seulement)
   function mois(position: 0 | 1) {
@@ -295,7 +299,7 @@ export default function CalendrierAdmin({
             onClick={ouvrirNouveau}
             className="rounded-md bg-green px-4 py-1.5 text-sm font-medium text-linen transition-colors hover:bg-[#244D2B]"
           >
-            + Nouveau blocage
+            + Bloquer des dates
           </button>
         </div>
 
@@ -382,10 +386,10 @@ export default function CalendrierAdmin({
 
       <section>
         <h2 className="mb-3 font-serif text-xl font-semibold text-green">
-          Blocages en cours et à venir
+          Dates bloquées sans réservation
         </h2>
         {aVenir.length === 0 ? (
-          <p className="text-sm text-gray-600">Aucun blocage.</p>
+          <p className="text-sm text-gray-600">Aucune date bloquée.</p>
         ) : (
           <ul className="space-y-3">
             {aVenir.map((b) => {

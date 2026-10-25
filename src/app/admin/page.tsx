@@ -25,6 +25,10 @@ export default async function AdminPage() {
     return null;
   });
   const nouvelles = demandes?.filter((d) => d.statut === "nouvelle").length ?? 0;
+  const aEncaisser =
+    demandes?.filter(
+      (d) => d.statut === "acceptee" || d.statut === "en_attente_paiement",
+    ).length ?? 0;
   const enRetard = demandes?.filter((d) => delaiDepasse(d)).length ?? 0;
 
   return (
@@ -37,19 +41,22 @@ export default async function AdminPage() {
         <ul className="space-y-3">
           <li>
             <Link
-              href="/admin/demandes"
+              href="/admin/reservations"
               className="block rounded-lg bg-[#FFFEF6] p-5 shadow-sm transition-colors hover:bg-white"
             >
-              <span className="block font-semibold text-green">
-                Demandes de réservation
-              </span>
+              <span className="block font-semibold text-green">Réservations</span>
               <span className="block text-sm text-gray-600">
                 {demandes === null
-                  ? "Les demandes reçues depuis le site."
+                  ? "Les réservations et les demandes reçues depuis le site."
                   : nouvelles === 0
                     ? "Aucune nouvelle demande."
                     : `${nouvelles} ${nouvelles > 1 ? "nouvelles demandes" : "nouvelle demande"} à traiter`}
               </span>
+              {aEncaisser > 0 && (
+                <span className="block text-sm text-gray-600">
+                  {aEncaisser} à encaisser
+                </span>
+              )}
               {enRetard > 0 && (
                 <span className="mt-1 block text-sm font-medium text-red-700">
                   {enRetard}{" "}
@@ -62,7 +69,7 @@ export default async function AdminPage() {
           </li>
           <li>
             <Link
-              href="/admin/calendrier"
+              href="/admin/reservations?vue=calendrier"
               className="block rounded-lg bg-[#FFFEF6] p-5 shadow-sm transition-colors hover:bg-white"
             >
               <span className="block font-semibold text-green">Calendrier</span>

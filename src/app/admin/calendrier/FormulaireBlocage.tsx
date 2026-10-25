@@ -7,6 +7,7 @@ import {
   SOURCES_MODIFIABLES,
   validerBlocage,
   type Blocage,
+  type SourceBlocage,
 } from "@/lib/blocages-types";
 import { ajouterJours, dateValide, etatDate, nombreNuits } from "@/lib/sejour";
 import {
@@ -41,6 +42,10 @@ export default function FormulaireBlocage({
 }: Props) {
   const modification = blocage !== undefined;
   const p = blocage?.id ?? "nouveau"; // préfixe des identifiants de champs
+// À la création, seul « Indisponible » est proposé ; les anciens blocages gardent leur type
+  const sourcesChoix: SourceBlocage[] = modification
+       ? SOURCES_MODIFIABLES
+       : ["indisponible"];
   const arriveeInitiale = blocage?.debut ?? initial?.arrivee ?? "";
 
   const [studio, setStudio] = useState(
@@ -51,7 +56,7 @@ export default function FormulaireBlocage({
     blocage?.fin ??
       (dateValide(arriveeInitiale) ? ajouterJours(arriveeInitiale, 1) : ""),
   );
-  const [source, setSource] = useState<string>(blocage?.source ?? "manuel");
+  const [source, setSource] = useState<string>(blocage?.source ?? "indisponible");
   const [nom, setNom] = useState(blocage?.nom ?? "");
   const [email, setEmail] = useState(blocage?.email ?? "");
   const [telephone, setTelephone] = useState(blocage?.telephone ?? "");
@@ -121,7 +126,7 @@ export default function FormulaireBlocage({
       className="space-y-2 rounded-lg border border-[#C6B06B] bg-white p-3 md:p-4"
     >
       <h3 className="text-sm font-semibold text-green">
-        {modification ? "Modifier le blocage" : "Nouveau blocage"}
+        {modification ? "Modifier le blocage" : "Bloquer des dates (séjour personnel, travaux…)"}
       </h3>
 
       {blocage && <input type="hidden" name="id" value={blocage.id} />}
@@ -211,7 +216,7 @@ export default function FormulaireBlocage({
             onChange={(e) => setSource(e.target.value)}
             className={CHAMP}
           >
-            {SOURCES_MODIFIABLES.map((s) => (
+            {sourcesChoix.map((s) => (
               <option key={s} value={s}>
                 {LIBELLES_SOURCE[s]}
               </option>
@@ -226,7 +231,7 @@ export default function FormulaireBlocage({
         </p>
       )}
 
-      {/* Ligne 2 : client */}
+      {/* Ligne 2 : client
       <div className="grid gap-2 md:grid-cols-3">
         <div>
           <label htmlFor={`nom-${p}`} className={ETIQUETTE}>
@@ -273,7 +278,7 @@ export default function FormulaireBlocage({
             className={CHAMP}
           />
         </div>
-      </div>
+      </div> */}
 
       {/* Note : libellé réservé aux lecteurs d'écran, l'aide est dans le champ */}
       <div>

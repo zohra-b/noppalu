@@ -159,6 +159,7 @@ export async function traiterDemande(
 
   rafraichirSitePublic();
   revalidatePath("/admin/demandes");
+  revalidatePath("/admin/reservations");
   revalidatePath(`/admin/demandes/${id}`);
   return { ok, attention };
 }
