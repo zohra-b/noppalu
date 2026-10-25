@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getBungalows } from "@/lib/data";
+import { getBungalows, getReglages } from "@/lib/data";
 import {
   CLASSES_STATUT,
   LIBELLES_SOURCE,
@@ -32,11 +32,12 @@ import {
   confirmationAutomatique,
   estPlateforme,
 } from "@/lib/reservations-types";
-import { nombreNuits } from "@/lib/sejour";
+import { aujourdhuiSenegal, nombreNuits } from "@/lib/sejour";
 import { requireAdmin } from "@/lib/supabase/session";
 import EnteteAdmin from "../../EnteteAdmin";
 import BoutonsDemande from "./BoutonsDemande";
 import CopierMessage from "./CopierMessage";
+import ModifierDates from "./ModifierDates";
 
 export const metadata: Metadata = { title: "Demande" };
 
@@ -110,6 +111,9 @@ export default async function DemandePage({
   const paiement = acceptee ? await getCoordonneesPaiement() : null;
   const echeance = echeancePaiement(demande);
   const enRetard = delaiDepasse(demande);
+  // Dates et montant modifiables tant que la réservation est acceptée ou payée
+  const modifiable = acceptee || payee;
+  const reglages = modifiable ? await getReglages().catch(() => null) : null;
 
   const nuits = nombreNuits(demande.arrivee, demande.depart);
   const whatsapp = lienWhatsApp(demande.telephone);
@@ -251,6 +255,17 @@ export default async function DemandePage({
             envoiAuto={envoiAuto}
           />
         </section>
+
+        {modifiable && (
+          <ModifierDates
+            id={demande.id}
+            arrivee={demande.arrivee}
+            depart={demande.depart}
+            montant={demande.estimation}
+            tarifs={reglages ? reglages.tarifs : null}
+            aujourdhui={aujourdhuiSenegal()}
+          />
+        )}
 
         {demande.statut === "nouvelle" && (
           <section
