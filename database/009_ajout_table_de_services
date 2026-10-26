@@ -1,0 +1,25 @@
+-- 1. Table des services (transfert, petit-déjeuner…)
+create table public.site_services (
+  id     uuid primary key default gen_random_uuid(),
+  ordre  integer not null default 0,
+  actif  boolean not null default true,
+  nom    jsonb   not null default '{}'::jsonb,   -- {"fr": "…"}
+  prix   integer check (prix is null or prix >= 0),  -- vide = « nous consulter »
+  unite  text    check (unite is null or unite in ('trajet', 'nuit', 'personne', 'sejour'))
+);
+
+alter table public.site_services enable row level security;
+
+create policy "lecture publique des services actifs"
+  on public.site_services for select
+  to anon, authenticated
+  using (actif);
+
+grant select on public.site_services to anon, authenticated;
+grant select, insert, update, delete on public.site_services to service_role;
+
+-- Reprise du transfert actuel comme premier service
+insert into public.site_services (ordre, nom, prix)
+select 1, '{"fr": "Transfert de / vers l''aéroport sur demande"}'::jsonb, prix_transfert
+from public.site_settings
+where not exists (select 1 from public.site_services);

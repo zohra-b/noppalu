@@ -132,7 +132,18 @@
       "fetes": "Fêtes de fin d'année ({debut} au {fin})",
       "parNuit": "{prix} FCFA/nuit"
     },
-    "transfert": "Transfert de / vers l'aéroport sur demande ({prix} FCFA)",
+    "nousConsulter": "Nous consulter pour connaître nos tarifs",
+    "service": {
+      "prix": "{nom} ({prix} FCFA)",
+      "prixUnite": "{nom} ({prix} FCFA {unite})",
+      "consulter": "{nom} (nous consulter)"
+    },
+    "unites": {
+      "trajet": "par trajet",
+      "nuit": "par nuit",
+      "personne": "par personne",
+      "sejour": "par séjour"
+    },
     "conditions": {
       "capacite": "Capacité : 2 personnes par studio",
       "sejour": "Séjour minimum : 2 nuits. Réservation : minimum 24h avant.",

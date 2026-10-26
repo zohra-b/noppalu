@@ -8,7 +8,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import type { EquipementCode } from "@/lib/data";
+import { Link } from "@/i18n/navigation";
+import { texteLocalise, type EquipementCode, type Service } from "@/lib/data";
 import {
   PERIODES,
   formaterJourMois,
@@ -29,11 +30,20 @@ const icones: Record<CodeIcone, LucideIcon> = {
 
 const SAISONS: SaisonCle[] = ["basse", "haute", "fetes"];
 
+// Dans une condition, le texte entouré de ** s'affiche en gras (ex. **Capacité :** 2 personnes)
+function avecGras(texte: string): React.ReactNode[] {
+  return texte
+    .split(/\*\*(.+?)\*\*/g)
+    .map((morceau, i) =>
+      i % 2 === 1 ? <strong key={i}>{morceau}</strong> : morceau,
+    );
+}
+
 type Props = {
   litCm?: number;
   equipements: EquipementCode[];
   tarifs: Tarifs | null; // null = prix masqués
-  prixTransfert: number | null;
+  services: Service[];
   conditions: string[];
 };
 
@@ -41,12 +51,13 @@ export default function BungalowInfos({
   litCm,
   equipements,
   tarifs,
-  prixTransfert,
+  services,
   conditions,
 }: Props) {
   const t = useTranslations("BungalowInfos");
   const locale = useLocale();
   const formaterPrix = (n: number) => new Intl.NumberFormat(locale).format(n);
+  const prixVisibles = tarifs !== null;
 
   const lignes: { code: CodeIcone; valeur?: string }[] = [
     ...(litCm ? [{ code: "lit" as const, valeur: `${litCm} cm` }] : []),
@@ -62,6 +73,27 @@ export default function BungalowInfos({
     }
     return t(`tarifs.${cle}`);
   }
+
+  // Une ligne par service : « Nom (20 000 FCFA) », ou « Nom (nous consulter) » si le prix est vide ou masqué
+  const lignesServices = services
+    .map((s) => {
+      const nom = texteLocalise(s.nom, locale);
+      if (!nom) return null;
+      if (!prixVisibles || s.prix === null) {
+        return { cle: s.id, texte: t("service.consulter", { nom }) };
+      }
+      return {
+        cle: s.id,
+        texte: s.unite
+          ? t("service.prixUnite", {
+              nom,
+              prix: formaterPrix(s.prix),
+              unite: t(`unites.${s.unite}`),
+            })
+          : t("service.prix", { nom, prix: formaterPrix(s.prix) }),
+      };
+    })
+    .filter((l): l is { cle: string; texte: string } => l !== null);
 
   return (
     <>
@@ -91,35 +123,44 @@ export default function BungalowInfos({
           {t("conditionsTitre")}
         </h2>
 
-        {tarifs && (
-          <>
-            <h3 className="mb-2 text-lg font-semibold text-[#2F6036]">
-              {t("tarifsTitre")}
-            </h3>
-            <dl className="max-w-xl divide-y divide-[#C6B06B]/40 rounded-lg bg-[#FFFEF6] text-sm shadow-sm">
-              {SAISONS.map((cle) => (
-                <div key={cle} className="flex justify-between gap-4 px-4 py-2">
-                  <dt>{libelleSaison(cle)}</dt>
-                  <dd className="font-semibold">
-                    {t("tarifs.parNuit", { prix: formaterPrix(tarifs[cle]) })}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            {prixTransfert && (
-              <p className="mt-3 text-sm text-gray-600">
-                {t("transfert", { prix: formaterPrix(prixTransfert) })}
-              </p>
-            )}
-          </>
+        <h3 className="mb-2 text-lg font-semibold text-[#2F6036]">
+          {t("tarifsTitre")}
+        </h3>
+
+        {prixVisibles ? (
+          <dl className="max-w-xl divide-y divide-[#C6B06B]/40 rounded-lg bg-[#FFFEF6] text-sm shadow-sm">
+            {SAISONS.map((cle) => (
+              <div key={cle} className="flex justify-between gap-4 px-4 py-2">
+                <dt>{libelleSaison(cle)}</dt>
+                <dd className="font-semibold">
+                  {t("tarifs.parNuit", { prix: formaterPrix(tarifs[cle]) })}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <p className="text-sm">
+            <Link
+              href="/contact"
+              className="font-medium text-[#2F6036] underline underline-offset-4 hover:text-[#8B3017]"
+            >
+              {t("nousConsulter")}
+            </Link>
+          </p>
+        )}
+
+        {lignesServices.length > 0 && (
+          <div className="mt-3 space-y-1 text-sm text-gray-600">
+            {lignesServices.map((l) => (
+              <p key={l.cle}>{l.texte}</p>
+            ))}
+          </div>
         )}
 
         {conditions.length > 0 && (
-          <ul
-            className={`list-disc space-y-1 pl-5 ${tarifs ? "mt-6" : ""}`}
-          >
+          <ul className="mt-6 list-disc space-y-1 pl-5">
             {conditions.map((c, i) => (
-              <li key={i}>{c}</li>
+              <li key={i}>{avecGras(c)}</li>
             ))}
           </ul>
         )}

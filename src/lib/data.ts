@@ -16,11 +16,22 @@ export type Bungalow = {
   description: Record<string, string>;
 };
 
+export type UniteService = "trajet" | "nuit" | "personne" | "sejour";
+
+export type Service = {
+  id: string;
+  ordre: number;
+  actif: boolean;
+  nom: Record<string, string>;
+  prix: number | null; // null = « nous consulter »
+  unite: UniteService | null;
+};
+
 export type Reglages = {
   tarifs: Tarifs;
-  afficherPrix: boolean;
-  prixTransfert: number;
   conditions: Record<string, string[]>;
+  afficherPrix: boolean;
+  services: Service[];
 };
 
 type LigneBungalow = {
@@ -78,23 +89,44 @@ export async function getBungalow(slug: string): Promise<Bungalow | null> {
   return data ? versBungalow(data as LigneBungalow) : null;
 }
 
-/** Tarifs, prix du transfert et conditions. */
-export async function getReglages(): Promise<Reglages> {
+/** Services proposés (transfert, petit-déjeuner…), dans l'ordre d'affichage. La base ne renvoie que les actifs. */
+export async function getServices(): Promise<Service[]> {
   const { data, error } = await createPublicClient()
-    .from("site_settings")
-    .select("prix_basse, prix_haute, prix_fetes, prix_transfert, conditions, afficher_prix")
-    .single();
+    .from("site_services")
+    .select("id, ordre, actif, nom, prix, unite")
+    .eq("actif", true)
+    .order("ordre", { ascending: true });
 
+  if (error) throw new Error(`Lecture des services impossible : ${error.message}`);
+  return data as Service[];
+}
+
+/** Tarifs, conditions, services et réglage d'affichage des prix. */
+export async function getReglages(): Promise<Reglages> {
+  const [reponse, services] = await Promise.all([
+    createPublicClient()
+      .from("site_settings")
+      .select("prix_basse, prix_haute, prix_fetes, conditions, afficher_prix")
+      .single(),
+    // Les services sont facultatifs : si leur lecture échoue, le reste du site continue de s'afficher
+    getServices().catch((e) => {
+      console.error("Lecture des services impossible", e);
+      return [] as Service[];
+    }),
+  ]);
+
+  const { data, error } = reponse;
   if (error) throw new Error(`Lecture des réglages impossible : ${error.message}`);
+
   return {
     tarifs: {
       basse: data.prix_basse,
       haute: data.prix_haute,
       fetes: data.prix_fetes,
     },
-    prixTransfert: data.prix_transfert,
     conditions: data.conditions as Record<string, string[]>,
     afficherPrix: data.afficher_prix,
+    services,
   };
 }
 
