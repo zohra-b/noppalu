@@ -71,7 +71,7 @@ const TEXTES_CONFIRMATION: Record<
     pasReservation:
       "Il s'agit d'une demande, pas encore d'une réservation : les dates ne sont pas bloquées tant que nous ne vous avons pas confirmé la disponibilité.",
     annulation:
-      "Si votre demande est acceptée, voici notre politique d'annulation : remboursement à 100 % si vous annulez 15 jours ou plus avant l'arrivée, à 50 % entre 14 et 8 jours avant, aucun remboursement à 7 jours ou moins.",
+      "Si votre demande est acceptée, nous vous adresserons une confirmation accompagnée d'une demande de paiement sous 72h afin dque votre réservation soit définitive. En cas d'annulation : remboursement à 100 % si vous annulez 15 jours ou plus avant l'arrivée, à 50 % entre 14 et 8 jours avant, aucun remboursement à 7 jours ou moins.",
     correction:
       "Une information est incorrecte, ou vous souhaitez préciser quelque chose ? Répondez simplement à cet e-mail.",
     signature: "À bientôt,\nL'équipe de Casa Noppalu",

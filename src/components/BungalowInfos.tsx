@@ -16,6 +16,7 @@ import {
   type SaisonCle,
   type Tarifs,
 } from "@/lib/saisons";
+import { avecGras } from "@/lib/avec-gras";
 
 type CodeIcone = EquipementCode | "lit";
 
@@ -29,15 +30,6 @@ const icones: Record<CodeIcone, LucideIcon> = {
 };
 
 const SAISONS: SaisonCle[] = ["basse", "haute", "fetes"];
-
-// Dans une condition, le texte entouré de ** s'affiche en gras (ex. **Capacité :** 2 personnes)
-function avecGras(texte: string): React.ReactNode[] {
-  return texte
-    .split(/\*\*(.+?)\*\*/g)
-    .map((morceau, i) =>
-      i % 2 === 1 ? <strong key={i}>{morceau}</strong> : morceau,
-    );
-}
 
 type Props = {
   litCm?: number;

@@ -164,7 +164,7 @@ export default async function AdminPage() {
             >
               <span className="block font-semibold text-green">Réglages</span>
               <span className="block text-sm text-gray-600">
-                Les studios : nom, description, équipements, visibilité.
+                  Studios, tarifs, services et conditions.
               </span>
             </Link>
           </li>
