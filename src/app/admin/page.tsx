@@ -157,6 +157,17 @@ export default async function AdminPage() {
               </span>
             </Link>
           </li>
+                    <li>
+            <Link
+              href="/admin/reglages"
+              className="block rounded-lg bg-[#FFFEF6] p-5 shadow-sm transition-colors hover:bg-white"
+            >
+              <span className="block font-semibold text-green">Réglages</span>
+              <span className="block text-sm text-gray-600">
+                Les studios : nom, description, équipements, visibilité.
+              </span>
+            </Link>
+          </li>
         </ul>
       </main>
     </>

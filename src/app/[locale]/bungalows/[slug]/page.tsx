@@ -86,7 +86,9 @@ export default async function BungalowPage({ params }: Props) {
             <h2 className="mb-3 font-serif text-2xl text-[#2F6036]">
               {t("descriptionTitre")}
             </h2>
-            <p className="max-w-3xl leading-7">{description}</p>
+            <p className="max-w-3xl whitespace-pre-line leading-7">
+              {description}
+            </p>
           </section>
         )}
 
