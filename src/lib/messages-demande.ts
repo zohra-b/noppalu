@@ -40,10 +40,10 @@ const POLITIQUE_ANNULATION_FR =
   "remboursement à 100 % si vous annulez 15 jours ou plus avant l'arrivée, à 50 % entre 14 et 8 jours avant, aucun remboursement à 7 jours ou moins.";
 
 const POLITIQUE_ANNULATION_ES =
-  "reembolso del 100 % si cancela 15 días o más antes de la llegada, del 50 % entre 14 y 8 días antes, y ningún reembolso si cancela 7 días o menos antes de la llegada.";
+  "reembolso del 100 % si cancela 15 días o más antes de la llegada, del 50 % entre 14 y 8 días antes, y ningún reembolso con 7 días o menos de antelación.";
 
 const POLITIQUE_ANNULATION_EN =
-  "100% refund if you cancel 15 days or more before arrival, 50% refund between 14 and 8 days before arrival, and no refund 7 days or less before arrival.";
+  "a 100% refund if you cancel 15 days or more before arrival, 50% between 14 and 8 days before, and no refund 7 days or less before arrival.";
 
 function dateLongue(cle: string, locale: string): string {
   const [a, m, j] = cle.split("-").map(Number);
@@ -490,14 +490,14 @@ const en: Generateur = {
 
     if (plateforme) {
       lignes.push(
-        `We confirm the cancellation of your booking for studio ${d.studio}, from ${a} to ${dep}. These dates are now available again.`,
+        `We confirm the cancellation of your booking for studio ${d.studio}, from ${a} to ${dep}. The dates are now available again.`,
         "",
       );
     } else if (payee) {
       lignes.push(
-        `We confirm the cancellation of your booking for studio ${d.studio}, from ${a} to ${dep}. The dates have been released.`,
+        `We confirm the cancellation of your booking for studio ${d.studio}, from ${a} to ${dep}. The dates are now available again.`,
         "",
-        `We will contact you regarding any potential refund, in accordance with our cancellation policy: ${POLITIQUE_ANNULATION_EN}`,
+        `We will contact you regarding any refund due, in accordance with our cancellation policy: ${POLITIQUE_ANNULATION_EN}`,
         "",
       );
     } else {
