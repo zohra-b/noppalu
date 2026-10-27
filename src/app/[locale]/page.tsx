@@ -22,11 +22,14 @@ export default async function Home({
 
   const photosAccueil = [
     { src: "/images/jardin1.png", alt: t("photos.jardin1") },
+    { src: "/images/maison-depuis-terrasse.jpg", alt: t("photos.maison-depuis-terrasse") },
+    { src: "/images/jardin-depuis-coinRepas.jpeg", alt: t("photos.jardin-depuis-coinRepas") },
+    { src: "/images/piscine1.jpg", alt: t("photos.piscine1") },
     { src: "/images/jardin2.jpg", alt: t("photos.jardin2") },
     { src: "/images/jardin3.jpg", alt: t("photos.jardin3") },
     { src: "/images/jardin4.jpg", alt: t("photos.jardin4") },
-    { src: "/images/piscine1.jpg", alt: t("photos.piscine1") },
-    { src: "/images/plage.jpg", alt: t("photos.plage") },
+    { src: "/images/porte-exterieure-ext.jpeg", alt: t("photos.porte-exterieure-ext") },
+    { src: "/images/plage-coucher-de-soleil.jpg", alt: t("photos.plage") },
   ];
 
   return (

@@ -18,22 +18,25 @@
   
   "Accueil": {
     "surtitre": "Casa Noppalu, Casa de huéspedes en Senegal",
-    "titre": "Tu hogar lejos del hogar con piscina en Saly",
+    "titre": "Tu refugio con piscina en Saly",
     "intro": "En Saly, en la zona residencial de Niakhnakhal, Casa Noppalu te recibe en un entorno sencillo y cómodo, lejos de los grandes complejos hoteleros. Nuestros tres estudios independientes y climatizados, equipados con cocina americana y wifi, te ofrecen la libertad de organizar tus días a tu ritmo, mientras disfrutas de la piscina, el jardín y la playa, accesible a diez minutos a pie.",
     "photos": {
       "jardin1": "El jardín de Casa Noppalu",
+      "maison-depuis-terrasse" : "Vista casa principal desde la terraza",
+      "jardin-depuis-coinRepas" : "El jardin visto desde la zona de comedor",
       "jardin2": "Una adorable salamandra",
       "jardin3": "La terraza para el aperitivo",
+      "porte-exterieure-ext" : "Nuestra puerta principal, hecha a medida por un artesano del barrio",
       "jardin4": "Un caracol nos visita",
       "piscine1": "La piscina de Casa Noppalu",
-      "plage": "La playa cercana"
+      "plage": "Puesta del sol en la playa"
     },
     "bungalowsSurtitre": "Tu estancia",
     "bungalowsTitre": "Nuestros estudios",
     "bungalowsIntro": "Nuestros estudios te ofrecen un espacio privado para disfrutar plenamente de tu estancia en Saly. Climatizados y equipados con una zona de cocina con placa, microondas y nevera pequeña, también cuentan con Wi-Fi y televisión inteligente.",
     "decouvrir": "Descubrir este estudio",
     "voirBungalows": "Ver los estudios",
-    "reserver": "Hacer una solicitud de reserva"
+    "reserver": "Enviar una solicitud de reserva"
   },
 
   "Contact": {
@@ -166,7 +169,7 @@
     "libresCeJour": "Noche del {date}, disponible: {liste}",
     "aucunLibre": "Noche del {date}: ningún estudio disponible",
     "introReservation": "Consulta la disponibilidad de nuestros estudios y elige tus fechas a continuación.",
-    "reserver": "Hacer una solicitud de reserva"
+    "reserver": "Enviar una solicitud de reserva"
   },
 
   "Reservation": {

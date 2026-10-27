@@ -1,7 +1,7 @@
 const PHOTOS: Record<string, string[]> = {
-  manguier: ["/images/bungalow1.jpg", "/images/bungalow2.jpg"],
-  cocotier: ["/images/bungalow2.jpg"],
-  bananier: ["/images/bungalow3.jpg"],
+  manguier: ["/images/manguier.jpeg"],
+  cocotier: ["/images/cocotier.jpeg"],
+  bananier: ["/images/bananier.jpeg"],
 };
 
 export function photosDe(slug: string): string[] {

@@ -76,6 +76,58 @@ const TEXTES_CONFIRMATION: Record<
       "Une information est incorrecte, ou vous souhaitez préciser quelque chose ? Répondez simplement à cet e-mail.",
     signature: "À bientôt,\nL'équipe de Casa Noppalu",
   },
+
+  en: {
+    sujet: "Casa Noppalu - We have received your request",
+    bonjour: (nom) => `Hello ${nom},`,
+    intro:
+      "Thank you for your request. We have received it and will get back to you as soon as possible.",
+    titre: "Summary of your request",
+    studio: "Studio",
+    arrivee: "Arrival",
+    depart: "Departure",
+    duree: (n) => `${n} night${n > 1 ? "s" : ""}`,
+    voyageurs: "Guests",
+    estimation: "Estimated stay",
+    estimationNote: "according to our current pricing grid",
+    telephone: "Phone / WhatsApp",
+    email: "E-mail",
+    nonRenseigne: "Not provided",
+    votreMessage: "Your message",
+    pasReservation:
+      "This is a request, not yet a booking: dates are not blocked until we confirm availability.",
+    annulation:
+      "If your request is accepted, we will send you a confirmation along with a payment request within 72 hours to make your booking final. In case of cancellation: 100% refund if you cancel 15 days or more before arrival, 50% between 14 and 8 days before, no refund 7 days or less before.",
+    correction:
+      "Is any information incorrect, or would you like to clarify something? Simply reply to this email.",
+    signature: "See you soon,\nThe Casa Noppalu team",
+},
+
+  es: {
+    sujet: "Casa Noppalu - Hemos recibido su solicitud",
+    bonjour: (nom) => `Hola ${nom},`,
+    intro:
+      "Gracias por su solicitud. La hemos recibido correctamente y le responderemos lo antes posible.",
+    titre: "Resumen de su solicitud",
+    studio: "Estudio",
+    arrivee: "Llegada",
+    depart: "Salida",
+    duree: (n) => `${n} noche${n > 1 ? "s" : ""}`,
+    voyageurs: "Viajeros",
+    estimation: "Estimación de la estancia",
+    estimationNote: "según nuestra tarifa actual",
+    telephone: "Teléfono / WhatsApp",
+    email: "Correo electrónico",
+    nonRenseigne: "No especificado",
+    votreMessage: "Su mensaje",
+    pasReservation:
+      "Se trata de una solicitud, no de una reserva: las fechas no están bloqueadas hasta que le confirmemos la disponibilidad.",
+    annulation:
+      "Si su solicitud es aceptada, le enviaremos una confirmación acompañada de una solicitud de pago en un plazo de 72h para que su reserva sea definitiva. En caso de cancelación: reembolso del 100 % si cancela 15 días o más antes de la llegada, del 50 % entre 14 y 8 días antes, ningún reembolso a 7 días o menos.",
+    correction:
+      "¿Hay alguna información incorrecta o desea precisar algo? Simplemente responda a este correo electrónico.",
+    signature: "Hasta pronto,\nEl equipo de Casa Noppalu",
+}
 };
 
 export async function POST(req: Request) {

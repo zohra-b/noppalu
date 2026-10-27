@@ -88,11 +88,13 @@ const fr: Generateur = {
         : `Merci pour votre réservation ! Le studio ${d.studio} est bien réservé du ${a} au ${dep} (${detailSejour(d)}). 🌴`;
 
     const reglement = plateforme
-      ? `Montant du séjour : ${montant}, à régler à votre arrivée en espèces, ou à l'avance par l'un des moyens ci-dessous.`
+    // ? `Montant du séjour : ${montant}, à régler à votre arrivée en espèces, ou à l'avance par l'un des moyens ci-dessous.`
+      ? `Montant du séjour : ${montant}, à régler à l'avance par l'un des moyens ci-dessous.`
       : `Montant du séjour : ${montant}, à régler en totalité sous 72 h.`;
 
     const moyens = plateforme
-      ? "(espèces à l'arrivée, virement bancaire, Wave ou PayPal)"
+    // ? " "(espèces à l'arrivée, virement bancaire, Wave ou PayPal)"
+      ? "(virement bancaire, Wave ou PayPal)"
       : "(virement bancaire, Wave ou PayPal)";
 
     const lignes = [
@@ -167,7 +169,7 @@ const fr: Generateur = {
       "",
       "Si vos dates sont flexibles, ou si un autre studio vous convient, répondez simplement à ce message : nous regarderons ensemble ce qui est possible.",
       "",
-      "À bientôt peut-être !",
+      "À bientôt !",
       "L'équipe de Casa Noppalu",
     ].join("\n");
 
@@ -215,7 +217,294 @@ const fr: Generateur = {
   },
 };
 
-const GENERATEURS: Record<string, Generateur> = { fr };
+const es: Generateur = {
+  acceptation(d, locale) {
+    const a = dateLongue(d.arrivee, locale);
+    const dep = dateLongue(d.depart, locale);
+    const plateforme = estPlateforme(d.origine);
+    const p = d.paiement;
+    const montant =
+      d.montantFcfa !== null
+        ? `${formaterFcfa(d.montantFcfa, locale)} (${formaterEuros(enEuros(d.montantFcfa), locale)})`
+        : "[monto a indicar]";
+
+    const intro =
+      d.origine === "site"
+        ? `¡Buenas noticias: el estudio ${d.studio} está libre del ${a} al ${dep} (${detailSejour(d)}), ¡te lo reservamos! 🌴`
+        : `¡Gracias por su reserva! El estudio ${d.studio} está reservado del ${a} al ${dep} (${detailSejour(d)}). 🌴`;
+
+    const reglement = plateforme
+    // ? `Importe de la estancia: ${montant}, a pagar a su llegada en efectivo, o por adelantado mediante uno de los medios siguientes.`
+      ? `Importe de la estancia: ${montant}, a pagar por adelantado mediante uno de los medios siguientes.`
+      : `Importe de la estancia: ${montant}, a pagar en su totalidad en un plazo de 72 h.`;
+
+    const moyens = plateforme
+    //? "(en efectivo a la llegada, transferencia bancaria, Wave o PayPal)"
+      ? "(transferencia bancaria, Wave o PayPal)"
+      : "(transferencia bancaria, Wave o PayPal)";
+
+    const lignes = [
+      salutation(d.nom),
+      "",
+      intro,
+      "",
+      reglement,
+      "",
+      "Puede pagar mediante:",
+      `– Wave : ${p?.wave ?? "[número a indicar]"}`,
+      `– Transferencia bancaria : IBAN ${p?.iban ?? "[IBAN a indicar]"}, titular ${p?.titulaire ?? "[titular a indicar]"}. Por favor, indique en el concepto el nombre de la persona que realizó la reserva.`,
+      `– PayPal : ${p?.paypal ?? "[dirección a indicar]"}`,
+      "",
+      `Por favor, indíquenos el método de pago elegido ${moyens}. Si paga mediante transferencia, envíenos también el comprobante.`,
+      "",
+    ];
+
+    if (!plateforme) {
+      lignes.push(
+        `Cancelación : ${POLITIQUE_ANNULATION_ES}`,
+        "",
+        "Tan pronto como recibamos su pago, le enviaremos la confirmación de su reserva.",
+        "",
+      );
+    }
+    lignes.push("¡Hasta pronto!", "El equipo de Casa Noppalu");
+
+    return {
+      sujet: `Casa Noppalu - Su estancia del ${a} al ${dep}`,
+      texte: lignes.join("\n"),
+    };
+  },
+
+  confirmation(d, locale) {
+    const a = dateLongue(d.arrivee, locale);
+    const dep = dateLongue(d.depart, locale);
+    const plateforme = estPlateforme(d.origine);
+
+    const premier = plateforme
+      ? "¡Gracias por su reserva! ¡Estamos encantados de recibirle en Saly!"
+      : "¡Recibido, gracias! Su pago ha llegado y su reserva está confirmada. ¡Estamos encantados de recibirle en Saly!";
+
+    const paragraphes = [
+      salutation(d.nom),
+      premier,
+      `Estudio ${d.studio}, del ${a} al ${dep} (${detailSejour(d)}). Llegada a partir de las 14:00, salida antes de las 11:00 (consigna de equipaje gratuita).`,
+      `Dónde encontrarnos : ${ADRESSE}\n${LIEN_MAPS}`,
+      "El traslado desde o hacia el aeropuerto es posible bajo petición: solo díganos la hora de su vuelo.",
+      ...(plateforme
+        ? []
+        : [`Recordatorio - cancelación : ${POLITIQUE_ANNULATION_ES}`]),
+      `¿Alguna pregunta? Simplemente responda a este correo electrónico o escríbanos por WhatsApp : ${LIEN_WHATSAPP}\n¡Hasta pronto!\nEl equipo de Casa Noppalu`,
+    ];
+
+    return {
+      sujet: "Casa Noppalu - ¡Su reserva está confirmada!",
+      texte: paragraphes.join("\n\n"),
+      html: versHtml(paragraphes),
+    };
+  },
+
+  refus(d, locale) {
+    const a = dateLongue(d.arrivee, locale);
+    const dep = dateLongue(d.depart, locale);
+
+    const texte = [
+      salutation(d.nom),
+      "",
+      `Gracias por su solicitud de estancia en el estudio ${d.studio}, del ${a} al ${dep}. Desafortunadamente, no podemos darles curso: nuestros estudios no están disponibles en esas fechas.`,
+      "",
+     "Si tiene flexibilidad en las fechas o le interesa otro estudio, simplemente responda a este mensaje y estaremos encantados de estudiar las opciones disponibles.",
+      "",
+      "¡Hasta pronto !",
+      "El equipo de Casa Noppalu",
+    ].join("\n");
+
+    return { sujet: `Casa Noppalu - Su solicitud del ${a} al ${dep}`, texte };
+  },
+
+  annulation(d, locale) {
+    const a = dateLongue(d.arrivee, locale);
+    const dep = dateLongue(d.depart, locale);
+    const payee = d.reservationPayee === true;
+    const plateforme = estPlateforme(d.origine);
+    const objet = payee || d.origine !== "site" ? "reserva" : "solicitud";
+
+    const lignes = [salutation(d.nom), ""];
+
+    if (plateforme) {
+      lignes.push(
+        `Le confirmamos la cancelación de su reserva para el estudio ${d.studio}, del ${a} al ${dep}. Estas fechas vuelven a estar disponibles`,
+        "",
+      );
+    } else if (payee) {
+      lignes.push(
+        `Le confirmamos la cancelación de su reserva para el estudio ${d.studio}, del ${a} al ${dep}. Estas fechas vuelven a estar disponibles.`,
+        "",
+        `Nos pondremos en contacto con usted respecto a un posible reembolso, de acuerdo con nuestra política de cancelación : ${POLITIQUE_ANNULATION_ES}`,
+        "",
+      );
+    } else {
+      lignes.push(
+        `Hasta la fecha, no hemos recibido el pago correspondiente a su ${objet}, que se tenía que pagar en un plazo de 72 horas desde su aceptación.`,
+        "",
+        `Por lo tanto, le confirmamos la cancelación de su ${objet} para el estudio ${d.studio}, del ${a} al ${dep}. Estas fechas vuelven a estar disponibles.`,
+        "",
+        "Si todavía desea alojarse con nosotros, simplemente responda a este mensaje y estaremos encantados de estudiar las opciones disponibles.",
+        "",
+      );
+    }
+    lignes.push("¡Hasta pronto !", "El equipo de Casa Noppalu");
+
+    return {
+      sujet: `Casa Noppalu - Cancelación de su ${objet} del ${a} al ${dep}`,
+      texte: lignes.join("\n"),
+    };
+  },
+};
+
+const en: Generateur = {
+  acceptation(d, locale) {
+    const a = dateLongue(d.arrivee, locale);
+    const dep = dateLongue(d.depart, locale);
+    const plateforme = estPlateforme(d.origine);
+    const p = d.paiement;
+    const montant =
+      d.montantFcfa !== null
+        ? `${formaterFcfa(d.montantFcfa, locale)} (${formaterEuros(enEuros(d.montantFcfa), locale)})`
+        : "[amount to be indicated]";
+
+    const intro =
+      d.origine === "site"
+        ? `Good news: the studio ${d.studio} is available from ${a} to ${dep} (${detailSejour(d)}), we are holding it for you! 🌴`
+        : `Thank you for your booking! The studio ${d.studio} is successfully booked from ${a} to ${dep} (${detailSejour(d)}). 🌴`;
+
+    const reglement = plateforme
+      ? `Amount of the stay: ${montant}, to be paid upon arrival in cash, or in advance via one of the methods below.`
+      : `Amount of the stay: ${montant}, to be paid in full within 72 hours.`;
+
+    const moyens = plateforme
+    // ? "(cash upon arrival, bank transfer, Wave or PayPal)"
+      ? "(bank transfer, Wave or PayPal)"
+      : "(bank transfer, Wave or PayPal)";
+
+    const lignes = [
+      salutation(d.nom),
+      "",
+      intro,
+      "",
+      reglement,
+      "",
+      "You can pay by:",
+      `– Wave : ${p?.wave ?? "[number to be indicated]"}`,
+      `– Bank transfer : IBAN ${p?.iban ?? "[IBAN to be indicated]"}, account holder ${p?.titulaire ?? "[holder to be indicated]"}. Please indicate the name of the person who made the booking in the reference.`,
+      `– PayPal : ${p?.paypal ?? "[address to be indicated]"}`,
+      "",
+      `Please let us know your chosen payment method ${moyens}. If you pay by bank transfer, please also send us the receipt.`,
+      "",
+    ];
+
+    if (!plateforme) {
+      lignes.push(
+        `Cancellation: ${POLITIQUE_ANNULATION_EN}`,
+        "",
+        "As soon as we receive your payment, we will send you your booking confirmation.",
+        "",
+      );
+    }
+    lignes.push("See you soon!", "The Casa Noppalu team");
+
+    return {
+      sujet: `Casa Noppalu - Your stay from ${a} to ${dep}`,
+      texte: lignes.join("\n"),
+    };
+  },
+
+  confirmation(d, locale) {
+    const a = dateLongue(d.arrivee, locale);
+    const dep = dateLongue(d.depart, locale);
+    const plateforme = estPlateforme(d.origine);
+
+    const premier = plateforme
+      ? "Thank you for your booking! We look forward to welcoming you to Saly!"
+      : "Received, thank you! Your payment has arrived and your booking is confirmed. We look forward to welcoming you to Saly!";
+
+    const paragraphes = [
+      salutation(d.nom),
+      premier,
+      `Studio ${d.studio}, from ${a} to ${dep} (${detailSejour(d)}). Arrival from 2:00 PM, departure before 11:00 AM (free luggage storage).`,
+      `Where to find us: ${ADRESSE}\n${LIEN_MAPS}`,
+      "Airport transfer to or from the airport is available upon request: just let us know your flight time.",
+      ...(plateforme
+        ? []
+        : [`Reminder - cancellation: ${POLITIQUE_ANNULATION_EN}`]),
+      `Any questions? Simply reply to this email or write to us on WhatsApp: ${LIEN_WHATSAPP}\nSee you soon!\nThe Casa Noppalu team`,
+    ];
+
+    return {
+      sujet: "Casa Noppalu - Your booking is confirmed!",
+      texte: paragraphes.join("\n\n"),
+      html: versHtml(paragraphes),
+    };
+  },
+
+  refus(d, locale) {
+    const a = dateLongue(d.arrivee, locale);
+    const dep = dateLongue(d.depart, locale);
+
+    const texte = [
+      salutation(d.nom),
+      "",
+      `Thank you for your request for a stay in studio ${d.studio}, from ${a} to ${dep}. Unfortunately, we are unable to accommodate your request, as our studios are fully booked for these dates.`,
+      "",
+      "If your dates are flexible or you would consider another studio, simply reply to this message, and we will be happy to explore the available options with you.",
+      "",
+      "Hope to see you soon!",
+      "The Casa Noppalu team",
+    ].join("\n");
+
+    return { sujet: `Casa Noppalu - Your request from ${a} to ${dep}`, texte };
+  },
+
+  annulation(d, locale) {
+    const a = dateLongue(d.arrivee, locale);
+    const dep = dateLongue(d.depart, locale);
+    const payee = d.reservationPayee === true;
+    const plateforme = estPlateforme(d.origine);
+    const objet = payee || d.origine !== "site" ? "booking" : "request";
+
+    const lignes = [salutation(d.nom), ""];
+
+    if (plateforme) {
+      lignes.push(
+        `We confirm the cancellation of your booking for studio ${d.studio}, from ${a} to ${dep}. These dates are now available again.`,
+        "",
+      );
+    } else if (payee) {
+      lignes.push(
+        `We confirm the cancellation of your booking for studio ${d.studio}, from ${a} to ${dep}. The dates have been released.`,
+        "",
+        `We will contact you regarding any potential refund, in accordance with our cancellation policy: ${POLITIQUE_ANNULATION_EN}`,
+        "",
+      );
+    } else {
+      lignes.push(
+        `We have not yet received payment for your ${objet}, which was due within 72 hours of acceptance of your booking request.`,
+        "",
+        `We therefore confirm the cancellation of your ${objet} for studio ${d.studio}, from ${a} to ${dep}. These dates are now available again.`,
+        "",
+        "If you still wish to stay with us, simply reply to this message, and we will be happy to explore the available options with you.",
+        "",
+      );
+    }
+    lignes.push("Hope to welcome you soon!", "The Casa Noppalu team");
+
+    return {
+      sujet: `Casa Noppalu - Cancellation of your ${objet} from ${a} to ${dep}`,
+      texte: lignes.join("\n"),
+    };
+  },
+};
+
+const GENERATEURS: Record<string, Generateur> = { fr, es, en };
 
 // Langue non prévue : on écrit en français, dates comprises
 function choisir(locale: string): { g: Generateur; langue: string } {

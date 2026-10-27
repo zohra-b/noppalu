@@ -18,22 +18,25 @@
   
   "Accueil": {
     "surtitre": "Casa Noppalu, Guest House in Senegal",
-    "titre": "Your home away from home with a pool in Saly",
+    "titre": "Your pied-à-terre with a pool in Saly",
     "intro": "In Saly, in the residential neighborhood of Niakhnakhal, Casa Noppalu welcomes you in a simple and comfortable setting, far from large hotel complexes. Our three independent, air-conditioned studios, equipped with a kitchenette and Wi-Fi, offer you the freedom to organize your days at your own pace, while enjoying the pool, garden, and beach, accessible in a ten-minute walk.",
     "photos": {
       "jardin1": "The Casa Noppalu garden",
+      "maison-depuis-terrasse" : "The house from the terrace",
+      "jardin-depuis-coinRepas" : "The garden from the eating area",
       "jardin2": "An adorable salamander",
       "jardin3": "The terrace for drinks",
+       "porte-exterieure-ext" : "Our main door, custom-made by a local craftsman",
       "jardin4": "A snail visiting us",
       "piscine1": "The Casa Noppalu pool",
-      "plage": "The nearby beach"
+      "plage": "Sunset on the beach"
     },
     "bungalowsSurtitre": "Your stay",
     "bungalowsTitre": "Our studios",
     "bungalowsIntro": "Our studios offer you a private space to fully enjoy your stay in Saly. Air-conditioned and equipped with a kitchenette area featuring a stovetop, microwave, and small refrigerator, they also feature Wi-Fi and a smart TV.",
     "decouvrir": "Discover this studio",
     "voirBungalows": "View studios",
-    "reserver": "Make a booking request"
+    "reserver": "Request a booking"
   },
 
   "Contact": {
@@ -166,7 +169,7 @@
     "libresCeJour": "Night of {date}, available: {liste}",
     "aucunLibre": "Night of {date}: no studios available",
     "introReservation": "Check the availability of our studios, then choose your dates below.",
-    "reserver": "Make a booking request"
+    "reserver": "Request a booking"
   },
 
   "Reservation": {
