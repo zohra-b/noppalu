@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export type ReglagesAdmin = {
   tarifs: Tarifs;
   afficherPrix: boolean;
+  annonce: Record<string, string>;
   conditions: Record<string, string[]>;
   services: Service[]; // y compris les services masqués
 };
@@ -17,7 +18,9 @@ export async function getReglagesAdmin(): Promise<ReglagesAdmin> {
   const [reglages, services] = await Promise.all([
     admin
       .from("site_settings")
-      .select("prix_basse, prix_haute, prix_fetes, conditions, afficher_prix")
+      .select(
+        "prix_basse, prix_haute, prix_fetes, conditions, afficher_prix, annonce_tarifs",
+      )
       .single(),
     admin
       .from("site_services")
@@ -39,6 +42,7 @@ export async function getReglagesAdmin(): Promise<ReglagesAdmin> {
       fetes: reglages.data.prix_fetes,
     },
     afficherPrix: reglages.data.afficher_prix,
+    annonce: (reglages.data.annonce_tarifs ?? {}) as Record<string, string>,
     conditions: (reglages.data.conditions ?? {}) as Record<string, string[]>,
     services: services.data as Service[],
   };

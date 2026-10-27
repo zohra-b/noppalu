@@ -52,7 +52,7 @@ function fusionner(
   return base;
 }
 
-// ---------- Tarifs ----------
+// ---------- Tarifs et annonce ----------
 
 export async function enregistrerTarifs(
   _etat: EtatReglage,
@@ -77,16 +77,46 @@ export async function enregistrerTarifs(
     };
   }
 
+  // Annonce : un champ par langue active ; seules les langues actives sont lues
+  const annonces: Record<string, string> = {};
+  for (const langue of routing.locales) {
+    const texte = String(formData.get(`annonce_${langue}`) ?? "")
+      .replace(/\r\n/g, "\n")
+      .trim();
+    if (texte.length > LIMITES_REGLAGES.annonceMax) {
+      return {
+        erreur: `L'annonce est trop longue (${LIMITES_REGLAGES.annonceMax} caractères maximum).`,
+      };
+    }
+    if (!grasEquilibre(texte)) {
+      return {
+        erreur:
+          "L'annonce contient un nombre impair de « ** » : le gras est mal fermé.",
+      };
+    }
+    annonces[langue] = texte;
+  }
+
   const afficher = formData.get("afficher_prix") === "on";
+  const admin = createAdminClient();
 
   try {
-    const { data, error } = await createAdminClient()
+    const { data: existant, error: erreurLecture } = await admin
+      .from("site_settings")
+      .select("annonce_tarifs")
+      .eq("id", true)
+      .maybeSingle();
+    if (erreurLecture) throw erreurLecture;
+    if (!existant) return { erreur: "Réglages introuvables." };
+
+    const { data, error } = await admin
       .from("site_settings")
       .update({
         prix_basse: basse,
         prix_haute: haute,
         prix_fetes: fetes,
         afficher_prix: afficher,
+        annonce_tarifs: fusionner(existant.annonce_tarifs, annonces),
       })
       .eq("id", true)
       .select("id");

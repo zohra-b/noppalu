@@ -31,6 +31,7 @@ export type Reglages = {
   tarifs: Tarifs;
   conditions: Record<string, string[]>;
   afficherPrix: boolean;
+  annonce: Record<string, string>; // texte libre affiché au-dessus des tarifs, par langue
   services: Service[];
 };
 
@@ -100,18 +101,35 @@ export async function getServices(): Promise<Service[]> {
   if (error) throw new Error(`Lecture des services impossible : ${error.message}`);
   return data as Service[];
 }
+/** Texte libre affiché au-dessus des tarifs (promotion, offre exceptionnelle…), par langue. */
+async function getAnnonceTarifs(): Promise<Record<string, string>> {
+  const { data, error } = await createPublicClient()
+    .from("site_settings")
+    .select("annonce_tarifs")
+    .single();
 
-/** Tarifs, conditions, services et réglage d'affichage des prix. */
+  if (error) {
+    throw new Error(`Lecture de l'annonce impossible : ${error.message}`);
+  }
+  return (data.annonce_tarifs ?? {}) as Record<string, string>;
+}
+
+/** Tarifs, conditions, services, annonce et réglage d'affichage des prix. */
 export async function getReglages(): Promise<Reglages> {
-  const [reponse, services] = await Promise.all([
+  const [reponse, services, annonce] = await Promise.all([
     createPublicClient()
       .from("site_settings")
       .select("prix_basse, prix_haute, prix_fetes, conditions, afficher_prix")
       .single(),
-    // Les services sont facultatifs : si leur lecture échoue, le reste du site continue de s'afficher
+    // Les services et l'annonce sont facultatifs : si leur lecture échoue,
+    // le reste du site continue de s'afficher
     getServices().catch((e) => {
       console.error("Lecture des services impossible", e);
       return [] as Service[];
+    }),
+    getAnnonceTarifs().catch((e) => {
+      console.error("Lecture de l'annonce impossible", e);
+      return {} as Record<string, string>;
     }),
   ]);
 
@@ -126,6 +144,7 @@ export async function getReglages(): Promise<Reglages> {
     },
     conditions: data.conditions as Record<string, string[]>,
     afficherPrix: data.afficher_prix,
+    annonce,
     services,
   };
 }

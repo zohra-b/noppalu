@@ -1,15 +1,23 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { grasEquilibre } from "@/lib/avec-gras";
+import { LIMITES_REGLAGES } from "@/lib/reglages-types";
 import {
   PERIODES,
   formaterJourMois,
   type SaisonCle,
   type Tarifs,
 } from "@/lib/saisons";
+import { NOMS_LANGUES } from "@/lib/studios-types";
 import { enregistrerTarifs, type EtatReglage } from "./actions-reglages";
 
-type Props = { tarifs: Tarifs; afficherPrix: boolean };
+type Props = {
+  tarifs: Tarifs;
+  afficherPrix: boolean;
+  annonce: Record<string, string>;
+  langues: string[];
+};
 
 const SAISONS: { cle: SaisonCle; libelle: string }[] = [
   { cle: "basse", libelle: "Basse saison" },
@@ -24,21 +32,65 @@ const ETIQUETTE = "mb-0.5 block text-xs font-medium";
 const periode = (cle: SaisonCle) =>
   `du ${formaterJourMois(PERIODES[cle].debut, "fr")} au ${formaterJourMois(PERIODES[cle].fin, "fr")}`;
 
-export default function FormulaireTarifs({ tarifs, afficherPrix }: Props) {
+export default function FormulaireTarifs({
+  tarifs,
+  afficherPrix,
+  annonce,
+  langues,
+}: Props) {
   const [prix, setPrix] = useState<Record<SaisonCle, string>>({
     basse: String(tarifs.basse),
     haute: String(tarifs.haute),
     fetes: String(tarifs.fetes),
   });
   const [afficher, setAfficher] = useState(afficherPrix);
+  const [annonces, setAnnonces] = useState<Record<string, string>>(() =>
+    Object.fromEntries(langues.map((l) => [l, annonce[l] ?? ""])),
+  );
 
   const [etat, action, enCours] = useActionState<EtatReglage, FormData>(
     enregistrerTarifs,
     null,
   );
 
+  const plusieursLangues = langues.length > 1;
+
   return (
     <form action={action} className="space-y-3">
+      {langues.map((l) => (
+        <div key={l}>
+          <label htmlFor={`annonce-${l}`} className={ETIQUETTE}>
+            {plusieursLangues
+              ? `Annonce au-dessus des tarifs (${NOMS_LANGUES[l] ?? l})`
+              : "Annonce au-dessus des tarifs (facultatif)"}
+          </label>
+          <textarea
+            id={`annonce-${l}`}
+            name={`annonce_${l}`}
+            rows={3}
+            maxLength={LIMITES_REGLAGES.annonceMax}
+            placeholder="Ex. : **Offre exceptionnelle :** du 3 au 9 novembre, le petit-déjeuner est offert."
+            value={annonces[l] ?? ""}
+            onChange={(e) =>
+              setAnnonces((a) => ({ ...a, [l]: e.target.value }))
+            }
+            className={`${CHAMP} resize-y`}
+          />
+          <p className="mt-0.5 flex flex-wrap justify-between gap-x-3 text-xs text-gray-500">
+            <span>
+              {grasEquilibre(annonces[l] ?? "") ? (
+                "Laissez vide pour ne rien afficher. Le texte reste affiché tant que vous ne l'effacez pas."
+              ) : (
+                <span className="text-red-700">« ** » mal fermé</span>
+              )}
+            </span>
+            <span>
+              {(annonces[l] ?? "").length} / {LIMITES_REGLAGES.annonceMax}
+            </span>
+          </p>
+        </div>
+      ))}
+
       <div className="grid gap-3 md:grid-cols-3">
         {SAISONS.map((s) => (
           <div key={s.cle}>

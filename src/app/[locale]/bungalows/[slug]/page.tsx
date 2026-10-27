@@ -105,6 +105,7 @@ export default async function BungalowPage({ params }: Props) {
           equipements={bungalow.equipements}
           tarifs={reglages.afficherPrix ? reglages.tarifs : null}
           services={reglages.services}
+          annonce={texteLocalise(reglages.annonce, locale) ?? null}
           conditions={texteLocalise(reglages.conditions, locale) ?? []}
         />
       </div>

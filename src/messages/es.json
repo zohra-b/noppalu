@@ -1,0 +1,264 @@
+{
+  "Header": {
+    "logoAlt": "Logo Casa Noppalu",
+    "slogan": "Calma y Serenidad",
+    "accueil": "Inicio",
+    "bungalows": "Nuestros estudios",
+    "presentation": "Presentación",
+    "reserver": "Reservar",
+    "contact": "Contacto",
+    "langueActuelle": "Idioma actual: {langue}"
+  },
+
+  "Footer": {
+    "bungalows": "Nuestros estudios",
+    "contact": "Contacto",
+    "droits": "© {annee} Casa Noppalu. Todos los derechos reservados."
+  },
+  
+  "Accueil": {
+    "surtitre": "Casa Noppalu, Casa de huéspedes en Senegal",
+    "titre": "Tu hogar lejos del hogar con piscina en Saly",
+    "intro": "En Saly, en la zona residencial de Niakhnakhal, Casa Noppalu te recibe en un entorno sencillo y cómodo, lejos de los grandes complejos hoteleros. Nuestros tres estudios independientes y climatizados, equipados con cocina americana y wifi, te ofrecen la libertad de organizar tus días a tu ritmo, mientras disfrutas de la piscina, el jardín y la playa, accesible a diez minutos a pie.",
+    "photos": {
+      "jardin1": "El jardín de Casa Noppalu",
+      "jardin2": "Una adorable salamandra",
+      "jardin3": "La terraza para el aperitivo",
+      "jardin4": "Un caracol nos visita",
+      "piscine1": "La piscina de Casa Noppalu",
+      "plage": "La playa cercana"
+    },
+    "bungalowsSurtitre": "Tu estancia",
+    "bungalowsTitre": "Nuestros estudios",
+    "bungalowsIntro": "Nuestros estudios te ofrecen un espacio privado para disfrutar plenamente de tu estancia en Saly. Climatizados y equipados con una zona de cocina con placa, microondas y nevera pequeña, también cuentan con Wi-Fi y televisión inteligente.",
+    "decouvrir": "Descubrir este estudio",
+    "voirBungalows": "Ver los estudios",
+    "reserver": "Hacer una solicitud de reserva"
+  },
+
+  "Contact": {
+    "metaTitre": "Contacto",
+    "metaDescription": "Contacta con Casa Noppalu, casa de huéspedes en Saly (Senegal): disponibilidades, preguntas sobre nuestros alojamientos, información práctica.",
+    "titre": "Contacto",
+    "intro": "¿Tienes alguna pregunta sobre Casa Noppalu o nuestros estudios? Escríbenos, te responderemos con mucho gusto.",
+    "formulaire": {
+      "titre": "Envíanos un mensaje",
+      "nom": "Nombre *",
+      "email": "Correo electrónico *",
+      "corriger": "Sí, corregir",
+      "telephone": "Teléfono / WhatsApp (opcional)",
+      "telephonePlaceholder": "+33, +221, etc.",
+      "objet": "Asunto de tu solicitud",
+      "message": "Tu mensaje *",
+      "messagePlaceholder": "¿Cómo podemos ayudarte?",
+      "antispam": "No rellenar",
+      "mention": "La información introducida se utiliza para responder a tu solicitud.",
+      "envoyer": "Enviar mi mensaje",
+      "envoiEnCours": "Enviando…",
+      "succes": "Gracias, tu mensaje ha sido enviado correctamente. Te responderemos con rapidez.",
+      "whatsappErreur": "Escribirnos por WhatsApp"
+    },
+    "objets": {
+      "disponibilites": "Disponibilidades",
+      "bungalow": "Pregunta sobre un estudio",
+      "infos": "Información práctica",
+      "autre": "Otra solicitud"
+    },
+    "erreurs": {
+      "email_vide": "Indica tu dirección de correo electrónico.",
+      "email_trop_long": "Esta dirección de correo electrónico es demasiado larga.",
+      "email_invalide": "Esta dirección de correo electrónico no es válida. Ejemplo: nombre@ejemplo.com",
+      "email_suggestion": "¿Querías escribir {adresse}?",
+      "nom_invalide": "Nombre no válido.",
+      "telephone_invalide": "Número de teléfono no válido.",
+      "message_invalide": "El mensaje debe tener entre 10 y 5000 caracteres.",
+      "requete_invalide": "Solicitud no válida.",
+      "envoi_echoue": "El envío ha fallado. Vuelve a intentarlo o contáctanos por WhatsApp.",
+      "timeout": "El servidor tarda demasiado en responder. Tu información se ha guardado: vuelve a intentarlo.",
+      "reseau": "Conexión imposible. Comprueba tu conexión a internet y vuelve a intentarlo."
+    },
+    "coordonnees": {
+      "titre": "Nuestros datos de contacto",
+      "email": "Correo electrónico",
+      "whatsapp": "WhatsApp",
+      "boutonWhatsapp": "Contáctanos por WhatsApp",
+      "adresse": "Dirección"
+    },
+    "itineraire": {
+      "titre": "Cómo llegar",
+      "ouvrir": "Abrir indicaciones en Google Maps",
+      "carteTitre": "Ubicación de Casa Noppalu en Saly, Senegal"
+    }
+  },
+  "Bungalows": {
+    "metaTitre": "Nuestros estudios",
+    "metaDescription": "Tres estudios independientes y climatizados en Saly, con aire acondicionado, cocina americana, Wi-Fi y acceso a la piscina.",
+    "metaTitreBungalow": "Estudio {nom}",
+    "surtitre": "Tu estancia",
+    "titre": "Nuestros estudios",
+    "intro": "Casa Noppalu cuenta con tres estudios independientes para alojar a dos personas. Climatizados y equipados con una zona de cocina, ofrecen un espacio privado para disfrutar plenamente de tu estancia en Saly, con acceso a la piscina y al jardín.",
+    "retour": "← Presentación",
+    "descriptionTitre": "Descripción",
+    "photoAlt": "Estudio {nom}",
+    "items": {
+      "manguier": {
+        "resume": "Estudio independiente y climatizado con cama de 160 cm, cocina americana y acceso a la piscina."
+      },
+      "cocotier": {
+        "resume": "Estudio independiente y climatizado con cama de 160 cm, cocina americana y acceso a la piscina."
+      },
+      "bananier": {
+        "resume": "Estudio independiente y climatizado con cama de 140 cm, cocina americana y acceso a la piscina."
+      }
+    }
+  },
+  "BungalowInfos": {
+    "equipementsTitre": "Equipamiento",
+    "equipements": {
+      "lit": "Cama de {valeur}",
+      "clim": "Aire acondicionado",
+      "wifi": "Wi-Fi",
+      "tv": "Televisión inteligente",
+      "piscine": "Acceso a la piscina y al jardín",
+      "cuisine": "Cocina americana (nevera pequeña, placa de cocción, microondas, cafetera, hervidor)"
+    },
+    
+    "conditionsTitre": "Condiciones e información práctica",
+    "tarifsTitre": "Tarifas",
+    "tarifs": {
+      "basse": "Temporada baja (de junio a octubre)",
+      "haute": "Temporada alta (de noviembre a mayo)",
+      "fetes": "Fiestas de fin de año (del {debut} al {fin})",
+      "parNuit": "{prix} FCFA/noche"
+    },
+    "nousConsulter": "Consúltanos para conocer nuestras tarifas",
+    "service": {
+      "prix": "{nom} ({prix} FCFA)",
+      "prixUnite": "{nom} ({prix} FCFA {unite})",
+      "consulter": "{nom} (consúltanos)"
+    },
+    "unites": {
+      "trajet": "por trayecto",
+      "nuit": "por noche",
+      "personne": "por persona",
+      "sejour": "por estancia"
+    },
+    "conditions": {
+      "capacite": "Capacidad: 2 personas por estudio",
+      "sejour": "Estancia mínima: 2 noches. Reserva: mínimo 24h antes.",
+      "horaires": "Entrada al alojamiento: a partir de las 14:00. Salida del alojamiento: antes de las 11:00. (servicio de guardaequipaje gratuito)",
+      "paiement": "Pago: transferencia bancaria, Wave, PayPal"
+    }
+  },
+
+  "Calendrier": {
+    "titre": "Disponibilidades",
+    "intro": "Envíanos tus solicitudes de reserva, te responderemos lo antes posible",
+    "introGeneral": "Selecciona un estudio si deseas consultar sus disponibilidades.",
+    "choixStudio": "Estudio mostrado",
+    "tous": "Todos",
+    "precedent": "Mes anterior",
+    "suivant": "Mes siguiente",
+    "libre": "Disponible",
+    "partiel": "Parcialmente disponible",
+    "occupee": "No disponible",
+    "passee": "Fecha pasada",
+    "libresCeJour": "Noche del {date}, disponible: {liste}",
+    "aucunLibre": "Noche del {date}: ningún estudio disponible",
+    "introReservation": "Consulta la disponibilidad de nuestros estudios y elige tus fechas a continuación.",
+    "reserver": "Hacer una solicitud de reserva"
+  },
+
+  "Reservation": {
+    "metaTitre": "Solicitud de reserva",
+    "metaDescription": "Elige tus fechas, descubre los estudios disponibles en Saly y envía tu solicitud de reserva à Casa Noppalu.",
+    "titre": "Solicitud de reserva",
+    "intro": "Consulta el calendario, elige tus fechas y te confirmaremos la disponibilidad por correo electrónico o WhatsApp.",
+    "indisponible": "Las solicitudes online no están disponibles en este momento. Escríbenos, te responderemos con mucho gusto.",
+    "etapeDates": "Tus fechas",
+    "arrivee": "Llegada",
+    "depart": "Salida",
+    "voyageurs": "Viajeros",
+    "nuits": "{n, plural, one {# noche} other {# noches}}",
+    "etapeStudio": "Elige tu estudio",
+    "etapeStudioAide": "Elige primero tus fechas para ver la disponibilidad. Ya puedes indicar el estudio que te interesa.",
+    "aucunStudio": "No hay ningún estudio disponible en estas fechas. Prueba otras fechas o escríbenos: a veces podemos ofrecer una solución.",
+    "studioIndisponible": "No disponible",
+    "studioSelectionne": "✓ Seleccionado",
+    "preferenceIndisponible": "El estudio que habías elegido no está disponible en estas fechas. Estos son los estudios libres:",
+    "lit": "Cama de {cm} cm",
+    "etapeCoordonnees": "Tus datos",
+    "nom": "Nombre *",
+    "email": "Correo electrónico *",
+    "corriger": "Sí, corregir",
+    "telephone": "Teléfono / WhatsApp (opcional)",
+    "telephonePlaceholder": "+33, +221, etc.",
+    "message": "Mensaje (opcional)",
+    "messagePlaceholder": "Hora prevista de llegada, petición especial…",
+    "antispam": "No rellenar",
+    "mention": "La información introducida se utiliza para responder a tu solicitud.",
+    "recapTitre": "Resumen",
+    "studio": "Estudio",
+    "duree": "Duración",
+    "estimation": "Estimación de la estancia",
+    "prixFcfa": "{prix} FCFA",
+    "estimationNote": "Estimación según nuestra tarifa actual. Te confirmaremos el importe definitivo.",
+    "envoyer": "Enviar mi solicitud",
+    "envoiEnCours": "Enviando…",
+    "whatsapp": "Escribirnos por WhatsApp",
+    "autreQuestion": "¿Tienes alguna pregunta antes de enviar tu solicitud?",
+    "contact": "Contáctanos",
+    "succesTitre": "Solicitud enviada",
+    "succesTexte": "Gracias {nom}, hemos recibido tu solicitud y te responderemos lo antes posible.",
+    "succesEmail": "Se acaba de enviar un correo electrónico de confirmación a {email}. Recuerda revisar tu carpeta de spam.",
+    "succesRappel": "Se trata de una solicitud, todavía no de una reserva: las fechas no están bloqueadas hasta que te confirmemos la disponibilidad.",
+    "retourAccueil": "Volver al inicio",
+    "erreurs": {
+      "nom_invalide": "Nombre no válido.",
+      "email_vide": "Indica tu dirección de correo electrónico.",
+      "email_trop_long": "Esta dirección de correo electrónico es demasiado larga.",
+      "email_invalide": "Esta dirección de correo electrónico no es válida. Ejemplo: nombre@ejemplo.com",
+      "email_suggestion": "¿Querías escribir {adresse}?",
+      "telephone_invalide": "Número de teléfono no válido.",
+      "message_trop_long": "Tu mensaje es demasiado largo (máximo 2.000 caracteres).",
+      "studio_inconnu": "Este estudio no está disponible para reserva.",
+      "studio_indisponible": "Este estudio ya no está disponible en estas fechas. Elige otras fechas u otro estudio.",
+      "dates_invalides": "Fecha no válida: comprueba el día, el mes y el año.",
+      "depart_avant_arrivee": "La fecha de salida debe ser posterior a la fecha de llegada.",
+      "arrivee_trop_proche": "La llegada debe tener lugar como muy pronto mañana. Para una estancia inmediata, contáctanos.",
+      "arrivee_trop_lointaine": "Aún no abrimos solicitudes con tanta antelación.",
+      "sejour_trop_court": "La estancia debe durar al menos {min} noches.",
+      "sejour_trop_long": "La estancia no puede superar las {max} noches. Para estancias más largas, contáctanos.",
+      "voyageurs_invalides": "El número de viajeros supera la capacidad del estudio.",
+      "requete_invalide": "Solicitud no válida.",
+      "envoi_echoue": "El envío ha fallado. Vuelve a intentarlo o contáctanos por WhatsApp.",
+      "timeout": "El servidor tarda demasiado en responder. Tu información se ha guardado: vuelve a intentarlo.",
+      "reseau": "Conexión imposible. Comprueba tu conexión a internet y vuelve a intentarlo."
+    }
+  },
+
+  "Gallery": {
+    "precedente": "Foto anterior",
+    "suivante": "Foto siguiente",
+    "afficher": "Mostrar la foto {numero}"
+  },
+
+   "NotFound": {
+    "titre": "Esta página no existe",
+    "texte": "Es posible que el enlace sea antiguo o esté mal escrito. Aquí tienes dónde ir:",
+    "accueil": "Inicio",
+    "bungalows": "Nuestros estudios",
+    "contact": "Contacto"
+  },
+
+  "Error": {
+    "titre": "Esta página no se ha podido mostrar",
+    "reessayer": "Reintentar",
+    "contact": "Contáctanos"
+  },
+
+  "Metadata": {
+    "titre": "Casa Noppalu | Casa de huéspedes en Senegal",
+    "description": "Descubre nuestros tres estudios independientes y climatizados en Saly, Niakhnakhal. Jardín arbolado, piscina y playa a diez minutos a pie."
+  }
+}

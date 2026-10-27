@@ -1,0 +1,264 @@
+{
+  "Header": {
+    "logoAlt": "Casa Noppalu Logo",
+    "slogan": "Calm & Serenity",
+    "accueil": "Home",
+    "bungalows": "Our studios",
+    "presentation": "Overview",
+    "reserver": "Book",
+    "contact": "Contact",
+    "langueActuelle": "Current language: {langue}"
+  },
+
+  "Footer": {
+    "bungalows": "Our studios",
+    "contact": "Contact",
+    "droits": "© {annee} Casa Noppalu. All rights reserved."
+  },
+  
+  "Accueil": {
+    "surtitre": "Casa Noppalu, Guest House in Senegal",
+    "titre": "Your home away from home with a pool in Saly",
+    "intro": "In Saly, in the residential neighborhood of Niakhnakhal, Casa Noppalu welcomes you in a simple and comfortable setting, far from large hotel complexes. Our three independent, air-conditioned studios, equipped with a kitchenette and Wi-Fi, offer you the freedom to organize your days at your own pace, while enjoying the pool, garden, and beach, accessible in a ten-minute walk.",
+    "photos": {
+      "jardin1": "The Casa Noppalu garden",
+      "jardin2": "An adorable salamander",
+      "jardin3": "The terrace for drinks",
+      "jardin4": "A snail visiting us",
+      "piscine1": "The Casa Noppalu pool",
+      "plage": "The nearby beach"
+    },
+    "bungalowsSurtitre": "Your stay",
+    "bungalowsTitre": "Our studios",
+    "bungalowsIntro": "Our studios offer you a private space to fully enjoy your stay in Saly. Air-conditioned and equipped with a kitchenette area featuring a stovetop, microwave, and small refrigerator, they also feature Wi-Fi and a smart TV.",
+    "decouvrir": "Discover this studio",
+    "voirBungalows": "View studios",
+    "reserver": "Make a booking request"
+  },
+
+  "Contact": {
+    "metaTitre": "Contact",
+    "metaDescription": "Contact Casa Noppalu, guest house in Saly (Senegal): availability, questions about our accommodation, practical information.",
+    "titre": "Contact",
+    "intro": "Any questions about Casa Noppalu or our studios? Write to us, and we will be happy to answer.",
+    "formulaire": {
+      "titre": "Send us a message",
+      "nom": "Name *",
+      "email": "Email address *",
+      "corriger": "Yes, correct it",
+      "telephone": "Phone / WhatsApp (optional)",
+      "telephonePlaceholder": "+33, +221, etc.",
+      "objet": "Subject of your request",
+      "message": "Your message *",
+      "messagePlaceholder": "How can we help you?",
+      "antispam": "Do not fill",
+      "mention": "The information entered is used to respond to your request.",
+      "envoyer": "Send my message",
+      "envoiEnCours": "Sending…",
+      "succes": "Thank you, your message has been sent successfully. We will get back to you promptly.",
+      "whatsappErreur": "Write to us on WhatsApp"
+    },
+    "objets": {
+      "disponibilites": "Availability",
+      "bungalow": "Question about a studio",
+      "infos": "Practical information",
+      "autre": "Other request"
+    },
+    "erreurs": {
+      "email_vide": "Please enter your email address.",
+      "email_trop_long": "This email address is too long.",
+      "email_invalide": "This email address is invalid. Example: name@example.com",
+      "email_suggestion": "Did you mean {adresse}?",
+      "nom_invalide": "Invalid name.",
+      "telephone_invalide": "Invalid phone number.",
+      "message_invalide": "The message must contain between 10 and 5000 characters.",
+      "requete_invalide": "Invalid request.",
+      "envoi_echoue": "Sending failed. Please try again or contact us via WhatsApp.",
+      "timeout": "The server is taking too long to respond. Your information has been saved: please try again.",
+      "reseau": "Connection failed. Check your internet connection and try again."
+    },
+    "coordonnees": {
+      "titre": "Our contact details",
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "boutonWhatsapp": "Contact us on WhatsApp",
+      "adresse": "Address"
+    },
+    "itineraire": {
+      "titre": "Directions",
+      "ouvrir": "Open directions in Google Maps",
+      "carteTitre": "Location of Casa Noppalu in Saly, Senegal"
+    }
+  },
+  "Bungalows": {
+    "metaTitre": "Our studios",
+    "metaDescription": "Three independent air-conditioned studios in Saly, with air conditioning, kitchenette, Wi-Fi, and pool access.",
+    "metaTitreBungalow": "Studio {nom}",
+    "surtitre": "Your stay",
+    "titre": "Our studios",
+    "intro": "Casa Noppalu features three independent studios accommodating two people. Air-conditioned and equipped with a kitchenette corner, they offer a private space to fully enjoy your stay in Saly, with access to the pool and garden.",
+    "retour": "← Overview",
+    "descriptionTitre": "Description",
+    "photoAlt": "Studio {nom}",
+    "items": {
+      "manguier": {
+        "resume": "Independent air-conditioned studio with a 160 cm bed, kitchenette, and pool access."
+      },
+      "cocotier": {
+        "resume": "Independent air-conditioned studio with a 160 cm bed, kitchenette, and pool access."
+      },
+      "bananier": {
+        "resume": "Independent air-conditioned studio with a 140 cm bed, kitchenette, and pool access."
+      }
+    }
+  },
+  "BungalowInfos": {
+    "equipementsTitre": "Amenities",
+    "equipements": {
+      "lit": "{valeur} bed",
+      "clim": "Air conditioning",
+      "wifi": "Wi-Fi",
+      "tv": "Smart TV",
+      "piscine": "Access to the pool and garden",
+      "cuisine": "Kitchenette (small refrigerator, stovetop, microwave, coffee maker, kettle)"
+    },
+    
+    "conditionsTitre": "Conditions and practical information",
+    "tarifsTitre": "Rates",
+    "tarifs": {
+      "basse": "Low season (June to October)",
+      "haute": "High season (November to May)",
+      "fetes": "Holiday season ({debut} to {fin})",
+      "parNuit": "{prix} FCFA/night"
+    },
+    "nousConsulter": "Contact us for our rates",
+    "service": {
+      "prix": "{nom} ({prix} FCFA)",
+      "prixUnite": "{nom} ({prix} FCFA {unite})",
+      "consulter": "{nom} (contact us)"
+    },
+    "unites": {
+      "trajet": "per trip",
+      "nuit": "per night",
+      "personne": "per person",
+      "sejour": "per stay"
+    },
+    "conditions": {
+      "capacite": "Capacity: 2 people per studio",
+      "sejour": "Minimum stay: 2 nights. Booking: at least 24 hours in advance.",
+      "horaires": "Check-in: from 2:00 PM. Check-out: before 11:00 AM. (complimentary luggage storage service)",
+      "paiement": "Payment: bank transfer, Wave, PayPal"
+    }
+  },
+
+  "Calendrier": {
+    "titre": "Availability",
+    "intro": "Send us your booking requests, and we will respond as soon as possible",
+    "introGeneral": "Select a studio if you wish to check its availability.",
+    "choixStudio": "Displayed studio",
+    "tous": "All",
+    "precedent": "Previous month",
+    "suivant": "Next month",
+    "libre": "Available",
+    "partiel": "Partially available",
+    "occupee": "Unavailable",
+    "passee": "Past date",
+    "libresCeJour": "Night of {date}, available: {liste}",
+    "aucunLibre": "Night of {date}: no studios available",
+    "introReservation": "Check the availability of our studios, then choose your dates below.",
+    "reserver": "Make a booking request"
+  },
+
+  "Reservation": {
+    "metaTitre": "Booking request",
+    "metaDescription": "Choose your dates, discover available studios in Saly, and send your booking request to Casa Noppalu.",
+    "titre": "Booking request",
+    "intro": "Check the calendar then choose your dates and we will confirm availability by email or WhatsApp.",
+    "indisponible": "Online requests are currently unavailable. Write to us, and we will be happy to reply.",
+    "etapeDates": "Your dates",
+    "arrivee": "Check-in",
+    "depart": "Check-out",
+    "voyageurs": "Guests",
+    "nuits": "{n, plural, one {# night} other {# nights}}",
+    "etapeStudio": "Choose your studio",
+    "etapeStudioAide": "Choose your dates first to view availability. You can already indicate the studio you are interested in.",
+    "aucunStudio": "No studios are available on these dates. Try other dates, or write to us: we can sometimes offer a solution.",
+    "studioIndisponible": "Unavailable",
+    "studioSelectionne": "✓ Selected",
+    "preferenceIndisponible": "The studio you chose is not available on these dates. Here are the available studios:",
+    "lit": "{cm} cm bed",
+    "etapeCoordonnees": "Your details",
+    "nom": "Name *",
+    "email": "Email address *",
+    "corriger": "Yes, correct it",
+    "telephone": "Phone / WhatsApp (optional)",
+    "telephonePlaceholder": "+33, +221, etc.",
+    "message": "Message (optional)",
+    "messagePlaceholder": "Estimated arrival time, special request…",
+    "antispam": "Do not fill",
+    "mention": "The information entered is used to respond to your request.",
+    "recapTitre": "Summary",
+    "studio": "Studio",
+    "duree": "Duration",
+    "estimation": "Estimated stay",
+    "prixFcfa": "{prix} FCFA",
+    "estimationNote": "Estimate based on our current rate card. We will confirm the final amount.",
+    "envoyer": "Send my request",
+    "envoiEnCours": "Sending…",
+    "whatsapp": "Write to us on WhatsApp",
+    "autreQuestion": "Any questions before sending your request?",
+    "contact": "Contact us",
+    "succesTitre": "Request sent",
+    "succesTexte": "Thank you {nom}, we have received your request and will get back to you as soon as possible.",
+    "succesEmail": "A confirmation email has just been sent to {email}. Please check your spam folder.",
+    "succesRappel": "This is a request, not yet a booking: dates are not blocked until we confirm availability.",
+    "retourAccueil": "Back to home",
+    "erreurs": {
+      "nom_invalide": "Invalid name.",
+      "email_vide": "Please enter your email address.",
+      "email_trop_long": "This email address is too long.",
+      "email_invalide": "This email address is invalid. Example: name@example.com",
+      "email_suggestion": "Did you mean {adresse}?",
+      "telephone_invalide": "Invalid phone number.",
+      "message_trop_long": "Your message is too long (maximum 2,000 characters).",
+      "studio_inconnu": "This studio is not available for booking.",
+      "studio_indisponible": "This studio is no longer available on these dates. Choose other dates or another studio.",
+      "dates_invalides": "Invalid date: check the day, month, and year.",
+      "depart_avant_arrivee": "The departure date must be after the arrival date.",
+      "arrivee_trop_proche": "Arrival must be tomorrow at the earliest. For immediate stays, please contact us.",
+      "arrivee_trop_lointaine": "We do not open requests this far in advance yet.",
+      "sejour_trop_court": "The stay must last at least {min} nights.",
+      "sejour_trop_long": "The stay cannot exceed {max} nights. For longer stays, please contact us.",
+      "voyageurs_invalides": "The number of guests exceeds the studio's capacity.",
+      "requete_invalide": "Invalid request.",
+      "envoi_echoue": "Sending failed. Please try again or contact us via WhatsApp.",
+      "timeout": "The server is taking too long to respond. Your information has been saved: please try again.",
+      "reseau": "Connection failed. Check your internet connection and try again."
+    }
+  },
+
+  "Gallery": {
+    "precedente": "Previous photo",
+    "suivante": "Next photo",
+    "afficher": "Show photo {numero}"
+  },
+
+   "NotFound": {
+    "titre": "This page does not exist",
+    "texte": "The link may be old or mistyped. Here is where you can go:",
+    "accueil": "Home",
+    "bungalows": "Our studios",
+    "contact": "Contact"
+  },
+
+  "Error": {
+    "titre": "This page could not be displayed",
+    "reessayer": "Try again",
+    "contact": "Contact us"
+  },
+
+  "Metadata": {
+    "titre": "Casa Noppalu | Guest House in Saly, Senegal",
+    "description": "Discover our three independent, air-conditioned studios in Saly, Niakhnakhal. Tree-filled garden, pool, and beach a ten-minute walk away."
+  }
+}

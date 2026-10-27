@@ -138,6 +138,8 @@ export default async function ReglagesPage() {
               <FormulaireTarifs
                 tarifs={reglages.tarifs}
                 afficherPrix={reglages.afficherPrix}
+                annonce={reglages.annonce}
+                langues={langues}
               />
             </div>
           )}

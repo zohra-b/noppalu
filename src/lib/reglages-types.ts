@@ -13,6 +13,7 @@ export const LIMITES_REGLAGES = {
   prixMax: 9_999_999, // 7 chiffres
   conditionsMax: 20,
   conditionMax: 500,
+  annonceMax: 500,
   serviceNomMax: 100,
   servicesMax: 30,
   ordreMax: 999,

@@ -36,7 +36,9 @@ type Props = {
   equipements: EquipementCode[];
   tarifs: Tarifs | null; // null = prix masqués
   services: Service[];
+  annonce: string | null; // texte libre affiché au-dessus des tarifs
   conditions: string[];
+  
 };
 
 export default function BungalowInfos({
@@ -44,6 +46,7 @@ export default function BungalowInfos({
   equipements,
   tarifs,
   services,
+  annonce,
   conditions,
 }: Props) {
   const t = useTranslations("BungalowInfos");
@@ -119,6 +122,12 @@ export default function BungalowInfos({
           {t("tarifsTitre")}
         </h3>
 
+        {annonce && (
+          <p className="mb-3 max-w-xl whitespace-pre-line rounded-md border-l-4 border-[#C6B06B] bg-[#C6B06B]/20 px-4 py-3 text-sm">
+            {avecGras(annonce)}
+          </p>
+        )}
+        
         {prixVisibles ? (
           <dl className="max-w-xl divide-y divide-[#C6B06B]/40 rounded-lg bg-[#FFFEF6] text-sm shadow-sm">
             {SAISONS.map((cle) => (
