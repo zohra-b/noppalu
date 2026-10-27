@@ -78,7 +78,7 @@ const TEXTES_CONFIRMATION: Record<
   },
 
   en: {
-    sujet: "Casa Noppalu - We have received your request",
+    sujet: "Casa Noppalu - We've received your booking request",
     bonjour: (nom) => `Hello ${nom},`,
     intro:
       "Thank you for your request. We have received it and will get back to you as soon as possible.",
@@ -89,17 +89,17 @@ const TEXTES_CONFIRMATION: Record<
     duree: (n) => `${n} night${n > 1 ? "s" : ""}`,
     voyageurs: "Guests",
     estimation: "Estimated stay",
-    estimationNote: "according to our current pricing grid",
+    estimationNote: "based on our current rates",
     telephone: "Phone / WhatsApp",
     email: "E-mail",
     nonRenseigne: "Not provided",
     votreMessage: "Your message",
     pasReservation:
-      "This is a request, not yet a booking: dates are not blocked until we confirm availability.",
+      "This is a request, not yet a booking. Your dates are not blocked until we confirm availability.",
     annulation:
-      "If your request is accepted, we will send you a confirmation along with a payment request within 72 hours to make your booking final. In case of cancellation: 100% refund if you cancel 15 days or more before arrival, 50% between 14 and 8 days before, no refund 7 days or less before.",
+      "If your request is accepted, we will send you a confirmation and payment instructions. Full payment is required within 72 hours of acceptance to finalize your booking.Cancellation policy: 100% refund for cancellations made 15 days or more before arrival; 50% refund for cancellations made 8–14 days before arrival; no refund for cancellations made 7 days or less before arrival.",
     correction:
-      "Is any information incorrect, or would you like to clarify something? Simply reply to this email.",
+      "If any information is incorrect, or you would like to clarify anything, simply reply to this email.",
     signature: "See you soon,\nThe Casa Noppalu team",
 },
 

@@ -39,6 +39,12 @@ const LIEN_WHATSAPP = "https://wa.me/34637251773";
 const POLITIQUE_ANNULATION_FR =
   "remboursement à 100 % si vous annulez 15 jours ou plus avant l'arrivée, à 50 % entre 14 et 8 jours avant, aucun remboursement à 7 jours ou moins.";
 
+const POLITIQUE_ANNULATION_ES =
+  "reembolso del 100 % si cancela 15 días o más antes de la llegada, del 50 % entre 14 y 8 días antes, y ningún reembolso si cancela 7 días o menos antes de la llegada.";
+
+const POLITIQUE_ANNULATION_EN =
+  "100% refund if you cancel 15 days or more before arrival, 50% refund between 14 and 8 days before arrival, and no refund 7 days or less before arrival.";
+
 function dateLongue(cle: string, locale: string): string {
   const [a, m, j] = cle.split("-").map(Number);
   return new Intl.DateTimeFormat(locale, {
@@ -49,8 +55,16 @@ function dateLongue(cle: string, locale: string): string {
 
 const pluriel = (n: number, mot: string) => `${n} ${mot}${n > 1 ? "s" : ""}`;
 
-const salutation = (nom: string | null) =>
-  nom ? `Bonjour ${nom},` : "Bonjour,";
+const SALUTATIONS: Record<string, string> = {
+  fr: "Bonjour",
+  es: "Hola",
+  en: "Hello",
+};
+
+const salutation = (nom: string | null, langue: string) => {
+  const mot = SALUTATIONS[langue] ?? SALUTATIONS.fr;
+  return nom ? `${mot} ${nom},` : `${mot},`;
+};
 
 // « 3 nuits, 2 voyageurs » (le nombre de voyageurs peut être inconnu)
 const detailSejour = (d: DonneesMessage) =>
@@ -98,7 +112,7 @@ const fr: Generateur = {
       : "(virement bancaire, Wave ou PayPal)";
 
     const lignes = [
-      salutation(d.nom),
+      salutation(d.nom, locale),
       "",
       intro,
       "",
@@ -140,7 +154,7 @@ const fr: Generateur = {
       : "Bien reçu, merci ! Votre paiement est arrivé et votre réservation est confirmée. On est ravis de vous accueillir à Saly !";
 
     const paragraphes = [
-      salutation(d.nom),
+      salutation(d.nom, locale),
       premier,
       `Studio ${d.studio}, du ${a} au ${dep} (${detailSejour(d)}). Arrivée à partir de 14 h, départ avant 11 h (bagagerie offerte).`,
       `Où nous trouver : ${ADRESSE}\n${LIEN_MAPS}`,
@@ -163,7 +177,7 @@ const fr: Generateur = {
     const dep = dateLongue(d.depart, locale);
 
     const texte = [
-      salutation(d.nom),
+      salutation(d.nom, locale),
       "",
       `Merci pour votre demande de séjour au studio ${d.studio}, du ${a} au ${dep}. Malheureusement, nous ne pouvons pas y donner suite : nos studios ne sont pas disponibles à ces dates.`,
       "",
@@ -184,7 +198,7 @@ const fr: Generateur = {
     // Une demande du site s'appelle « demande » tant qu'elle n'est pas payée ; les autres sont des réservations
     const objet = payee || d.origine !== "site" ? "réservation" : "demande";
 
-    const lignes = [salutation(d.nom), ""];
+    const lignes = [salutation(d.nom, locale), ""];
 
     if (plateforme) {
       lignes.push(
@@ -230,13 +244,13 @@ const es: Generateur = {
 
     const intro =
       d.origine === "site"
-        ? `¡Buenas noticias: el estudio ${d.studio} está libre del ${a} al ${dep} (${detailSejour(d)}), ¡te lo reservamos! 🌴`
-        : `¡Gracias por su reserva! El estudio ${d.studio} está reservado del ${a} al ${dep} (${detailSejour(d)}). 🌴`;
+        ? `¡Buenas noticias: el estudio ${d.studio} está disponible del ${a} al ${dep} (${detailSejour(d)}), ¡te lo reservamos! 🌴`
+        : `¡Gracias por tu reserva! El estudio ${d.studio} está reservado del ${a} al ${dep} (${detailSejour(d)}). 🌴`;
 
     const reglement = plateforme
     // ? `Importe de la estancia: ${montant}, a pagar a su llegada en efectivo, o por adelantado mediante uno de los medios siguientes.`
-      ? `Importe de la estancia: ${montant}, a pagar por adelantado mediante uno de los medios siguientes.`
-      : `Importe de la estancia: ${montant}, a pagar en su totalidad en un plazo de 72 h.`;
+      ? `Importe total: ${montant}, a pagar por adelantado mediante uno de los medios siguientes.`
+      : `Importe total: ${montant}, a pagar en su totalidad en un plazo de 72 h.`;
 
     const moyens = plateforme
     //? "(en efectivo a la llegada, transferencia bancaria, Wave o PayPal)"
@@ -244,18 +258,18 @@ const es: Generateur = {
       : "(transferencia bancaria, Wave o PayPal)";
 
     const lignes = [
-      salutation(d.nom),
+      salutation(d.nom, locale),
       "",
       intro,
       "",
       reglement,
       "",
-      "Puede pagar mediante:",
+      "Puedes realizar el pago mediante:",
       `– Wave : ${p?.wave ?? "[número a indicar]"}`,
-      `– Transferencia bancaria : IBAN ${p?.iban ?? "[IBAN a indicar]"}, titular ${p?.titulaire ?? "[titular a indicar]"}. Por favor, indique en el concepto el nombre de la persona que realizó la reserva.`,
+      `– Transferencia bancaria : IBAN ${p?.iban ?? "[IBAN a indicar]"}, titular ${p?.titulaire ?? "[titular a indicar]"}. Por favor, indica en el concepto el nombre de la persona que realizó la solicitud.`,
       `– PayPal : ${p?.paypal ?? "[dirección a indicar]"}`,
       "",
-      `Por favor, indíquenos el método de pago elegido ${moyens}. Si paga mediante transferencia, envíenos también el comprobante.`,
+      `Por favor, indícanos el método de pago que has elegido ${moyens}. Si pagas mediante transferencia, envíanos el comprobante.`,
       "",
     ];
 
@@ -263,7 +277,7 @@ const es: Generateur = {
       lignes.push(
         `Cancelación : ${POLITIQUE_ANNULATION_ES}`,
         "",
-        "Tan pronto como recibamos su pago, le enviaremos la confirmación de su reserva.",
+        "Tan pronto como recibamos el pago, te enviaremos la confirmación de tu reserva.",
         "",
       );
     }
@@ -281,11 +295,11 @@ const es: Generateur = {
     const plateforme = estPlateforme(d.origine);
 
     const premier = plateforme
-      ? "¡Gracias por su reserva! ¡Estamos encantados de recibirle en Saly!"
-      : "¡Recibido, gracias! Su pago ha llegado y su reserva está confirmada. ¡Estamos encantados de recibirle en Saly!";
+      ? "¡Gracias por tu reserva! ¡Estamos encantados de recibirte en Saly!"
+      : "¡Recibido, gracias! Tu pago ha llegado y tu reserva está confirmada. ¡Estamos encantados de recibirte en Saly!";
 
     const paragraphes = [
-      salutation(d.nom),
+      salutation(d.nom, locale),
       premier,
       `Estudio ${d.studio}, del ${a} al ${dep} (${detailSejour(d)}). Llegada a partir de las 14:00, salida antes de las 11:00 (consigna de equipaje gratuita).`,
       `Dónde encontrarnos : ${ADRESSE}\n${LIEN_MAPS}`,
@@ -293,11 +307,11 @@ const es: Generateur = {
       ...(plateforme
         ? []
         : [`Recordatorio - cancelación : ${POLITIQUE_ANNULATION_ES}`]),
-      `¿Alguna pregunta? Simplemente responda a este correo electrónico o escríbanos por WhatsApp : ${LIEN_WHATSAPP}\n¡Hasta pronto!\nEl equipo de Casa Noppalu`,
+      `¿Alguna pregunta? Simplemente responde a este correo electrónico o escríbenos por WhatsApp : ${LIEN_WHATSAPP}\n¡Hasta pronto!\nEl equipo de Casa Noppalu`,
     ];
 
     return {
-      sujet: "Casa Noppalu - ¡Su reserva está confirmada!",
+      sujet: "Casa Noppalu - ¡Tu reserva está confirmada!",
       texte: paragraphes.join("\n\n"),
       html: versHtml(paragraphes),
     };
@@ -308,7 +322,7 @@ const es: Generateur = {
     const dep = dateLongue(d.depart, locale);
 
     const texte = [
-      salutation(d.nom),
+      salutation(d.nom, locale),
       "",
       `Gracias por su solicitud de estancia en el estudio ${d.studio}, del ${a} al ${dep}. Desafortunadamente, no podemos darles curso: nuestros estudios no están disponibles en esas fechas.`,
       "",
@@ -328,11 +342,11 @@ const es: Generateur = {
     const plateforme = estPlateforme(d.origine);
     const objet = payee || d.origine !== "site" ? "reserva" : "solicitud";
 
-    const lignes = [salutation(d.nom), ""];
+    const lignes = [salutation(d.nom, locale), ""];
 
     if (plateforme) {
       lignes.push(
-        `Le confirmamos la cancelación de su reserva para el estudio ${d.studio}, del ${a} al ${dep}. Estas fechas vuelven a estar disponibles`,
+        `Te confirmamos la cancelación de tu reserva para el estudio ${d.studio}, del ${a} al ${dep}. Estas fechas vuelven a estar disponibles`,
         "",
       );
     } else if (payee) {
@@ -374,12 +388,13 @@ const en: Generateur = {
 
     const intro =
       d.origine === "site"
-        ? `Good news: the studio ${d.studio} is available from ${a} to ${dep} (${detailSejour(d)}), we are holding it for you! 🌴`
+        ? `Good news: the ${d.studio} studio is available from ${a} to ${dep} (${detailSejour(d)}), we are holding it for you! 🌴`
         : `Thank you for your booking! The studio ${d.studio} is successfully booked from ${a} to ${dep} (${detailSejour(d)}). 🌴`;
 
     const reglement = plateforme
-      ? `Amount of the stay: ${montant}, to be paid upon arrival in cash, or in advance via one of the methods below.`
-      : `Amount of the stay: ${montant}, to be paid in full within 72 hours.`;
+    //? `Total amount: ${montant}, to be paid upon arrival in cash, or in advance via one of the methods below.`
+      ? `Total amount: ${montant}, to be paid in advance via one of the methods below.`
+      : `Total amount: ${montant}, to be paid in full within 72 hours.`;
 
     const moyens = plateforme
     // ? "(cash upon arrival, bank transfer, Wave or PayPal)"
@@ -387,18 +402,18 @@ const en: Generateur = {
       : "(bank transfer, Wave or PayPal)";
 
     const lignes = [
-      salutation(d.nom),
+      salutation(d.nom, locale),
       "",
       intro,
       "",
       reglement,
       "",
-      "You can pay by:",
+      "You can pay using one of the following methods:",
       `– Wave : ${p?.wave ?? "[number to be indicated]"}`,
-      `– Bank transfer : IBAN ${p?.iban ?? "[IBAN to be indicated]"}, account holder ${p?.titulaire ?? "[holder to be indicated]"}. Please indicate the name of the person who made the booking in the reference.`,
+      `– Bank transfer : IBAN ${p?.iban ?? "[IBAN to be indicated]"}, account holder ${p?.titulaire ?? "[holder to be indicated]"}. Please indicate the name used for the booking in the payment reference.`,
       `– PayPal : ${p?.paypal ?? "[address to be indicated]"}`,
       "",
-      `Please let us know your chosen payment method ${moyens}. If you pay by bank transfer, please also send us the receipt.`,
+      `Please let us know which payment method you have chosen ${moyens}. If you pay by bank transfer, please also send us the receipt.`,
       "",
     ];
 
@@ -406,7 +421,7 @@ const en: Generateur = {
       lignes.push(
         `Cancellation: ${POLITIQUE_ANNULATION_EN}`,
         "",
-        "As soon as we receive your payment, we will send you your booking confirmation.",
+        "Once we have received your payment, we will send you your booking confirmation.",
         "",
       );
     }
@@ -428,7 +443,7 @@ const en: Generateur = {
       : "Received, thank you! Your payment has arrived and your booking is confirmed. We look forward to welcoming you to Saly!";
 
     const paragraphes = [
-      salutation(d.nom),
+      salutation(d.nom, locale),
       premier,
       `Studio ${d.studio}, from ${a} to ${dep} (${detailSejour(d)}). Arrival from 2:00 PM, departure before 11:00 AM (free luggage storage).`,
       `Where to find us: ${ADRESSE}\n${LIEN_MAPS}`,
@@ -451,7 +466,7 @@ const en: Generateur = {
     const dep = dateLongue(d.depart, locale);
 
     const texte = [
-      salutation(d.nom),
+      salutation(d.nom, locale),
       "",
       `Thank you for your request for a stay in studio ${d.studio}, from ${a} to ${dep}. Unfortunately, we are unable to accommodate your request, as our studios are fully booked for these dates.`,
       "",
@@ -471,7 +486,7 @@ const en: Generateur = {
     const plateforme = estPlateforme(d.origine);
     const objet = payee || d.origine !== "site" ? "booking" : "request";
 
-    const lignes = [salutation(d.nom), ""];
+    const lignes = [salutation(d.nom, locale), ""];
 
     if (plateforme) {
       lignes.push(
