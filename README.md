@@ -4,6 +4,8 @@ Site web de **Casa Noppalu**, maison d'hôtes de trois studios indépendants à 
 
 Le site présente les studios, affiche leurs disponibilités, reçoit des **demandes de réservation** et dispose d'un **espace d'administration** (`/admin`) pour traiter les demandes, gérer le calendrier et modifier le contenu. Il n'y a pas de paiement en ligne : le client paie manuellement (Wave, virement, PayPal) après acceptation de sa demande.
 
+Il a été entièrement développé en Vibe coding avec Claude Sonnet 5.5.
+
 ## Fonctionnalités
 
 **Partie publique**
