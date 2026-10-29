@@ -10,13 +10,16 @@ export default function Footer() {
       <div className="grid w-full grid-cols-1 items-center gap-4 px-6 py-5 sm:grid-cols-3">
 
         {/* Bloc gauche : identité */}
-        <div className="flex justify-center sm:justify-start">
+        <div className="flex items-center justify-center gap-3 sm:justify-start">
           <Link
             href="/"
             className="font-serif text-lg font-semibold hover:text-linen"
           >
             Casa Noppalu
           </Link>
+          <span className="text-sm">
+            {t("droits", { annee: String(new Date().getFullYear()) })}
+          </span>
         </div>
 
         {/* Bloc central : réseaux sociaux */}
@@ -63,7 +66,7 @@ export default function Footer() {
         </div>
 
         {/* Bloc droit : navigation */}
-        <nav className="flex items-center justify-center gap-6 text-sm sm:justify-end">
+        <nav className="flex items-center justify-center gap-6 sm:justify-end">
          <Link href="/bungalows" className="hover:text-linen">
             {t("bungalows")}
           </Link>
@@ -73,10 +76,7 @@ export default function Footer() {
         </nav>
       </div>
 
-      {/* Deuxième ligne : droits réservés */}
-      <div className="border-t border-sand/40 px-6 py-3 text-center text-xs">
-        {t("droits", { annee: String(new Date().getFullYear()) })}
-      </div>
+      
     </footer>
   );
 }
