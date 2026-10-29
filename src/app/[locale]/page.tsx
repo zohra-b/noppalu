@@ -41,12 +41,17 @@ export default async function Home({
               {t("intro")}
             </p>
 
-            <Button href="/bungalows" className="mt-5">
+            {/* <Button href="/bungalows" className="mt-5">
               {t("voirStudios")}
-            </Button>
+            </Button> */}
           </div>
 
           <Gallery photos={photosAccueil} priority />
+        </div>
+        <div className="mx-auto w-fit grid items-center">
+          <Button href="/bungalows" className="mt-5">
+              {t("voirStudios")}
+            </Button>
         </div>
       </section>
     </main>
