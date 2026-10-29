@@ -40,10 +40,6 @@ export default async function Home({
             <p className="max-w-full text-base leading-7 text-[#222222]">
               {t("intro")}
             </p>
-
-            {/* <Button href="/bungalows" className="mt-5">
-              {t("voirStudios")}
-            </Button> */}
           </div>
 
           <Gallery photos={photosAccueil} priority />

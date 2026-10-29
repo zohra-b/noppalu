@@ -7,9 +7,9 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
 const langues = [ 
-    { code: "fr", nom: "Français", drapeau: "🇫🇷" }, 
-    { code: "en", nom: "English", drapeau: "🇬🇧" }, 
-    { code: "es", nom: "Español", drapeau: "🇪🇸" }, ];
+    { code: "fr", nom: "Français", drapeau: "/images/FR.png" }, 
+    { code: "en", nom: "English", drapeau: "/images/UK.png" }, 
+    { code: "es", nom: "Español", drapeau: "/images/ES.png" }, ];
     
 
 type StudioMenu = { slug: string; nom: string };
@@ -130,9 +130,12 @@ export default function Header({ bungalows }: { bungalows: StudioMenu[] }) {
                         aria-expanded={menuLanguesOuvert}
                         className="rounded-md p-2 hover:bg-white/50"
                         >
-                        <span className="text-2xl">
-                        {langueSelectionnee.drapeau}
-                        </span>
+                        <Image 
+                            src={langueSelectionnee.drapeau}
+                            alt={langueSelectionnee.nom}
+                            width={22}
+                            height={22}
+                                />
                     </button>
 
                     {menuLanguesOuvert && ( 
@@ -150,9 +153,12 @@ export default function Header({ bungalows }: { bungalows: StudioMenu[] }) {
                                         setMenuLanguesOuvert(false); }} 
                                     className="flex w-full items-center gap-3 px-4 py-2 text-left hover:bg-linen" 
                                     > 
-                                <span className="text-xl"> 
-                                    {l.drapeau} 
-                                    </span> 
+                                <Image 
+                                    src={l.drapeau}
+                                    alt={l.nom}
+                                    width={22}
+                                    height={22}
+                                />
                                 <span className="text-sm text-foreground"> 
                                     {l.nom} 
                                     </span> 
