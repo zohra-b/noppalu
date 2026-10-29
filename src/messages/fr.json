@@ -21,6 +21,7 @@
     "surtitre": "Casa Noppalu, Maison d'hôtes au Sénégal",
     "titre": "Votre pied à terre avec piscine à Saly",
     "intro": "À Saly, dans le quartier résidentiel de Niakhnakhal, Casa Noppalu vous accueille dans un cadre simple et confortable, loin des grands complexes hôteliers. Nos trois studios indépendants et climatisés, équipés d'une kitchenette et du wifi, vous offrent la liberté d'organiser vos journées à votre rythme, tout en profitant de la piscine, du jardin et de la plage, accessible en dix minutes à pied.",
+    "voirStudios": "Découvrir nos studios",
     "photos": {
       "jardin1": "Le jardin de Casa Noppalu",
       "maison-depuis-terrasse" : "Vue de la maison",
@@ -103,6 +104,9 @@
     "intro": "Casa Noppalu dispose de trois studios indépendants pour recevoir deux personnes. Climatisés et dotés d'un coin kitchenette, ils offrent un espace privé pour profiter pleinement de votre séjour à Saly, avec un accès à la piscine et au jardin.",
     "retour": "← Présentation",
     "descriptionTitre": "Description",
+    "decouvrir": "Découvrir ce studio",
+    "bientot": "Bientôt disponible",
+    "reserver": "Voir les disponibilités et réserver",
     "photoAlt": "Studio {nom}",
     "items": {
       "manguier": {

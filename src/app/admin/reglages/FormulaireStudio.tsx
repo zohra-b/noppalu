@@ -222,7 +222,7 @@ export default function FormulaireStudio({ studio, langues }: Props) {
             studio.publie &&
             !publie &&
             !window.confirm(
-              "Masquer ce studio ? Sa page ne sera plus accessible et il disparaîtra du site. Les réservations existantes sont conservées.",
+                            "Masquer ce studio ? Sa page ne sera plus accessible et il ne pourra plus être réservé ; sa carte restera sur la page Studios avec « Bientôt disponible ». Les réservations existantes sont conservées.",
             )
           ) {
             e.preventDefault();

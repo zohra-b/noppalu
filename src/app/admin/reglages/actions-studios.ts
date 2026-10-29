@@ -153,7 +153,7 @@ export async function modifierStudio(
       notes.push(
         count
           ? `Ce studio est masqué alors qu'il a ${count} blocage${count > 1 ? "s" : ""} de dates à venir : les réservations sont conservées, mais plus personne ne peut le demander sur le site.`
-          : "Ce studio est masqué : sa page n'est plus accessible et il n'apparaît plus sur le site.",
+          : "Ce studio est masqué : sa page n'est plus accessible et il n'est plus proposé à la réservation. Sa carte reste sur la page Studios avec « Bientôt disponible ».",
       );
     }
     if (publie && photosDe(slug).length === 0) {

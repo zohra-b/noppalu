@@ -64,7 +64,7 @@ export default function Footer() {
 
         {/* Bloc droit : navigation */}
         <nav className="flex items-center justify-center gap-6 text-sm sm:justify-end">
-          <Link href="/#bungalows" className="hover:text-linen">
+         <Link href="/bungalows" className="hover:text-linen">
             {t("bungalows")}
           </Link>
           <Link href="/contact" className="hover:text-linen">

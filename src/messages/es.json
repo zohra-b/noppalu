@@ -20,6 +20,7 @@
     "surtitre": "Casa Noppalu, Casa de huéspedes en Senegal",
     "titre": "Tu refugio con piscina en Saly",
     "intro": "En Saly, en la zona residencial de Niakhnakhal, Casa Noppalu te recibe en un entorno sencillo y cómodo, lejos de los grandes complejos hoteleros. Nuestros tres estudios independientes y climatizados, equipados con cocina americana y wifi, te ofrecen la libertad de organizar tus días a tu ritmo, mientras disfrutas de la piscina, el jardín y la playa, accesible a diez minutos a pie.",
+    "voirStudios":"Descubre nuestros estudios",
     "photos": {
       "jardin1": "El jardín de Casa Noppalu",
       "maison-depuis-terrasse" : "Vista casa principal desde la terraza",
@@ -102,6 +103,9 @@
     "intro": "Casa Noppalu cuenta con tres estudios independientes para alojar a dos personas. Climatizados y equipados con una zona de cocina, ofrecen un espacio privado para disfrutar plenamente de tu estancia en Saly, con acceso a la piscina y al jardín.",
     "retour": "← Presentación",
     "descriptionTitre": "Descripción",
+        "decouvrir": "Descubrir este estudio",
+    "bientot": "Próximamente",
+    "reserver": "Ver disponibilidad y reservar",
     "photoAlt": "Estudio {nom}",
     "items": {
       "manguier": {
