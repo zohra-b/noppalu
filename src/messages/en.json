@@ -31,20 +31,14 @@
       "jardin4": "A snail visiting us",
       "piscine1": "The Casa Noppalu pool",
       "plage": "Sunset on the beach"
-    },
-    "bungalowsSurtitre": "Your stay",
-    "bungalowsTitre": "Our studios",
-    "bungalowsIntro": "Our studios offer you a private space to fully enjoy your stay in Saly. Air-conditioned and equipped with a kitchenette area featuring a stovetop, microwave, and small refrigerator, they also feature Wi-Fi and a smart TV.",
-    "decouvrir": "Discover this studio",
-    "voirBungalows": "View studios",
-    "reserver": "Request a booking"
+    }
   },
 
   "Contact": {
     "metaTitre": "Contact",
     "metaDescription": "Contact Casa Noppalu, guest house in Saly (Senegal): availability, questions about our accommodation, practical information.",
     "titre": "Contact",
-    "intro": "Any questions about Casa Noppalu or our studios? Write to us, and we will be happy to answer.",
+    "intro": "Any question about Casa Noppalu or our studios? Write to us, and we will be happy to answer.",
     "formulaire": {
       "titre": "Send us a message",
       "nom": "Name *",
