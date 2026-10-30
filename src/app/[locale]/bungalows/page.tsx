@@ -77,7 +77,7 @@ export default async function BungalowsPage({ params }: Props) {
                     </div>
                   )}
 
-                  <div className="p-6">
+                  <div className="p-4">
                     <h2 className="mb-3 text-xl font-semibold text-[#2F6036]">
                       {bungalow.nom}
                     </h2>
