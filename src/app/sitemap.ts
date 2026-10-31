@@ -17,6 +17,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Sitemap : lecture des bungalows impossible", e);
   }
 
+    
+
     const chemins = [
     "",
     "/bungalows",
