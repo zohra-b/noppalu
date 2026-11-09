@@ -23,7 +23,7 @@ export default function Footer() {
         </div>
 
         {/* Bloc central : réseaux sociaux */}
-        <div className="flex items-center justify-center gap-5">
+        {/* <div className="flex items-center justify-center gap-5">
           <a
             href="https://www.facebook.com/"
             target="_blank"
@@ -63,10 +63,10 @@ export default function Footer() {
               <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
             </svg>
           </a>
-        </div>
+        </div> */}
 
         {/* Bloc droit : navigation */}
-        <nav className="flex items-center justify-center gap-6 sm:justify-end">
+        <nav className="flex items-center justify-center gap-6 sm:col-start-3 sm:justify-end">
          <Link href="/bungalows" className="hover:text-linen">
             {t("bungalows")}
           </Link>
