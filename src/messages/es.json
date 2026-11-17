@@ -24,12 +24,13 @@
     "photos": {
       "jardin1": "El jardín de Casa Noppalu",
       "maison-depuis-terrasse" : "Vista casa principal desde la terraza",
-      "jardin-depuis-coinRepas" : "El jardin visto desde la zona de comedor",
       "jardin2": "Una adorable salamandra",
-      "jardin3": "La terraza para el aperitivo",
+      "jardin3":  "Café a la sombra del mango",
+      "bananier-terrasse-5": "Un rincón para leer solo o tomar algo con los demás",
       "porte-exterieure-ext" : "Nuestra puerta principal, hecha a medida por un artesano del barrio",
       "jardin4": "Un caracol nos visita",
       "piscine1": "La piscina de Casa Noppalu",
+      "piscine2":"La piscina de Casa Noppalu y sus tumbonas", 
       "plage": "Puesta del sol en la playa"
     }
   },

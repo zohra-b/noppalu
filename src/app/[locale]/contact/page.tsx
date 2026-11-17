@@ -266,8 +266,8 @@ export default function ContactPage() {
 
                 <div>
                   <h3 className="font-semibold">{t("coordonnees.whatsapp")}</h3>
-                  <p className="mb-3">+34 637 251 773</p>
-                  <Button href="https://wa.me/34637251773" target="_blank">
+                  <p className="mb-3">+221 76 866 33 67</p>
+                  <Button href="https://wa.me/221768663367" target="_blank">
                     {t("coordonnees.boutonWhatsapp")}
                   </Button>
                 </div>
