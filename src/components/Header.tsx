@@ -7,9 +7,9 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
 const langues = [ 
-    { code: "fr", nom: "Français", drapeau: "/images/FR.png" }, 
-    { code: "en", nom: "English", drapeau: "/images/UK.png" }, 
-    { code: "es", nom: "Español", drapeau: "/images/ES.png" }, ];
+    { code: "fr", nom: "Français", drapeau: "/images/z-FR.png" }, 
+    { code: "en", nom: "English", drapeau: "/images/z-UK.png" }, 
+    { code: "es", nom: "Español", drapeau: "/images/z-ES.png" }, ];
     
 
 type StudioMenu = { slug: string; nom: string };
