@@ -21,9 +21,16 @@ export default async function Home({
     { src: "/images/jardin-piscine2.jpg", alt: t("photos.piscine2") },
 
     { src: "/images/jardin2.jpg", alt: t("photos.jardin2") },
+    { src: "/images/jardin-bambous.jpg", alt: t("photos.jardin-bambous") },
+
+    { src: "/images/jardin-pergola1.jpg", alt: t("photos.jardin-pergola1") },
+    { src: "/images/jardin-pergola4.jpg", alt: t("photos.jardin-pergola4") },
+
     { src: "/images/jardin3.jpg", alt: t("photos.jardin3") },
     
      { src: "/images/jardin-bananier-terrasse-5.jpg", alt: t("photos.bananier-terrasse-5") },
+
+     { src: "/images/jardin5.jpg", alt: t("photos.jardin5") },
 
     { src: "/images/jardin4.jpg", alt: t("photos.jardin4") },
     { src: "/images/porte-exterieure-ext.jpeg", alt: t("photos.porte-exterieure-ext") },
