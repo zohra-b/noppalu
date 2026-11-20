@@ -33,7 +33,7 @@ export default async function Home({
      { src: "/images/jardin5.jpg", alt: t("photos.jardin5") },
 
     { src: "/images/jardin4.jpg", alt: t("photos.jardin4") },
-    { src: "/images/porte-exterieure-ext.jpeg", alt: t("photos.porte-exterieure-ext") },
+    { src: "/images/porte-exterieure-ext.jpg", alt: t("photos.porte-exterieure-ext") },
     { src: "/images/plage-coucher-de-soleil.jpg", alt: t("photos.plage") },
   ];
 
