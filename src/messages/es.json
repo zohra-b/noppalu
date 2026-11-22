@@ -249,6 +249,27 @@
     "afficher": "Mostrar la foto {numero}"
   },
 
+  "BungalowPhotos": {
+  "manguier": {
+    "manguier": "La entrada de nuestro estudio Manguier",
+    "manguier-vue-ensemble": "Vista general del estudio Manguier, con la cama, espacios de almacenamiento y el televisor",
+    "manguier-lit": "Cama de 160 cm, nuestras sábanas son de thioup, teñidas por una artesana de la región",
+    "manguier-repas": "Zona de comedor del estudio Manguier",
+    "manguier-douche": "Cuarto de baño del estudio Manguier, equipado con un calentador de agua eléctrico instantáneo",
+    "manguier-kitchenette": "Cocina americana equipada del estudio Manguier, con placa de cocina, nevera pequeña y microondas",
+    "manguier-portefenetre": "Puerta acristalada del estudio Manguier"
+  }, 
+  "cocotier": {
+  "cocotier": "La entrada de nuestro estudio Cocotier",
+  "cocotier-vue-ensemble": "Vista general del estudio Cocotier, con la cama, el armario, la puerta del baño y la zona de cocina",
+  "cocotier-lit": "Cama de 160 cm, nuestras sábanas son de thioup, teñidas por una artesana de la región",
+  "cocotier-repas": "Zona de comedor del estudio Cocotier y el smart TV",
+  "cocotier-douche": "Baño del estudio Cocotier, equipado con un calentador de agua eléctrico instantáneo",
+  "cocotier-kitchenette": "Cocina equipada del estudio Cocotier, con placa de cocción, minifrigorífico y microondas",
+  "cocotier-vue-jardin": "Vista del jardín desde el estudio Cocotier"
+}
+},
+
    "NotFound": {
     "titre": "Esta página no existe",
     "texte": "Es posible que el enlace sea antiguo o esté mal escrito. Aquí tienes dónde ir:",

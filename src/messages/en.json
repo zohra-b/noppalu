@@ -249,6 +249,27 @@
     "afficher": "Show photo {numero}"
   },
 
+  "BungalowPhotos": {
+  "manguier": {
+    "manguier": "The entrance to our Manguier studio",
+    "manguier-vue-ensemble": "Overview of the Manguier studio, featuring the bed, storage units and TV",
+    "manguier-lit": "160 cm bed, our sheets are made of thioup, dyed by a local craftswoman",
+    "manguier-repas": "Dining area of the Manguier studio",
+    "manguier-douche": "Bathroom of the Manguier studio, equipped with an instant electric water heater",
+    "manguier-kitchenette": "Fully equipped kitchenette in the Manguier studio, with a cooktop, mini fridge and microwave",
+    "manguier-portefenetre": "French door of the Manguier studio"
+  },
+  "cocotier": {
+  "cocotier": "The entrance to our Cocotier studio",
+  "cocotier-vue-ensemble": "Overview of the Cocotier studio, with the bed, the wardrobe, the bathroom door and the kitchenette area",
+  "cocotier-lit": "160 cm bed, our sheets are made of thioup, dyed by a local artisan",
+  "cocotier-repas": "Dining area of the Cocotier studio and the smart TV",
+  "cocotier-douche": "Bathroom of the Cocotier studio, equipped with an instant electric water heater",
+  "cocotier-kitchenette": "Equipped kitchenette of the Cocotier studio, with a hob, a small fridge and a microwave",
+  "cocotier-vue-jardin": "View of the garden from the Cocotier studio"
+}
+},
+
    "NotFound": {
     "titre": "This page does not exist",
     "texte": "The link may be old or mistyped. Here is where you can go:",

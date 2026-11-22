@@ -129,8 +129,7 @@
       "tv": "Télévision connectée",
       "piscine": "Accès à la piscine et au jardin",
       "cuisine": "Kitchenette (petit réfrigérateur, plaques de cuisson, micro-ondes, machine à café, bouilloire)"
-    },
-    
+      },
     "conditionsTitre": "Conditions et informations pratiques",
     "tarifsTitre": "Tarifs",
     "tarifs": {
@@ -138,25 +137,25 @@
       "haute": "Haute saison (novembre à mai)",
       "fetes": "Fêtes de fin d'année ({debut} au {fin})",
       "parNuit": "{prix} FCFA/nuit"
-    },
+      },
     "nousConsulter": "Nous consulter pour connaître nos tarifs",
     "service": {
       "prix": "{nom} ({prix} FCFA)",
       "prixUnite": "{nom} ({prix} FCFA {unite})",
       "consulter": "{nom} (nous consulter)"
-    },
+      },
     "unites": {
       "trajet": "par trajet",
       "nuit": "par nuit",
       "personne": "par personne",
       "sejour": "par séjour"
-    },
+      },
     "conditions": {
       "capacite": "Capacité : 2 personnes par studio",
       "sejour": "Séjour minimum : 2 nuits. Réservation : minimum 24h avant.",
       "horaires": "Accès au logement : à partir de 14h. Sortie du logement : avant 11h. (service de bagagerie offert)",
       "paiement": "Paiement : virement, Wave, Paypal"
-    }
+      }
   },
 
     "Calendrier": {
@@ -251,7 +250,28 @@
     "afficher": "Afficher la photo {numero}"
   },
 
-   "NotFound": {
+  "BungalowPhotos": {
+  "manguier": {
+    "manguier": "L'entrée de notre studio manguier",
+    "manguier-vue-ensemble": "Vue d'ensemble du studio Manguier, avec le lit, des éléments de rangement ainsi que la télé",
+    "manguier-lit": "Lit de 160 cm, nos draps sont en thioup, teint par une artisane de la région",
+    "manguier-repas": "Coin repas du studio Manguier",
+    "manguier-douche": "Salle d'eau du studio Manguier, équipée d'un chauffe-eau électrique instantané",
+    "manguier-kitchenette": "Kitchenette équipée du studio Manguier, avec plaque de cuisson, petit réfrigérateur et micro-ondes",
+    "manguier-portefenetre": "Porte-fenêtre du studio Manguier"
+  },
+  "cocotier": {
+    "cocotier": "L'entrée de notre studio Cocotier",
+    "cocotier-vue-ensemble": "Vue d'ensemble du studio Cocotier, avec le lit, le placard, la porte de la salle d'eau et le coin kitchenette ",
+    "cocotier-lit": "Lit de 160 cm, nos draps sont en thioup, teint par une artisane de la région",
+    "cocotier-repas": "Coin repas du studio Cocotier ainsi que la smart TV",
+    "cocotier-douche": "Salle d'eau du studio Cocotier, équipée d'un chauffe-eau électrique instantané",
+    "cocotier-kitchenette": "Kitchenette équipée du studio Cocotier, avec plaque de cuisson, petit réfrigérateur et micro-ondes",
+    "cocotier-vue-jardin": "Vue sur le jardin depuis le studio Cocotier"
+  }
+},
+
+  "NotFound": {
     "titre": "Cette page n’existe pas",
     "texte": "Le lien est peut-être ancien ou mal saisi. Voici où aller :",
     "accueil": "Accueil",

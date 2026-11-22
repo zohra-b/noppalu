@@ -41,16 +41,23 @@ export default async function BungalowPage({ params }: Props) {
   const bungalow = await getBungalow(slug);
   if (!bungalow || !bungalow.publie) notFound();
 
-  const [t, reglages, periodes] = await Promise.all([
+  const [t, tPhotos, reglages, periodes] = await Promise.all([
     getTranslations("Bungalows"),
+    getTranslations("BungalowPhotos"),
     getReglages(),
     getIndisponibilites(slug).catch(() => null),  // En cas d'erreur, on masque le calendrier plutôt que d'afficher des dates à tort libres
   ]);
 
-  const photos = photosDe(slug).map((src) => ({
+  const photos = photosDe(slug).map((src) => {
+  const cle = src.split("/").pop()!.replace(/\.\w+$/, "");
+  const chemin = `${slug}.${cle}`;
+  return {
     src,
-    alt: t("photoAlt", { nom: bungalow.nom }),
-  }));
+    alt: tPhotos.has(chemin)
+      ? tPhotos(chemin)
+      : t("photoAlt", { nom: bungalow.nom }),
+  };
+});
 
   const resume = texteLocalise(bungalow.resume, locale);
   const description = texteLocalise(bungalow.description, locale);
