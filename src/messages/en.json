@@ -15,33 +15,36 @@
     "contact": "Contact",
     "droits": "© {annee} Casa Noppalu. All rights reserved."
   },
-  
+
   "Accueil": {
-    "surtitre": "Casa Noppalu, Guest House in Senegal",
+    "surtitre": "Casa Noppalu, guest house in Senegal",
     "titre": "Your pied-à-terre with a pool in Saly",
     "intro": "In Saly, in the residential neighborhood of Niakhnakhal, Casa Noppalu welcomes you in a simple and comfortable setting, far from large hotel complexes. Our three independent, air-conditioned studios, equipped with a kitchenette and Wi-Fi, offer you the freedom to organize your days at your own pace, while enjoying the pool, garden, and beach, accessible in a ten-minute walk.",
-    "voirStudios":"Discover our studios",
+    "voirStudios": "Discover our studios",
     "photos": {
-      "jardin1": "The Casa Noppalu garden",
-      "maison-depuis-terrasse" : "The house from the terrace",
-      "jardin2": "An adorable salamander",
-      "jardin3": "Coffee in the shade of the mango tree",
-      "bananier-terrasse-5": "A seating area to read alone or have a drink with others",
-      "porte-exterieure-ext" : "Our main door, custom-made by a local craftsman",
-      "jardin4": "A snail visiting us",
-      "piscine1": "The Casa Noppalu pool",
-      "piscine2": "The pool at Casa Noppalu and its sun loungers",
-      "jardin-bambous": "A cosy moment for two in beautiful bamboo armchairs in the shade of the terrace",
-      "jardin-pergola1": "Our spacious pergola, a perfect place to escape the sun",
-      "jardin-pergola4": "Our spacious pergola, a perfect place to escape the sun",
-      "jardin5":"A view of the garden, with the swimming pool and sun loungers in the background and the shaded pergola on the right",
-      "plage": "Sunset on the beach"
+      "jardin1": "Tree-filled garden of Casa Noppalu in Saly",
+      "maison-depuis-terrasse": "Guest house viewed from the terrace",
+      "jardin2": "Salamander in the Casa Noppalu garden",
+      "jardin3": "Coffee in the shade of the mango tree in the garden",
+      "bananier-terrasse-5": "Outdoor seating area to read or share a drink",
+      "porte-exterieure-ext": "Custom-made front door crafted by a local artisan",
+      "jardin4": "Snail in the Casa Noppalu garden",
+      "piscine1": "Outdoor swimming pool at Casa Noppalu in Saly",
+      "piscine2": "Casa Noppalu swimming pool and sun loungers",
+      "piscine3": "Quiet swimming pool at Casa Noppalu at dusk",
+      "jardin-pergola2": "Spacious shaded pergola in the garden",
+      "jardin-pomelo": "Swimming pool, pomelo tree, and pergola in the garden",
+      "jardin-bambous": "Bamboo armchairs in the shade of the terrace",
+      "jardin-pergola1": "Shaded pergola for escaping the sun",
+      "jardin-pergola4": "Relaxation area under the garden pergola",
+      "jardin5": "Overview of the garden, swimming pool, and shaded pergola",
+      "plage": "Sunset on the beach in Saly"
     }
   },
 
   "Contact": {
     "metaTitre": "Contact",
-    "metaDescription": "Contact Casa Noppalu, guest house in Saly (Senegal): availability, questions about our accommodation, practical information.",
+    "metaDescription": "Contact Casa Noppalu, guest house in Saly (Senegal): availability, questions about our studios, and practical information.",
     "titre": "Contact",
     "intro": "Any question about Casa Noppalu or our studios? Write to us, and we will be happy to answer.",
     "formulaire": {
@@ -93,16 +96,17 @@
       "carteTitre": "Location of Casa Noppalu in Saly, Senegal"
     }
   },
+
   "Bungalows": {
     "metaTitre": "Our studios",
-    "metaDescription": "Three independent air-conditioned studios in Saly, with air conditioning, kitchenette, Wi-Fi, and pool access.",
+    "metaDescription": "Three independent, air-conditioned studios in Saly with kitchenette, Wi-Fi, swimming pool, and garden. Ideal for a stay in Senegal.",
     "metaTitreBungalow": "Studio {nom}",
     "surtitre": "Your stay",
     "titre": "Our studios",
-    "intro": "Designed to accommodate two guests, our studios offer a private space to make the most of your stay in Saly. They are air-conditioned and feature a kitchenette equipped with a hob, microwave and mini fridge. They also come with Wi-Fi and a smart TV.",
+    "intro": "Designed to accommodate two guests, our studios offer a private space to make the most of your stay in Saly. Air-conditioned and featuring a kitchenette with a stovetop, microwave, and mini-fridge, they also come with Wi-Fi and a Smart TV.",
     "retour": "← Overview",
     "descriptionTitre": "Description",
-        "decouvrir": "Discover this studio",
+    "decouvrir": "Discover this studio",
     "bientot": "Coming soon",
     "reserver": "See availability and book",
     "photoAlt": "Studio {nom}",
@@ -118,6 +122,7 @@
       }
     }
   },
+
   "BungalowInfos": {
     "equipementsTitre": "Amenities",
     "equipements": {
@@ -126,9 +131,8 @@
       "wifi": "Wi-Fi",
       "tv": "Smart TV",
       "piscine": "Access to the pool and garden",
-      "cuisine": "Kitchenette (small refrigerator, stovetop, microwave, coffee maker, kettle)"
+      "cuisine": "Kitchenette (mini-fridge, stovetop, microwave, coffee maker, kettle)"
     },
-    
     "conditionsTitre": "Conditions and practical information",
     "tarifsTitre": "Rates",
     "tarifs": {
@@ -152,14 +156,14 @@
     "conditions": {
       "capacite": "Capacity: 2 people per studio",
       "sejour": "Minimum stay: 2 nights. Booking: at least 24 hours in advance.",
-      "horaires": "Check-in: from 2:00 PM. Check-out: before 11:00 AM. (complimentary luggage storage service)",
+      "horaires": "Check-in: from 2:00 PM. Check-out: before 11:00 AM (complimentary luggage storage service).",
       "paiement": "Payment: bank transfer, Wave, PayPal"
     }
   },
 
   "Calendrier": {
     "titre": "Availability",
-    "intro": "Send us your booking requests, and we will respond as soon as possible",
+    "intro": "Send us your booking requests, and we will respond as soon as possible.",
     "introGeneral": "Select a studio if you wish to check its availability.",
     "choixStudio": "Displayed studio",
     "tous": "All",
@@ -250,27 +254,36 @@
   },
 
   "BungalowPhotos": {
-  "manguier": {
-    "manguier": "The entrance to our Manguier studio",
-    "manguier-vue-ensemble": "Overview of the Manguier studio, featuring the bed, storage units and TV",
-    "manguier-lit": "160 cm bed, our sheets are made of thioup, dyed by a local craftswoman",
-    "manguier-repas": "Dining area of the Manguier studio",
-    "manguier-douche": "Bathroom of the Manguier studio, equipped with an instant electric water heater",
-    "manguier-kitchenette": "Fully equipped kitchenette in the Manguier studio, with a cooktop, mini fridge and microwave",
-    "manguier-portefenetre": "French door of the Manguier studio"
+    "manguier": {
+      "manguier": "Entrance to the Manguier studio at Casa Noppalu",
+      "manguier-vue-ensemble": "Overview of the Manguier studio with bed, storage, and TV",
+      "manguier-lit": "160 cm bed with handcrafted thioup sheets in the Manguier studio",
+      "manguier-repas": "Dining area in the Manguier studio",
+      "manguier-douche": "Bathroom with instant water heater in the Manguier studio",
+      "manguier-kitchenette": "Equipped kitchenette in the Manguier studio",
+      "manguier-portefenetre": "French door in the Manguier studio"
+    },
+    "cocotier": {
+      "cocotier": "Entrance to the Cocotier studio at Casa Noppalu",
+      "cocotier-vue-ensemble": "Overview of the Cocotier studio with bed, storage, and kitchenette",
+      "cocotier-lit": "160 cm bed with handcrafted thioup sheets in the Cocotier studio",
+      "cocotier-repas": "Dining area and Smart TV in the Cocotier studio",
+      "cocotier-douche": "Bathroom with instant water heater in the Cocotier studio",
+      "cocotier-kitchenette": "Equipped kitchenette in the Cocotier studio",
+      "cocotier-vue-jardin": "Garden view from the Cocotier studio"
+    },
+    "bananier": {
+      "bananier": "Entrance to the Bananier studio at Casa Noppalu",
+      "bananier-vue-ensemble": "Overview of the Bananier studio with bed and Smart TV",
+      "bananier-lit": "140 cm bed with handcrafted thioup sheets in the Bananier studio",
+      "bananier-repas": "Dining and storage area in the Bananier studio",
+      "bananier-douche": "Bathroom with instant water heater in the Bananier studio",
+      "bananier-kitchenette": "Equipped kitchenette in the Bananier studio",
+      "bananier-vue-jardin": "Garden view from the Bananier studio"
+    }
   },
-  "cocotier": {
-  "cocotier": "The entrance to our Cocotier studio",
-  "cocotier-vue-ensemble": "Overview of the Cocotier studio, with the bed, the wardrobe, the bathroom door and the kitchenette area",
-  "cocotier-lit": "160 cm bed, our sheets are made of thioup, dyed by a local artisan",
-  "cocotier-repas": "Dining area of the Cocotier studio and the smart TV",
-  "cocotier-douche": "Bathroom of the Cocotier studio, equipped with an instant electric water heater",
-  "cocotier-kitchenette": "Equipped kitchenette of the Cocotier studio, with a hob, a small fridge and a microwave",
-  "cocotier-vue-jardin": "View of the garden from the Cocotier studio"
-}
-},
 
-   "NotFound": {
+  "NotFound": {
     "titre": "This page does not exist",
     "texte": "The link may be old or mistyped. Here is where you can go:",
     "accueil": "Home",
@@ -285,7 +298,7 @@
   },
 
   "Metadata": {
-    "titre": "Casa Noppalu | Guest House in Saly, Senegal",
+    "titre": "Casa Noppalu | Guest house with a pool in Saly, Senegal",
     "description": "Discover our three independent, air-conditioned studios in Saly, Niakhnakhal. Tree-filled garden, pool, and beach a ten-minute walk away."
   }
 }

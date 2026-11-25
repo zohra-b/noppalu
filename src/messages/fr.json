@@ -8,7 +8,6 @@
     "reserver": "Réserver",
     "contact": "Contact",
     "langueActuelle": "Langue actuelle : {langue}"
-    
   },
 
   "Footer": {
@@ -16,34 +15,36 @@
     "contact": "Contact",
     "droits": "© {annee} Casa Noppalu. Tous droits réservés."
   },
-  
+
   "Accueil": {
-    "surtitre": "Casa Noppalu, Maison d'hôtes au Sénégal",
-    "titre": "Votre pied à terre avec piscine à Saly",
-    "intro": "À Saly, dans le quartier résidentiel de Niakhnakhal, Casa Noppalu vous accueille dans un cadre simple et confortable, loin des grands complexes hôteliers. Nos trois studios indépendants et climatisés, équipés d'une kitchenette et du wifi, vous offrent la liberté d'organiser vos journées à votre rythme, tout en profitant de la piscine, du jardin et de la plage, accessible en dix minutes à pied.",
+    "surtitre": "Casa Noppalu, maison d'hôtes au Sénégal",
+    "titre": "Votre pied-à-terre avec piscine à Saly",
+    "intro": "À Saly, dans le quartier résidentiel de Niakhnakhal, Casa Noppalu vous accueille dans un cadre simple et confortable, loin des grands complexes hôteliers. Nos trois studios indépendants et climatisés, équipés d'une kitchenette et du Wi-Fi, vous offrent la liberté d'organiser vos journées à votre rythme, tout en profitant de la piscine, du jardin et de la plage, accessible en dix minutes à pied.",
     "voirStudios": "Découvrir nos studios",
     "photos": {
-      "jardin1": "Le jardin de Casa Noppalu",
-      "maison-depuis-terrasse" : "Vue de la maison",
-      "jardin2": "Une adorable salamandre",
-      "jardin3": "Café à l'ombre du manguier",
-      "bananier-terrasse-5": "Un coin salon pour lire seul ou boire un verre avec les autres",
-      "porte-exterieure-ext" : "Notre porte principale, réalisée sur mesure par un artisan du quartier",
-      "jardin4": "Un escargot nous rend visite",
-      "piscine1": "La piscine de Casa Noppalu",
-      "piscine2": "La piscine de Casa Noppalu et ses transats",
-      "jardin-bambous":"Tête à tête dans de beaux fauteuils en bambou à l'ombre de la terrasse",
-      "jardin-pergola1" : "Notre spacieuse pergola, indispensable lorsau'on veut fuir le soleil",
-      "jardin-pergola4" : "Notre spacieuse pergola, indispensable lorsau'on veut fuir le soleil",
-      "jardin5":"Vue d'ensemble du jardin, avec en fond la piscine et ses transats et sur la droite, la pergola ombragée",
-
-      "plage": "Coucher de soleil sur la plage"
+      "jardin1": "Jardin arboré de Casa Noppalu à Saly",
+      "maison-depuis-terrasse": "Maison d'hôtes vue depuis la terrasse",
+      "jardin2": "Salamandre dans le jardin de Casa Noppalu",
+      "jardin3": "Café à l'ombre du manguier dans le jardin",
+      "bananier-terrasse-5": "Coin salon extérieur pour lire ou partager un verre",
+      "porte-exterieure-ext": "Porte d'entrée sur mesure réalisée par un artisan local",
+      "jardin4": "Escargot dans le jardin de Casa Noppalu",
+      "piscine1": "Piscine extérieure de Casa Noppalu à Saly",
+      "piscine2": "Piscine de Casa Noppalu et transats",
+      "jardin-pergola2": "Spacieuse pergola ombragée dans le jardin",
+      "piscine3": "Piscine de Casa Noppalu au calme en fin de journée",
+      "jardin-pomelo": "Piscine, pomelo et pergola dans le jardin",
+      "jardin-bambous": "Fauteuils en bambou à l'ombre de la terrasse",
+      "jardin-pergola1": "Pergola ombragée pour se protéger du soleil",
+      "jardin-pergola4": "Coin détente sous la pergola du jardin",
+      "jardin5": "Vue d'ensemble du jardin, piscine et pergola ombragée",
+      "plage": "Coucher de soleil sur la plage à Saly"
     }
   },
 
   "Contact": {
     "metaTitre": "Contact",
-    "metaDescription": "Contactez Casa Noppalu, maison d'hôtes à Saly (Sénégal) : disponibilités, questions sur nos logements, informations pratiques.",
+    "metaDescription": "Contactez Casa Noppalu, maison d'hôtes à Saly (Sénégal) : disponibilités, questions sur nos studios et informations pratiques.",
     "titre": "Contact",
     "intro": "Une question sur Casa Noppalu ou sur nos studios ? Écrivez-nous, nous vous répondrons avec plaisir.",
     "formulaire": {
@@ -95,13 +96,14 @@
       "carteTitre": "Localisation de Casa Noppalu à Saly, Sénégal"
     }
   },
+
   "Bungalows": {
     "metaTitre": "Nos studios",
-    "metaDescription": "Trois studios indépendants et climatisés à Saly, avec climatisation, kitchenette, Wi-Fi et accès à la piscine.",
+    "metaDescription": "Trois studios indépendants et climatisés à Saly avec kitchenette, Wi-Fi, piscine et jardin. Idéals pour un séjour au Sénégal.",
     "metaTitreBungalow": "Studio {nom}",
     "surtitre": "Votre séjour",
     "titre": "Nos studios",
-    "intro": "Conçus pour recevoir deux persones, nos studios vous offrent un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d'un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d'une télévision connectée.",
+    "intro": "Conçus pour recevoir deux personnes, nos studios vous offrent un espace privé pour profiter pleinement de votre séjour à Saly. Climatisés et dotés d'un coin kitchenette avec plaques de cuisson, micro-ondes et petit réfrigérateur, ils disposent également du Wi-Fi et d'une télévision connectée.",
     "retour": "← Présentation",
     "descriptionTitre": "Description",
     "decouvrir": "Découvrir ce studio",
@@ -120,6 +122,7 @@
       }
     }
   },
+
   "BungalowInfos": {
     "equipementsTitre": "Équipements",
     "equipements": {
@@ -129,7 +132,7 @@
       "tv": "Télévision connectée",
       "piscine": "Accès à la piscine et au jardin",
       "cuisine": "Kitchenette (petit réfrigérateur, plaques de cuisson, micro-ondes, machine à café, bouilloire)"
-      },
+    },
     "conditionsTitre": "Conditions et informations pratiques",
     "tarifsTitre": "Tarifs",
     "tarifs": {
@@ -137,30 +140,30 @@
       "haute": "Haute saison (novembre à mai)",
       "fetes": "Fêtes de fin d'année ({debut} au {fin})",
       "parNuit": "{prix} FCFA/nuit"
-      },
+    },
     "nousConsulter": "Nous consulter pour connaître nos tarifs",
     "service": {
       "prix": "{nom} ({prix} FCFA)",
       "prixUnite": "{nom} ({prix} FCFA {unite})",
       "consulter": "{nom} (nous consulter)"
-      },
+    },
     "unites": {
       "trajet": "par trajet",
       "nuit": "par nuit",
       "personne": "par personne",
       "sejour": "par séjour"
-      },
+    },
     "conditions": {
       "capacite": "Capacité : 2 personnes par studio",
-      "sejour": "Séjour minimum : 2 nuits. Réservation : minimum 24h avant.",
-      "horaires": "Accès au logement : à partir de 14h. Sortie du logement : avant 11h. (service de bagagerie offert)",
-      "paiement": "Paiement : virement, Wave, Paypal"
-      }
+      "sejour": "Séjour minimum : 2 nuits. Réservation : minimum 24 h avant.",
+      "horaires": "Accès au logement : à partir de 14 h. Sortie du logement : avant 11 h (service de bagagerie offert).",
+      "paiement": "Paiement : virement, Wave, PayPal"
+    }
   },
 
-    "Calendrier": {
+  "Calendrier": {
     "titre": "Disponibilités",
-    "intro": "Adressez-nous vos demandes de réservations, nous vous répondrons dans les plus brefs délais",
+    "intro": "Adressez-nous vos demandes de réservation, nous vous répondrons dans les plus brefs délais.",
     "introGeneral": "Sélectionnez un studio si vous souhaitez consulter ses disponibilités.",
     "choixStudio": "Studio affiché",
     "tous": "Tous",
@@ -176,7 +179,7 @@
     "reserver": "Faire une demande de réservation"
   },
 
-    "Reservation": {
+  "Reservation": {
     "metaTitre": "Demande de réservation",
     "metaDescription": "Choisissez vos dates, découvrez les studios disponibles à Saly et envoyez votre demande de réservation à Casa Noppalu.",
     "titre": "Demande de réservation",
@@ -251,25 +254,34 @@
   },
 
   "BungalowPhotos": {
-  "manguier": {
-    "manguier": "L'entrée de notre studio manguier",
-    "manguier-vue-ensemble": "Vue d'ensemble du studio Manguier, avec le lit, des éléments de rangement ainsi que la télé",
-    "manguier-lit": "Lit de 160 cm, nos draps sont en thioup, teint par une artisane de la région",
-    "manguier-repas": "Coin repas du studio Manguier",
-    "manguier-douche": "Salle d'eau du studio Manguier, équipée d'un chauffe-eau électrique instantané",
-    "manguier-kitchenette": "Kitchenette équipée du studio Manguier, avec plaque de cuisson, petit réfrigérateur et micro-ondes",
-    "manguier-portefenetre": "Porte-fenêtre du studio Manguier"
+    "manguier": {
+      "manguier": "Entrée du studio Manguier à Casa Noppalu",
+      "manguier-vue-ensemble": "Vue d'ensemble du studio Manguier avec lit, rangements et TV",
+      "manguier-lit": "Lit 160 cm avec draps artisanaux en thioup du studio Manguier",
+      "manguier-repas": "Coin repas du studio Manguier",
+      "manguier-douche": "Salle d'eau avec chauffe-eau instantané du studio Manguier",
+      "manguier-kitchenette": "Kitchenette équipée du studio Manguier",
+      "manguier-portefenetre": "Porte-fenêtre du studio Manguier"
+    },
+    "cocotier": {
+      "cocotier": "Entrée du studio Cocotier à Casa Noppalu",
+      "cocotier-vue-ensemble": "Vue d'ensemble du studio Cocotier avec lit, rangements et kitchenette",
+      "cocotier-lit": "Lit 160 cm avec draps artisanaux en thioup du studio Cocotier",
+      "cocotier-repas": "Coin repas et Smart TV du studio Cocotier",
+      "cocotier-douche": "Salle d'eau avec chauffe-eau instantané du studio Cocotier",
+      "cocotier-kitchenette": "Kitchenette équipée du studio Cocotier",
+      "cocotier-vue-jardin": "Vue sur le jardin depuis le studio Cocotier"
+    },
+    "bananier": {
+      "bananier": "Entrée du studio Bananier à Casa Noppalu",
+      "bananier-vue-ensemble": "Vue d'ensemble du studio Bananier avec lit et Smart TV",
+      "bananier-lit": "Lit 140 cm avec draps artisanaux en thioup du studio Bananier",
+      "bananier-repas": "Coin repas et rangements du studio Bananier",
+      "bananier-douche": "Salle d'eau avec chauffe-eau instantané du studio Bananier",
+      "bananier-kitchenette": "Kitchenette équipée du studio Bananier",
+      "bananier-vue-jardin": "Vue sur le jardin depuis le studio Bananier"
+    }
   },
-  "cocotier": {
-    "cocotier": "L'entrée de notre studio Cocotier",
-    "cocotier-vue-ensemble": "Vue d'ensemble du studio Cocotier, avec le lit, le placard, la porte de la salle d'eau et le coin kitchenette ",
-    "cocotier-lit": "Lit de 160 cm, nos draps sont en thioup, teint par une artisane de la région",
-    "cocotier-repas": "Coin repas du studio Cocotier ainsi que la smart TV",
-    "cocotier-douche": "Salle d'eau du studio Cocotier, équipée d'un chauffe-eau électrique instantané",
-    "cocotier-kitchenette": "Kitchenette équipée du studio Cocotier, avec plaque de cuisson, petit réfrigérateur et micro-ondes",
-    "cocotier-vue-jardin": "Vue sur le jardin depuis le studio Cocotier"
-  }
-},
 
   "NotFound": {
     "titre": "Cette page n’existe pas",
@@ -286,8 +298,7 @@
   },
 
   "Metadata": {
-    "titre": "Casa Noppalu | Maison d'hôtes à Saly, Sénégal",
+    "titre": "Casa Noppalu | Maison d'hôtes avec piscine à Saly, Sénégal",
     "description": "Découvrez nos trois studios indépendants et climatisés à Saly, Niakhnakhal. Jardin arboré, piscine et plage à dix minutes à pied."
   }
-
 }

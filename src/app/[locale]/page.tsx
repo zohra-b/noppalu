@@ -15,10 +15,14 @@ export default async function Home({
   const photosAccueil = [
     { src: "/images/jardin1.png", alt: t("photos.jardin1") },
     { src: "/images/jardin-maison-depuis-terrasse.jpg", alt: t("photos.maison-depuis-terrasse") },
-
-   
     { src: "/images/jardin-piscine1.jpg", alt: t("photos.piscine1") },
     { src: "/images/jardin-piscine2.jpg", alt: t("photos.piscine2") },
+    { src: "/images/jardin-piscine3.jpg", alt: t("photos.piscine3") },
+
+       { src: "/images/jardin-pomelo.jpg", alt: t("photos.jardin-pomelo") },
+     { src: "/images/jardin-pergola2.jpg", alt: t("photos.jardin-pergola2") },
+
+
 
     { src: "/images/jardin2.jpg", alt: t("photos.jardin2") },
     { src: "/images/jardin-bambous.jpg", alt: t("photos.jardin-bambous") },
